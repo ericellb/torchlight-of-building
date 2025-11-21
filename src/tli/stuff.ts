@@ -293,18 +293,23 @@ const emptyGearDmg = (): GearDmg => {
   };
 };
 
-const findAffix = <T extends new (...args: any[]) => Affix.Affix>(
+const findAffix = <T extends Affix.Affix["type"]>(
   affixes: Affix.Affix[],
   type: T
-): InstanceType<T> | undefined => {
-  return affixes.find((a) => a instanceof type) as InstanceType<T> | undefined;
+): Extract<Affix.Affix, { type: T }> | undefined => {
+  return affixes.find((a) => a.type === type) as
+    | Extract<Affix.Affix, { type: T }>
+    | undefined;
 };
 
-const filterAffix = <T extends new (...args: any[]) => Affix.Affix>(
+const filterAffix = <T extends Affix.Affix["type"]>(
   affixes: Affix.Affix[],
   type: T
-): InstanceType<T>[] => {
-  return affixes.filter((a) => a instanceof type) as InstanceType<T>[];
+): Extract<Affix.Affix, { type: T }>[] => {
+  return affixes.filter((a) => a.type === type) as Extract<
+    Affix.Affix,
+    { type: T }
+  >[];
 };
 
 // currently only calculating mainhand
@@ -316,7 +321,7 @@ const calculateGearDmg = (
   if (mh === undefined) {
     return emptyGearDmg();
   }
-  let basePhysDmg = findAffix(mh.affixes, Affix.GearBasePhysFlatDmg);
+  let basePhysDmg = findAffix(mh.affixes, "GearBasePhysFlatDmg");
   if (basePhysDmg === undefined) {
     return emptyGearDmg();
   }
@@ -331,10 +336,7 @@ const calculateGearDmg = (
   phys.max += basePhysDmg.value;
   let physBonusPct = 0;
 
-  let gearEleMinusPhysDmg = findAffix(
-    mh.affixes,
-    Affix.GearPlusEleMinusPhysDmg
-  );
+  let gearEleMinusPhysDmg = findAffix(mh.affixes, "GearPlusEleMinusPhysDmg");
   if (gearEleMinusPhysDmg !== undefined) {
     physBonusPct -= 1;
 
@@ -348,12 +350,12 @@ const calculateGearDmg = (
     fire.max += max;
   }
 
-  let gearPhysDmgPct = findAffix(mh.affixes, Affix.GearPhysDmgPct);
+  let gearPhysDmgPct = findAffix(mh.affixes, "GearPhysDmgPct");
   if (gearPhysDmgPct !== undefined) {
     physBonusPct += gearPhysDmgPct.value;
   }
 
-  filterAffix(mh.affixes, Affix.FlatGearDmg).forEach((a) => {
+  filterAffix(mh.affixes, "FlatGearDmg").forEach((a) => {
     match(a.modType)
       .with("physical", () => addDR(phys, a.value))
       .with("cold", () => addDR(cold, a.value))
@@ -364,7 +366,7 @@ const calculateGearDmg = (
   });
 
   let addnMHDmgMult = 1;
-  filterAffix(allAffixes, Affix.AddnMainHandDmgPct).forEach((a) => {
+  filterAffix(allAffixes, "AddnMainHandDmgPct").forEach((a) => {
     addnMHDmgMult *= 1 + a.value;
   });
 
@@ -393,18 +395,18 @@ const calculateGearAspd = (
   if (mh === undefined) {
     return 0;
   }
-  let baseAspd = findAffix(mh.affixes, Affix.GearBaseAspd);
+  let baseAspd = findAffix(mh.affixes, "GearBaseAspd");
   if (baseAspd === undefined) {
     return 0;
   }
   let gearAspdPctBonus = calculateInc(
-    filterAffix(mh.affixes, Affix.GearAspdPct).map((b) => b.value)
+    filterAffix(mh.affixes, "GearAspdPct").map((b) => b.value)
   );
   return baseAspd.value * (1 + gearAspdPctBonus);
 };
 
 const calculateDmgPcts = (allAffixes: Affix.Affix[]): BMod.DmgPct[] => {
-  let dmgPctAffixes = filterAffix(allAffixes, Affix.DmgPct);
+  let dmgPctAffixes = filterAffix(allAffixes, "DmgPct");
   return dmgPctAffixes.map((a) => {
     return new BMod.DmgPct(a.value, a.addn, a.modType, a.src);
   });
@@ -429,7 +431,7 @@ const calculateDmgPcts = (allAffixes: Affix.Affix[]): BMod.DmgPct[] => {
 };
 
 const calculateCritRating = (allAffixes: Affix.Affix[]): number => {
-  let critRatingPctAffixes = filterAffix(allAffixes, Affix.CritRatingPct);
+  let critRatingPctAffixes = filterAffix(allAffixes, "CritRatingPct");
   let mods = critRatingPctAffixes.map((a) => {
     return new BMod.CritRatingPct(a.value, a.modType, a.src);
   });
@@ -438,7 +440,7 @@ const calculateCritRating = (allAffixes: Affix.Affix[]): number => {
 };
 
 const calculateCritDmg = (allAffixes: Affix.Affix[]): number => {
-  let critDmgPctAffixes = filterAffix(allAffixes, Affix.CritDmgPct);
+  let critDmgPctAffixes = filterAffix(allAffixes, "CritDmgPct");
   let mods = critDmgPctAffixes.map((a) => {
     return new BMod.CritDmgPct(a.value, a.addn, a.modType, a.src);
   });
@@ -450,7 +452,7 @@ const calculateCritDmg = (allAffixes: Affix.Affix[]): number => {
 };
 
 const calculateAspdPcts = (allAffixes: Affix.Affix[]): BMod.AspdPct[] => {
-  let aspdPctAffixes = filterAffix(allAffixes, Affix.AspdPct);
+  let aspdPctAffixes = filterAffix(allAffixes, "AspdPct");
   return aspdPctAffixes.map((a) => {
     return new BMod.AspdPct(a.value, a.addn, a.src);
   });

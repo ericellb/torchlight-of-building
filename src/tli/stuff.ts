@@ -78,6 +78,13 @@ export interface DivinityPage {
   slates: DivinitySlate[];
 }
 
+export interface Configuration {
+  fervor: {
+    enabled: boolean;
+    points: number;
+  };
+}
+
 export interface Gear {
   gearType:
     | "helmet"
@@ -369,7 +376,10 @@ const calculateDmgPcts = (
   });
 };
 
-const calculateCritRating = (allAffixes: Affix.Affix[]): number => {
+const calculateCritRating = (
+  allAffixes: Affix.Affix[],
+  configuration: Configuration
+): number => {
   let critRatingPctAffixes = filterAffix(allAffixes, "CritRatingPct");
   let mods = critRatingPctAffixes.map((a) => {
     return {
@@ -379,6 +389,19 @@ const calculateCritRating = (allAffixes: Affix.Affix[]): number => {
       src: a.src,
     };
   });
+
+  // Add fervor bonus if enabled
+  if (configuration.fervor.enabled) {
+    // Each fervor point gives 2% increased critical strike rating
+    let fervorBonus = configuration.fervor.points * 0.02;
+    mods.push({
+      type: "CritRatingPct",
+      value: fervorBonus,
+      modType: "global",
+      src: "fervor",
+    });
+  }
+
   let inc = calculateInc(mods.map((v) => v.value));
   return 0.05 * (1 + inc);
 };
@@ -601,7 +624,8 @@ const calculateSkillHit = (
 // return undefined if skill unimplemented or it's not an offensive skill
 export const calculateOffense = (
   loadout: Loadout,
-  skill: Skill
+  skill: Skill,
+  configuration: Configuration
 ): OffenseSummary | undefined => {
   let skillConf = offensiveSkillConfs.find((c) => c.skill === skill);
   if (skillConf === undefined) {
@@ -611,7 +635,7 @@ export const calculateOffense = (
   let gearDmg = calculateGearDmg(loadout, allAffixes);
   let aspd = calculateAspd(loadout, allAffixes);
   let dmgPcts = calculateDmgPcts(allAffixes);
-  let critChance = calculateCritRating(allAffixes);
+  let critChance = calculateCritRating(allAffixes, configuration);
   let critDmgMult = calculateCritDmg(allAffixes);
 
   let skillHit = calculateSkillHit(gearDmg, dmgPcts, skillConf);

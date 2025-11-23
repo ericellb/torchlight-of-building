@@ -6,6 +6,8 @@ import {
   CRIT_RATING_MOD_TYPES,
 } from "./constants";
 
+type ParseResult = "unrecognized" | "unimplemented" | Affix;
+
 const isValidDmgModType = (value: string): value is DmgModType => {
   return DMG_MOD_TYPES.includes(value as DmgModType);
 };
@@ -84,7 +86,7 @@ const parseCritRatingPct = (
   };
 };
 
-export const parseAffix = (input: string): Affix | undefined => {
+export const parseAffix = (input: string): ParseResult => {
   const normalized = input.trim();
 
   const parsers = [
@@ -103,5 +105,5 @@ export const parseAffix = (input: string): Affix | undefined => {
   }
 
   // No parser matched
-  return undefined;
+  return "unrecognized";
 };

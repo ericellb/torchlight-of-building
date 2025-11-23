@@ -14,3 +14,9 @@
 * uniques
   * ghostslaughter
   * trinity
+* spells
+* minions
+* defense
+* reservation
+* mana costs
+* rosa ramp

@@ -35,13 +35,13 @@ export type Affix =
       src?: string;
     }
   | {
-      type: "MinionAspdPct";
+      type: "AspdAndCspdPct";
       value: number;
       addn: boolean;
       src?: string;
     }
   | {
-      type: "MinionCspdPct";
+      type: "MinionAspdAndCspdPct";
       value: number;
       addn: boolean;
       src?: string;

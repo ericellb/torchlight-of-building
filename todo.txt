@@ -1,0 +1,7 @@
+* more affix parsers
+* affix range parsers for crafting
+* talent page
+  * tlidb scraper
+  * "unimplmented" affixes
+* hero memories/traits
+* frontend

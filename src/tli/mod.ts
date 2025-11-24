@@ -1,5 +1,5 @@
 import { DmgModType, CritRatingModType, CritDmgModType } from "./constants";
-import { DmgRange } from "./stuff";
+import { DmgRange } from "./core";
 
 export type Mod =
   | {

@@ -2,7 +2,7 @@ import * as R from "remeda";
 import { match } from "ts-pattern";
 import * as Mod from "./mod";
 import { DmgModType } from "./constants";
-import { Affix } from "./core";
+import { Affix, Loadout, GearPage, Gear, TalentPage, DivinityPage, DivinitySlate, Configuration, DmgRange } from "./core";
 
 let dummy40Armor = 0.11;
 let dummy85Armor = 0.44;
@@ -42,12 +42,6 @@ let offensiveSkillConfs: SkillConfiguration[] = [
   },
 ];
 
-export interface DmgRange {
-  // inclusive on both ends
-  min: number;
-  max: number;
-}
-
 const addDR = (dr1: DmgRange, dr2: DmgRange): DmgRange => {
   return {
     min: dr1.min + dr2.min,
@@ -65,60 +59,6 @@ const multDR = (dr: DmgRange, multiplier: number): DmgRange => {
 const emptyDamageRange = (): DmgRange => {
   return { min: 0, max: 0 };
 };
-
-export interface TalentPage {
-  affixes: Affix[];
-  coreTalents: Affix[];
-}
-
-export interface DivinitySlate {
-  affixes: Affix[];
-}
-
-export interface DivinityPage {
-  slates: DivinitySlate[];
-}
-
-export interface Configuration {
-  fervor: {
-    enabled: boolean;
-    points: number;
-  };
-}
-
-export interface Gear {
-  gearType:
-    | "helmet"
-    | "chest"
-    | "neck"
-    | "gloves"
-    | "belt"
-    | "boots"
-    | "ring"
-    | "sword"
-    | "shield";
-  affixes: Affix[];
-}
-
-export interface GearPage {
-  helmet?: Gear;
-  chest?: Gear;
-  neck?: Gear;
-  gloves?: Gear;
-  belt?: Gear;
-  boots?: Gear;
-  leftRing?: Gear;
-  rightRing?: Gear;
-  mainHand?: Gear;
-  offHand?: Gear;
-}
-
-export interface Loadout {
-  equipmentPage: GearPage;
-  talentPage: TalentPage;
-  divinityPage: DivinityPage;
-  customConfiguration: Affix[];
-}
 
 const calculateInc = (bonuses: number[]) => {
   return R.pipe(

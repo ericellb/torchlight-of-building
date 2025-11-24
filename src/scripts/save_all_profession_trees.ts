@@ -19,14 +19,14 @@ const saveAllProfessionTrees = async (): Promise<void> => {
       try {
         // Convert profession name to URL format (replace spaces with underscores)
         const professionUrlName = profession.replace(/ /g, "_");
-        const nodes = await scrapeProfessionTree(professionUrlName);
+        const talentTree = await scrapeProfessionTree(professionUrlName);
 
         // Save to file
         const filename = `${professionUrlName.toLowerCase()}_tree.json`;
         const filepath = join(process.cwd(), "data", filename);
-        await writeFile(filepath, JSON.stringify(nodes, null, 2), "utf-8");
+        await writeFile(filepath, JSON.stringify(talentTree, null, 2), "utf-8");
 
-        console.log(`  ✓ Saved ${nodes.length} nodes to ${filename}\n`);
+        console.log(`  ✓ Saved ${talentTree.nodes.length} nodes to ${filename}\n`);
       } catch (error) {
         console.error(`  ✗ Failed to scrape ${profession}:`, error);
         console.log();

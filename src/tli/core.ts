@@ -113,4 +113,5 @@ export interface RawGearPage {
 
 export interface RawLoadout {
   equipmentPage: RawGearPage;
+  talentPage: RawTalentPage;
 }

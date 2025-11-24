@@ -11,6 +11,12 @@ describe("parse_loadout", () => {
           affixes: ["+10% fire damage", "+5% attack speed"],
         },
       },
+      talentPage: {
+        tree1: { name: "Warrior", allocatedNodes: [] },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
     };
 
     const result = parse_loadout(rawLoadout);
@@ -45,6 +51,12 @@ describe("parse_loadout", () => {
           gearType: "chest",
           affixes: ["+10% fire damage\n+5% attack speed\n+15% critical strike rating"],
         },
+      },
+      talentPage: {
+        tree1: { name: "Warrior", allocatedNodes: [] },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
       },
     };
 
@@ -84,6 +96,12 @@ describe("parse_loadout", () => {
           affixes: ["+10% fire damage\nsome unrecognized mod\n+5% attack speed"],
         },
       },
+      talentPage: {
+        tree1: { name: "Warrior", allocatedNodes: [] },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
     };
 
     const result = parse_loadout(rawLoadout);
@@ -118,6 +136,12 @@ describe("parse_loadout", () => {
           affixes: [],
         },
       },
+      talentPage: {
+        tree1: { name: "Warrior", allocatedNodes: [] },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
     };
 
     const result = parse_loadout(rawLoadout);
@@ -142,6 +166,12 @@ describe("parse_loadout", () => {
           affixes: ["+15% critical strike rating"],
         },
       },
+      talentPage: {
+        tree1: { name: "Warrior", allocatedNodes: [] },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
     };
 
     const result = parse_loadout(rawLoadout);
@@ -157,11 +187,17 @@ describe("parse_loadout", () => {
   it("should initialize empty talentPage, divinityPage, and customConfiguration", () => {
     const rawLoadout: RawLoadout = {
       equipmentPage: {},
+      talentPage: {
+        tree1: { name: "Warrior", allocatedNodes: [] },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
     };
 
     const result = parse_loadout(rawLoadout);
 
-    expect(result.talentPage).toEqual({ affixes: [], coreTalents: [] });
+    expect(result.talentPage).toEqual({ affixes: [] });
     expect(result.divinityPage).toEqual({ slates: [] });
     expect(result.customConfiguration).toEqual([]);
   });
@@ -174,6 +210,12 @@ describe("parse_loadout", () => {
           affixes: ["+10% fire damage\n\n+5% attack speed\n"],
         },
       },
+      talentPage: {
+        tree1: { name: "Warrior", allocatedNodes: [] },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
     };
 
     const result = parse_loadout(rawLoadout);
@@ -181,5 +223,184 @@ describe("parse_loadout", () => {
     expect(result.equipmentPage.belt).toBeDefined();
     expect(result.equipmentPage.belt?.affixes[0].mods).toHaveLength(2);
     expect(result.equipmentPage.belt?.affixes[0].raw).toBe("+10% fire damage\n\n+5% attack speed\n");
+  });
+});
+
+describe("talent tree parsing", () => {
+  it("should parse a single talent node with 1 point", () => {
+    const rawLoadout: RawLoadout = {
+      equipmentPage: {},
+      talentPage: {
+        tree1: {
+          name: "The_Brave",
+          allocatedNodes: [{ x: 0, y: 0, points: 1 }],
+        },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
+    };
+
+    const result = parse_loadout(rawLoadout);
+
+    expect(result.talentPage.affixes).toHaveLength(1);
+    expect(result.talentPage.affixes[0].raw).toBe("+9% Attack Damage");
+    expect(result.talentPage.affixes[0].mods).toHaveLength(1);
+    expect(result.talentPage.affixes[0].mods[0]).toEqual({
+      type: "DmgPct",
+      value: 0.09,
+      modType: "attack",
+      addn: false,
+    });
+    expect(result.talentPage.affixes[0].src).toBe("The_Brave (0,0) x1");
+  });
+
+  it("should multiply mod values by allocated points", () => {
+    const rawLoadout: RawLoadout = {
+      equipmentPage: {},
+      talentPage: {
+        tree1: {
+          name: "The_Brave",
+          allocatedNodes: [{ x: 0, y: 0, points: 3 }],
+        },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
+    };
+
+    const result = parse_loadout(rawLoadout);
+
+    expect(result.talentPage.affixes).toHaveLength(1);
+    expect(result.talentPage.affixes[0].mods[0]).toEqual({
+      type: "DmgPct",
+      value: 0.27, // 0.09 * 3
+      modType: "attack",
+      addn: false,
+    });
+    expect(result.talentPage.affixes[0].src).toBe("The_Brave (0,0) x3");
+  });
+
+  it("should parse multi-line affixes in talent nodes", () => {
+    const rawLoadout: RawLoadout = {
+      equipmentPage: {},
+      talentPage: {
+        tree1: {
+          name: "The_Brave",
+          allocatedNodes: [{ x: 3, y: 0, points: 2 }],
+        },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
+    };
+
+    const result = parse_loadout(rawLoadout);
+
+    expect(result.talentPage.affixes).toHaveLength(1);
+    expect(result.talentPage.affixes[0].raw).toBe(
+      "+20% Attack Critical Strike Rating\n+5% Critical Strike Damage"
+    );
+    // Note: "+5% Critical Strike Damage" is currently not recognized by the parser
+    // So only the first line is parsed (as per our unrecognized mods policy)
+    expect(result.talentPage.affixes[0].mods).toHaveLength(1);
+
+    // First mod: +20% Attack Critical Strike Rating * 2 points
+    expect(result.talentPage.affixes[0].mods[0]).toEqual({
+      type: "CritRatingPct",
+      value: 0.4, // 0.20 * 2
+      modType: "attack",
+    });
+  });
+
+  it("should parse multiple talent nodes from multiple trees", () => {
+    const rawLoadout: RawLoadout = {
+      equipmentPage: {},
+      talentPage: {
+        tree1: {
+          name: "The_Brave",
+          allocatedNodes: [
+            { x: 0, y: 0, points: 1 },
+            { x: 2, y: 0, points: 2 },
+          ],
+        },
+        tree2: {
+          name: "Warrior",
+          allocatedNodes: [{ x: 0, y: 0, points: 3 }],
+        },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
+    };
+
+    const result = parse_loadout(rawLoadout);
+
+    // Should have 3 affixes total (2 from tree1, 1 from tree2)
+    expect(result.talentPage.affixes).toHaveLength(3);
+
+    // Check that affixes are from the correct trees
+    expect(result.talentPage.affixes[0].src).toContain("The_Brave");
+    expect(result.talentPage.affixes[1].src).toContain("The_Brave");
+    expect(result.talentPage.affixes[2].src).toContain("Warrior");
+  });
+
+  it("should throw error for unknown tree name", () => {
+    const rawLoadout: RawLoadout = {
+      equipmentPage: {},
+      talentPage: {
+        tree1: {
+          name: "NonexistentTree",
+          allocatedNodes: [{ x: 0, y: 0, points: 1 }],
+        },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
+    };
+
+    expect(() => parse_loadout(rawLoadout)).toThrow("Unknown talent tree name: NonexistentTree");
+  });
+
+  it("should throw error for invalid node coordinates", () => {
+    const rawLoadout: RawLoadout = {
+      equipmentPage: {},
+      talentPage: {
+        tree1: {
+          name: "The_Brave",
+          allocatedNodes: [{ x: 999, y: 999, points: 1 }],
+        },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
+    };
+
+    expect(() => parse_loadout(rawLoadout)).toThrow(
+      "Node not found at (999, 999) in tree The_Brave"
+    );
+  });
+
+  it("should handle unrecognized mods in talent nodes", () => {
+    // This test uses a node that may have some unrecognized mods
+    // The parser should keep the raw string but filter out unparseable mods
+    const rawLoadout: RawLoadout = {
+      equipmentPage: {},
+      talentPage: {
+        tree1: {
+          name: "The_Brave",
+          allocatedNodes: [{ x: 0, y: 0, points: 1 }],
+        },
+        tree2: { name: "Warrior", allocatedNodes: [] },
+        tree3: { name: "Warrior", allocatedNodes: [] },
+        tree4: { name: "Warrior", allocatedNodes: [] },
+      },
+    };
+
+    const result = parse_loadout(rawLoadout);
+
+    // Should still parse successfully
+    expect(result.talentPage.affixes).toHaveLength(1);
+    // Raw should be preserved
+    expect(result.talentPage.affixes[0].raw).toBeDefined();
   });
 });

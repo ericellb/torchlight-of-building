@@ -233,20 +233,6 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod.Mod[]): GearDmg => {
   phys.max += basePhysDmg.value;
   let physBonusPct = 0;
 
-  let gearEleMinusPhysDmg = findAffix(mainhandMods, "GearPlusEleMinusPhysDmg");
-  if (gearEleMinusPhysDmg !== undefined) {
-    physBonusPct -= 1;
-
-    let min = gearEleMinusPhysDmg.value.min;
-    let max = gearEleMinusPhysDmg.value.max;
-    cold.min += min;
-    cold.max += max;
-    lightning.min += min;
-    lightning.max += max;
-    fire.min += min;
-    fire.max += max;
-  }
-
   let gearPhysDmgPct = findAffix(mainhandMods, "GearPhysDmgPct");
   if (gearPhysDmgPct !== undefined) {
     physBonusPct += gearPhysDmgPct.value;
@@ -268,6 +254,11 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod.Mod[]): GearDmg => {
       })
       .with("erosion", () => {
         erosion = addDR(erosion, a.value);
+      })
+      .with("elemental", () => {
+        cold = addDR(cold, a.value);
+        lightning = addDR(lightning, a.value);
+        fire = addDR(fire, a.value);
       })
       .exhaustive();
   });

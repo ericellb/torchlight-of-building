@@ -131,17 +131,12 @@ export type Mod =
   | {
       type: "FlatGearDmg";
       value: DmgRange;
-      modType: "physical" | "cold" | "lightning" | "fire" | "erosion";
+      modType: "physical" | "cold" | "lightning" | "fire" | "erosion" | "elemental";
       src?: string;
     }
   | {
       type: "GearPhysDmgPct";
       value: number;
-      src?: string;
-    }
-  | {
-      type: "GearPlusEleMinusPhysDmg";
-      value: DmgRange;
       src?: string;
     }
   | {

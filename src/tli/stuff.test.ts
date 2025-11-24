@@ -251,7 +251,12 @@ test("calculate offense elemental damage", () => {
           { mods: [{ type: "GearBasePhysFlatDmg", value: 100 }] },
           {
             mods: [
-              { type: "GearPlusEleMinusPhysDmg", value: { min: 50, max: 50 } },
+              {
+                type: "FlatGearDmg",
+                modType: "elemental",
+                value: { min: 50, max: 50 },
+              },
+              { type: "GearPhysDmgPct", value: -1 },
             ],
           },
         ],

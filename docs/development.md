@@ -24,7 +24,7 @@ pnpm lint
 pnpm test
 
 # Run a single test file
-pnpm test src/tli/stuff.test.ts
+pnpm test src/tli/offense.test.ts
 ```
 
 ## Technology Stack
@@ -118,7 +118,7 @@ src/
 │   ├── core.ts           # Core type definitions
 │   ├── mod.ts            # Modifier type definitions
 │   ├── mod_parser.ts     # Parser for affix strings
-│   ├── stuff.ts          # Calculation engine
+│   ├── offense.ts        # Calculation engine
 │   ├── talent_tree_types.ts  # Talent tree name constants
 │   ├── talent_tree.ts    # Talent tree utilities
 │   └── talent_data/      # Generated talent tree data

@@ -1,6 +1,6 @@
 # Calculation Engine Guide
 
-This document covers the damage calculation system in [src/tli/stuff.ts](../src/tli/stuff.ts).
+This document covers the damage calculation system in [src/tli/offense.ts](../src/tli/offense.ts).
 
 ## Overview
 
@@ -260,7 +260,7 @@ export type Mod =
 // ... other types
 ```
 
-2. **Handle in calculations** in [src/tli/stuff.ts](../src/tli/stuff.ts):
+2. **Handle in calculations** in [src/tli/offense.ts](../src/tli/offense.ts):
 
 ```typescript
 const yourNewMods = filterMod(mods, "YourNewMod");
@@ -270,7 +270,7 @@ const totalValue = sumBy(yourNewMods, (m) => m.value);
 
 3. **Add parser** (see [mod-parser.md](mod-parser.md))
 
-4. **Write tests** in [src/tli/stuff.test.ts](../src/tli/stuff.test.ts)
+4. **Write tests** in [src/tli/offense.test.ts](../src/tli/offense.test.ts)
 
 ## Adding New Skills
 
@@ -330,7 +330,7 @@ Find the appropriate mod type (`DmgPct`, `FlatGearDmg`, etc.) and filter/apply i
 
 ### Changing scaling formulas
 
-Update the calculation functions in [src/tli/stuff.ts](../src/tli/stuff.ts). Follow the increased/more pattern.
+Update the calculation functions in [src/tli/offense.ts](../src/tli/offense.ts). Follow the increased/more pattern.
 
 ### Debugging calculations
 

@@ -698,7 +698,7 @@ const convertToLoadout = (raw: RawLoadout): Loadout => {
 
 1. Add to discriminated union in [src/tli/mod.ts](../src/tli/mod.ts)
 2. Add parser in [src/tli/mod_parser.ts](../src/tli/mod_parser.ts)
-3. Handle in calculations in [src/tli/stuff.ts](../src/tli/stuff.ts)
+3. Handle in calculations in [src/tli/offense.ts](../src/tli/offense.ts)
 
 ### Adding a Modifier Category
 

@@ -111,8 +111,98 @@ This script:
 
 - **[src/scripts/scrape_profession_tree.ts](../src/scripts/scrape_profession_tree.ts)** - Scrapes a single profession tree
 - **[src/scripts/save_all_profession_trees.ts](../src/scripts/save_all_profession_trees.ts)** - Scrapes all profession and god/goddess trees
+- **[src/scripts/extract_crafting_data.ts](../src/scripts/extract_crafting_data.ts)** - Extracts crafting affix data from HTML
 
 For detailed information about talent tree data structures, see [data-models.md](data-models.md#talent-tree-data).
+
+## Data Extraction Scripts
+
+The project uses cheerio for HTML parsing and data extraction. All extraction scripts are located in [src/scripts/](../src/scripts/).
+
+### Running Data Extraction Scripts
+
+```bash
+# Extract crafting affix data
+npx tsx src/scripts/extract_crafting_data.ts
+
+# Update talent tree data from tlidb.com
+npx tsx src/scripts/save_all_profession_trees.ts
+```
+
+### Common Patterns for HTML Parsing
+
+When creating new data extraction scripts, follow these patterns:
+
+#### 1. Handle Malformed HTML
+
+HTML fragments (like `<tbody>` outside of `<table>`) need to be fixed before parsing:
+
+```typescript
+// Fix malformed HTML structure
+const fixedHtml = html
+  .replace('<tbody>', '<table><tbody>')
+  .replace('</tbody>', '</tbody></table>');
+
+const $ = cheerio.load(fixedHtml, { xml: false });
+```
+
+#### 2. Process Value Ranges
+
+Convert HTML spans with value ranges to backtick-wrapped strings:
+
+```typescript
+// Before: <span class="val">+(17–24)</span>
+// After: `+(17-24)`
+
+clone.find('span.val').each((_, elem) => {
+  const text = $(elem).text().replace(/–/g, '-'); // en-dash to hyphen
+  $(elem).replaceWith(`\`${text}\``);
+});
+```
+
+#### 3. Remove Tooltips but Keep Content
+
+Strip tooltip spans while preserving their text:
+
+```typescript
+clone.find('span.tooltip').each((_, elem) => {
+  const text = $(elem).text();
+  $(elem).replaceWith(text);
+});
+```
+
+#### 4. Handle Line Breaks vs HTML Formatting
+
+Use marker replacement to distinguish semantic line breaks (`<br>`) from HTML formatting newlines:
+
+```typescript
+// Replace <br> with a unique marker
+let html = clone.html() || '';
+html = html.replace(/<br\s*\/?>/gi, '<<BR>>');
+
+// Normalize all whitespace (including HTML formatting)
+const processed = cheerio.load(html);
+let text = processed.text();
+text = text.replace(/\s+/g, ' ').trim();
+
+// Restore semantic line breaks
+text = text.replace(/<<BR>>/g, '\n');
+```
+
+#### 5. Select Elements with Multiple Classes
+
+For elements with varying class combinations (e.g., `"thing"` and `"thing contrast"`):
+
+```typescript
+// Use attribute contains selector
+const rows = $('tr[class*="thing"]');
+```
+
+### Data Storage
+
+- **JSON files**: Use `data/` directory for extracted JSON data (e.g., `data/crafting_data.json`)
+- **TypeScript files**: Use `src/tli/talent_data/` for generated TypeScript data (talent trees)
+- Create directories with `mkdir -p` before writing files
 
 ## Project Structure
 
@@ -132,10 +222,17 @@ src/
 │       ├── index.ts      # Exports TALENT_TREES mapping
 │       ├── warrior.ts    # Warrior profession tree
 │       └── ...
-├── scripts/              # Utility scripts
+├── scripts/              # Data extraction scripts
 │   ├── scrape_profession_tree.ts
-│   └── save_all_profession_trees.ts
+│   ├── save_all_profession_trees.ts
+│   └── extract_crafting_data.ts
 └── ...
+data/                      # Extracted JSON data
+├── crafting_data.json    # Crafting affix data
+└── ...
+.garbage/                 # Temporary working directory
+├── crafting/             # HTML sources for crafting data
+└── trees/                # HTML sources for talent trees
 ```
 
 ## Common Tasks

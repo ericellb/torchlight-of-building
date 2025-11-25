@@ -29,6 +29,7 @@ This is a Next.js 16 application built with React 19, TypeScript, and Tailwind C
 | Working on parsers ([src/tli/mod_parser.ts](src/tli/mod_parser.ts)) | [docs/mod-parser.md](docs/mod-parser.md)                                                             |
 | Adding new mod types                                                | [docs/mod-parser.md](docs/mod-parser.md), [docs/calculation-engine.md](docs/calculation-engine.md)   |
 | Updating talent trees                                               | [docs/development.md#talent-tree-data-system](docs/development.md#talent-tree-data-system)           |
+| Data extraction and HTML parsing                                    | [docs/development.md#data-extraction-scripts](docs/development.md#data-extraction-scripts)           |
 
 ## Documentation Guidelines
 

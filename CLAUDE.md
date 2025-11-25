@@ -6,107 +6,46 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Next.js 16 application built with React 19, TypeScript, and Tailwind CSS 4. It's a character build planner for "Torchlight Infinite" (TLI), a game with complex character builds involving equipment, talents, and divinity systems.
 
-The application has two main components:
-
+**Main Components:**
 1. **Frontend UI** ([src/app/](src/app/)) - Interactive build planner interface
 2. **Calculation Engine** ([src/tli/](src/tli/)) - Damage calculator that computes DPS and other offensive stats
 
-## Development Commands
+## Documentation
 
-```bash
-# Install dependencies
-pnpm install
-
-# Start development server (http://localhost:3000)
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Start production server
-pnpm start
-
-# Run linter
-pnpm lint
-
-# Run tests
-pnpm test
-
-# Run a single test file
-pnpm test src/tli/stuff.test.ts
-```
-
-## Technology Stack
-
-- **Framework**: Next.js 16 with App Router
-- **React**: Version 19.2 (client components with hooks)
-- **TypeScript**: Strict mode enabled
-- **Styling**: Tailwind CSS 4 (uses @tailwindcss/postcss plugin)
-- **Testing**: Vitest
-- **Utilities**:
-  - `remeda`: Functional programming utilities (like lodash)
-  - `ts-pattern`: Pattern matching for TypeScript
-
-## TypeScript Configuration
-
-- Target: ES2017
-- Strict mode enabled
-- Path alias: `@/*` maps to project root
-- Module resolution: bundler (required for Next.js 16)
-
-## Code Conventions
-
-### General Style
-
-- **Use const arrow functions** instead of function declarations:
-
-  ```typescript
-  // ✓ Good
-  const parseMod = (input: string): Mod | undefined => {
-    // ...
-  };
-
-  // ✗ Avoid
-  function parseMod(input: string): Mod | undefined {
-    // ...
-  }
-  ```
-
-- **Single source of truth for types**: Derive types from const arrays using `as const` and `(typeof ARRAY)[number]`:
-
-  ```typescript
-  // ✓ Good - only update the array to add new types
-  export const DMG_MOD_TYPES = ["global", "fire", "cold", ...] as const;
-  export type DmgModType = (typeof DMG_MOD_TYPES)[number];
-
-  // ✗ Avoid - duplication requiring updates in multiple places
-  export const DMG_MOD_TYPES = ["global", "fire", "cold", ...];
-  export type DmgModType = "global" | "fire" | "cold" | ...;
-  ```
-
-## Detailed Documentation
-
-For specific topics, see:
-
-- **[docs/ui-patterns.md](docs/ui-patterns.md)** - Frontend UI patterns, React conventions, and component architecture
-- **[docs/data-models.md](docs/data-models.md)** - Type definitions, data structures, and the distinction between Raw vs Parsed data
-- **[docs/calculation-engine.md](docs/calculation-engine.md)** - Damage calculation system, formulas, and mod application
-- **[docs/mod-parser.md](docs/mod-parser.md)** - Parser implementation, regex patterns, and adding new mod types
+- **[docs/development.md](docs/development.md)** - Development setup, commands, code conventions, and project structure
+- **[docs/ui-patterns.md](docs/ui-patterns.md)** - Frontend UI patterns and React conventions
+- **[docs/data-models.md](docs/data-models.md)** - Type definitions and data structures
+- **[docs/calculation-engine.md](docs/calculation-engine.md)** - Damage calculation system and formulas
+- **[docs/mod-parser.md](docs/mod-parser.md)** - Parser implementation and adding new mod types
 
 ## Quick Reference
 
-### Working on the UI (src/app/)
+| Task | Documentation |
+|------|---------------|
+| Setting up development | [docs/development.md](docs/development.md) |
+| Working on UI ([src/app/](src/app/)) | [docs/ui-patterns.md](docs/ui-patterns.md), [docs/data-models.md](docs/data-models.md) |
+| Working on calculations ([src/tli/stuff.ts](src/tli/stuff.ts)) | [docs/calculation-engine.md](docs/calculation-engine.md), [docs/data-models.md](docs/data-models.md) |
+| Working on parsers ([src/tli/mod_parser.ts](src/tli/mod_parser.ts)) | [docs/mod-parser.md](docs/mod-parser.md) |
+| Adding new mod types | [docs/mod-parser.md](docs/mod-parser.md), [docs/calculation-engine.md](docs/calculation-engine.md) |
+| Updating talent trees | [docs/development.md#talent-tree-data-system](docs/development.md#talent-tree-data-system) |
 
-→ Read [docs/ui-patterns.md](docs/ui-patterns.md) and [docs/data-models.md](docs/data-models.md)
+## Documentation Guidelines
 
-### Working on calculations (src/tli/stuff.ts)
+**Keep this file minimal.** When updating documentation:
 
-→ Read [docs/calculation-engine.md](docs/calculation-engine.md) and [docs/data-models.md](docs/data-models.md)
+- **This file (CLAUDE.md)** should only contain:
+  - Brief project overview
+  - Links to detailed documentation
+  - Quick reference table
 
-### Working on parsers (src/tli/mod_parser.ts)
+- **Detailed content belongs in [docs/](docs/)**:
+  - Add new sections to appropriate existing doc files
+  - Create new doc files for distinct topics
+  - Update links in this file to point to the detailed docs
 
-→ Read [docs/mod-parser.md](docs/mod-parser.md) and [docs/data-models.md](docs/data-models.md)
-
-### Adding new mod types
-
-→ Read [docs/mod-parser.md](docs/mod-parser.md) and [docs/calculation-engine.md](docs/calculation-engine.md)
+- **Follow the separation of concerns**:
+  - [docs/development.md](docs/development.md) - Setup, commands, conventions, workflows
+  - [docs/data-models.md](docs/data-models.md) - Type definitions and data structures
+  - [docs/ui-patterns.md](docs/ui-patterns.md) - UI/React patterns and conventions
+  - [docs/calculation-engine.md](docs/calculation-engine.md) - Calculation formulas and logic
+  - [docs/mod-parser.md](docs/mod-parser.md) - Parser implementation and patterns

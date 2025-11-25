@@ -1,6 +1,6 @@
 # Data Models & Type Definitions
 
-This document covers all type definitions in [src/tli/core.ts](../src/tli/core.ts) and [src/tli/mod.ts](../src/tli/mod.ts).
+This document covers all type definitions in [src/tli/core.ts](../src/tli/core.ts), [src/tli/mod.ts](../src/tli/mod.ts), and [src/tli/talent_tree_types.ts](../src/tli/talent_tree_types.ts).
 
 ## Two Data Formats
 
@@ -197,9 +197,10 @@ Talent tree and core talents:
 ```typescript
 interface TalentPage {
   affixes: Affix[]; // Talent tree selections
-  coreTalents: Affix[]; // Core talent selections
 }
 ```
+
+**Note:** Talent tree data is stored separately from the loadout. See the [Talent Tree Data](#talent-tree-data) section below.
 
 ### DivinityPage
 
@@ -214,6 +215,136 @@ interface DivinitySlate {
   affixes: Affix[];
 }
 ```
+
+---
+
+## Talent Tree Data
+
+Talent tree data is stored as TypeScript files in [src/tli/talent_data/](../src/tli/talent_data/), providing type safety and bundling with the application.
+
+### TalentTreeData
+
+Structure for a complete talent tree:
+
+```typescript
+interface TalentTreeData {
+  name: TreeName; // e.g., "Warrior", "God_of_War"
+  nodes: TalentNodeData[];
+}
+```
+
+### TalentNodeData
+
+Individual talent node in a tree:
+
+```typescript
+interface TalentNodeData {
+  nodeType: "micro" | "medium" | "legendary";
+  rawAffix: string; // Unparsed affix text
+  position: { x: number; y: number }; // Grid coordinates
+  prerequisite?: { x: number; y: number }; // Required node position
+  maxPoints: number; // Maximum allocatable points
+  iconName: string; // Icon file name
+}
+```
+
+### TreeName
+
+All available talent trees:
+
+```typescript
+type TreeName =
+  | "Warrior" | "Warlord" | "Onslaughter" | "The_Brave"
+  | "Marksman" | "Bladerunner" | "Druid" | "Assassin"
+  | "Magister" | "Arcanist" | "Elementalist" | "Prophet"
+  | "Shadowdancer" | "Ranger" | "Sentinel" | "Shadowmaster"
+  | "Psychic" | "Warlock" | "Lich" | "Machinist"
+  | "Steel_Vanguard" | "Alchemist" | "Artisan" | "Ronin"
+  | "God_of_War" | "God_of_Might" | "God_of_Machines"
+  | "Goddess_of_Hunting" | "Goddess_of_Knowledge" | "Goddess_of_Deception";
+```
+
+**From const arrays:**
+```typescript
+export const PROFESSION_TREES = ["Warrior", "Warlord", ...] as const;
+export const GOD_GODDESS_TREES = ["God_of_War", ...] as const;
+export type TreeName =
+  | (typeof PROFESSION_TREES)[number]
+  | (typeof GOD_GODDESS_TREES)[number];
+```
+
+### Loading Talent Trees
+
+```typescript
+import { loadTalentTree } from "@/src/tli/talent_tree";
+
+// Synchronous load (data is bundled)
+const warriorTree = loadTalentTree("Warrior");
+```
+
+### RawTalentTree
+
+Allocated talent points for a tree:
+
+```typescript
+interface RawTalentTree {
+  name: string; // Tree name
+  allocatedNodes: RawAllocatedTalentNode[];
+}
+
+interface RawAllocatedTalentNode {
+  x: number; // Grid X position
+  y: number; // Grid Y position
+  points: number; // Allocated points
+}
+```
+
+### RawTalentPage
+
+All talent tree allocations in a build:
+
+```typescript
+interface RawTalentPage {
+  tree1: RawTalentTree; // Primary profession tree
+  tree2: RawTalentTree; // Secondary tree
+  tree3: RawTalentTree; // God/goddess tree
+  tree4: RawTalentTree; // Additional tree
+}
+```
+
+### Talent Tree Utilities
+
+Validation and logic helpers in [src/tli/talent_tree.ts](../src/tli/talent_tree.ts):
+
+```typescript
+// Check if a column is unlocked (requires 3 points per column)
+isColumnUnlocked(allocatedNodes: RawAllocatedTalentNode[], columnIndex: number): boolean
+
+// Check if a node's prerequisite is satisfied
+isPrerequisiteSatisfied(
+  prerequisite: { x: number; y: number } | undefined,
+  allocatedNodes: RawAllocatedTalentNode[],
+  treeData: TalentTreeData
+): boolean
+
+// Check if a node can receive more points
+canAllocateNode(
+  node: TalentNodeData,
+  allocatedNodes: RawAllocatedTalentNode[],
+  treeData: TalentTreeData
+): boolean
+
+// Check if points can be removed from a node
+canDeallocateNode(
+  node: TalentNodeData,
+  allocatedNodes: RawAllocatedTalentNode[],
+  treeData: TalentTreeData
+): boolean
+```
+
+**Column Gating:** Each column requires 3 points in previous columns to unlock.
+
+**Prerequisites:** Some nodes require a specific prerequisite node to be fully allocated (max points).
 
 ---
 

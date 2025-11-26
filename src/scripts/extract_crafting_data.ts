@@ -20,7 +20,7 @@ interface CraftingAffix {
  */
 const parseAffixText = (
   td: cheerio.Cheerio<any>,
-  $: cheerio.CheerioAPI,
+  $: cheerio.CheerioAPI
 ): string => {
   // Clone the element to avoid modifying the original
   const clone = td.clone();
@@ -35,7 +35,7 @@ const parseAffixText = (
     if (
       nextSibling &&
       nextSibling.type === "text" &&
-      nextSibling.data?.startsWith(" ")
+      nextSibling.data?.startsWith(" %")
     ) {
       nextSibling.data = nextSibling.data.slice(1);
     }
@@ -49,24 +49,25 @@ const parseAffixText = (
 
   // Get the HTML and replace <br> tags with a special marker
   let html = clone.html() || "";
-  html = html.replace(/<br\s*\/?>/gi, "<<BR>>");
+  html = html.replace(/<br\s*\/?>/gi, "{REPLACEME}");
 
   // Load the processed HTML and extract text
   const processed = cheerio.load(html);
   let text = processed.text();
 
   // First, normalize all whitespace (including newlines from HTML formatting) to single spaces
-  text = text.replace(/\s+/g, " ").trim();
+  text = text.replace(/\n/g, "").trim();
+  text = text.replace(/\s\s+/g, " ").trim();
 
   // Then replace our BR markers with actual newlines
-  text = text.replace(/<<BR>>/g, "\n");
+  text = text.replace(/{REPLACEME} /g, "\n");
 
   // Clean up any lines that are now empty
-  text = text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .join("\n");
+  // text = text
+  //   .split("\n")
+  //   .map((line) => line.trim())
+  //   .filter((line) => line.length > 0)
+  //   .join("\n");
 
   return text;
 };
@@ -121,7 +122,7 @@ const main = async () => {
       process.cwd(),
       ".garbage",
       "crafting",
-      "codex_crafting.html",
+      "codex_crafting.html"
     );
     const html = await readFile(htmlPath, "utf-8");
 
@@ -138,7 +139,7 @@ const main = async () => {
     await writeFile(outputPath, JSON.stringify(affixes, null, 2), "utf-8");
 
     console.log(
-      `✓ Successfully wrote ${affixes.length} affixes to ${outputPath}`,
+      `✓ Successfully wrote ${affixes.length} affixes to ${outputPath}`
     );
   } catch (error) {
     console.error("Error:", error);

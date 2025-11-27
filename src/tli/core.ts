@@ -1,6 +1,5 @@
 import { Mod } from "./mod";
 import { TreeName } from "./talent_tree_types";
-import { Skill } from "./offense";
 import { EquipmentType } from "./gear_data_types";
 
 export interface Affix {
@@ -130,13 +129,29 @@ export interface RawGearPage {
   offHand?: RawGear;
 }
 
-export interface RawSkill {
-  skill: Skill;
+export interface RawSupportSkills {
+  supportSkill1?: string;
+  supportSkill2?: string;
+  supportSkill3?: string;
+  supportSkill4?: string;
+  supportSkill5?: string;
+}
+
+export interface RawSkillWithSupports {
+  skillName?: string;
   enabled: boolean;
+  supportSkills: RawSupportSkills;
 }
 
 export interface RawSkillPage {
-  skills: RawSkill[];
+  activeSkill1: RawSkillWithSupports;
+  activeSkill2: RawSkillWithSupports;
+  activeSkill3: RawSkillWithSupports;
+  activeSkill4: RawSkillWithSupports;
+  passiveSkill1: RawSkillWithSupports;
+  passiveSkill2: RawSkillWithSupports;
+  passiveSkill3: RawSkillWithSupports;
+  passiveSkill4: RawSkillWithSupports;
 }
 
 export interface RawLoadout {

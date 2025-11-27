@@ -1,7 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { encodeBuildCode, decodeBuildCode } from "./build-code";
-import { RawLoadout } from "@/src/tli/core";
+import { RawLoadout, RawSkillPage } from "@/src/tli/core";
 import { createEmptyLoadout } from "./storage";
+
+const createEmptySkillPage = (): RawSkillPage => ({
+  activeSkill1: { enabled: true, supportSkills: {} },
+  activeSkill2: { enabled: true, supportSkills: {} },
+  activeSkill3: { enabled: true, supportSkills: {} },
+  activeSkill4: { enabled: true, supportSkills: {} },
+  passiveSkill1: { enabled: true, supportSkills: {} },
+  passiveSkill2: { enabled: true, supportSkills: {} },
+  passiveSkill3: { enabled: true, supportSkills: {} },
+  passiveSkill4: { enabled: true, supportSkills: {} },
+});
 
 describe("build-code", () => {
   it("should encode and decode an empty loadout", () => {
@@ -28,9 +39,7 @@ describe("build-code", () => {
         },
       },
       talentPage: {},
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -56,9 +65,7 @@ describe("build-code", () => {
           allocatedNodes: [{ x: 2, y: 1, points: 5 }],
         },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -69,15 +76,29 @@ describe("build-code", () => {
   });
 
   it("should encode and decode a loadout with skills", () => {
+    const skillPage = createEmptySkillPage();
+    skillPage.activeSkill1 = {
+      skillName: "Berserking Blade",
+      enabled: true,
+      supportSkills: {
+        supportSkill1: "Added Fire Damage",
+      },
+    };
+    skillPage.activeSkill2 = {
+      skillName: "Blazing Dance",
+      enabled: false,
+      supportSkills: {},
+    };
+    skillPage.passiveSkill1 = {
+      skillName: "Charged Flames",
+      enabled: true,
+      supportSkills: {},
+    };
+
     const loadout: RawLoadout = {
       equipmentPage: {},
       talentPage: {},
-      skillPage: {
-        skills: [
-          { skill: "[Test] Simple Attack", enabled: true },
-          { skill: "Berserking Blade", enabled: false },
-        ],
-      },
+      skillPage,
       itemsList: [],
     };
 
@@ -88,6 +109,13 @@ describe("build-code", () => {
   });
 
   it("should encode and decode a full loadout", () => {
+    const skillPage = createEmptySkillPage();
+    skillPage.activeSkill1 = {
+      skillName: "Berserking Blade",
+      enabled: true,
+      supportSkills: {},
+    };
+
     const loadout: RawLoadout = {
       equipmentPage: {
         helmet: {
@@ -111,9 +139,7 @@ describe("build-code", () => {
           ],
         },
       },
-      skillPage: {
-        skills: [{ skill: "[Test] Simple Attack", enabled: true }],
-      },
+      skillPage,
       itemsList: [
         {
           id: "inv-1",
@@ -153,7 +179,7 @@ describe("build-code", () => {
     const loadout = createEmptyLoadout();
     const code = encodeBuildCode(loadout);
 
-    // Empty loadout should be fairly small
-    expect(code.length).toBeLessThan(200);
+    // Empty loadout should be fairly small (increased for 8 skill slots with support)
+    expect(code.length).toBeLessThan(700);
   });
 });

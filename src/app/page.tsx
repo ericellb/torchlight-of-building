@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { RawLoadout, RawGear, RawAllocatedTalentNode } from "@/src/tli/core";
-import { Skill, AVAILABLE_SKILLS } from "@/src/tli/offense";
+import {
+  RawLoadout,
+  RawGear,
+  RawAllocatedTalentNode,
+  RawSkillPage,
+  RawSupportSkills,
+} from "@/src/tli/core";
+import { ActiveSkills, PassiveSkills } from "@/src/data/skill";
 import {
   TalentTreeData,
   GOD_GODDESS_TREES,
@@ -38,7 +44,7 @@ import { AffixSlotComponent } from "./components/equipment/AffixSlotComponent";
 import { EquipmentSlotDropdown } from "./components/equipment/EquipmentSlotDropdown";
 import { InventoryItem } from "./components/equipment/InventoryItem";
 import { TalentGrid } from "./components/talents/TalentGrid";
-import { SkillEntry } from "./components/skills/SkillEntry";
+import { SkillSlot } from "./components/skills/SkillSlot";
 import { ExportModal } from "./components/ExportModal";
 import { ImportModal } from "./components/ImportModal";
 
@@ -391,34 +397,84 @@ export default function Home() {
   };
 
   // Skill page handlers
-  const handleAddSkill = (skill: Skill): void => {
-    setLoadout((prev) => {
-      const currentSkills = prev.skillPage.skills;
-      if (currentSkills.some((s) => s.skill === skill)) return prev;
-      if (currentSkills.length >= 4) return prev;
-      return {
-        ...prev,
-        skillPage: { skills: [...currentSkills, { skill, enabled: true }] },
-      };
-    });
+  type ActiveSkillSlot = "activeSkill1" | "activeSkill2" | "activeSkill3" | "activeSkill4";
+  type PassiveSkillSlot = "passiveSkill1" | "passiveSkill2" | "passiveSkill3" | "passiveSkill4";
+  type SkillSlotKey = ActiveSkillSlot | PassiveSkillSlot;
+  type SupportSkillKey = keyof RawSupportSkills;
+
+  const ACTIVE_SKILL_SLOTS: ActiveSkillSlot[] = [
+    "activeSkill1",
+    "activeSkill2",
+    "activeSkill3",
+    "activeSkill4",
+  ];
+
+  const PASSIVE_SKILL_SLOTS: PassiveSkillSlot[] = [
+    "passiveSkill1",
+    "passiveSkill2",
+    "passiveSkill3",
+    "passiveSkill4",
+  ];
+
+  const getSelectedActiveSkillNames = (): string[] => {
+    return ACTIVE_SKILL_SLOTS.map((slot) => loadout.skillPage[slot].skillName).filter(
+      (name): name is string => name !== undefined,
+    );
   };
 
-  const handleRemoveSkill = (index: number): void => {
+  const getSelectedPassiveSkillNames = (): string[] => {
+    return PASSIVE_SKILL_SLOTS.map((slot) => loadout.skillPage[slot].skillName).filter(
+      (name): name is string => name !== undefined,
+    );
+  };
+
+  const handleSkillChange = (
+    slotKey: SkillSlotKey,
+    skillName: string | undefined,
+  ): void => {
     setLoadout((prev) => ({
       ...prev,
       skillPage: {
-        skills: prev.skillPage.skills.filter((_, i) => i !== index),
+        ...prev.skillPage,
+        [slotKey]: {
+          ...prev.skillPage[slotKey],
+          skillName,
+          // Reset support skills when main skill changes
+          supportSkills: {},
+        },
       },
     }));
   };
 
-  const handleToggleSkill = (index: number): void => {
+  const handleToggleSkill = (slotKey: SkillSlotKey): void => {
     setLoadout((prev) => ({
       ...prev,
       skillPage: {
-        skills: prev.skillPage.skills.map((s, i) =>
-          i === index ? { ...s, enabled: !s.enabled } : s,
-        ),
+        ...prev.skillPage,
+        [slotKey]: {
+          ...prev.skillPage[slotKey],
+          enabled: !prev.skillPage[slotKey].enabled,
+        },
+      },
+    }));
+  };
+
+  const handleUpdateSkillSupport = (
+    slotKey: SkillSlotKey,
+    supportKey: SupportSkillKey,
+    supportName: string | undefined,
+  ): void => {
+    setLoadout((prev) => ({
+      ...prev,
+      skillPage: {
+        ...prev.skillPage,
+        [slotKey]: {
+          ...prev.skillPage[slotKey],
+          supportSkills: {
+            ...prev.skillPage[slotKey].supportSkills,
+            [supportKey]: supportName,
+          },
+        },
       },
     }));
   };
@@ -749,68 +805,57 @@ export default function Home() {
 
         {/* Skills Page */}
         {activePage === "skills" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">
-              Skill Selection
-            </h2>
+          <div className="space-y-8">
+            {/* Active Skills Section */}
+            <div>
+              <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">
+                Active Skills
+              </h2>
 
-            {/* Skill List */}
-            <div className="space-y-3">
-              {loadout.skillPage.skills.length === 0 ? (
-                <p className="text-zinc-500 dark:text-zinc-400">
-                  No skills selected. Add a skill below.
-                </p>
-              ) : (
-                loadout.skillPage.skills.map((skillEntry, index) => (
-                  <SkillEntry
-                    key={index}
-                    skill={skillEntry.skill}
-                    enabled={skillEntry.enabled}
-                    onToggle={() => handleToggleSkill(index)}
-                    onRemove={() => handleRemoveSkill(index)}
+              <div className="space-y-3">
+                {ACTIVE_SKILL_SLOTS.map((slotKey, index) => (
+                  <SkillSlot
+                    key={slotKey}
+                    slotLabel={`Active ${index + 1}`}
+                    skill={loadout.skillPage[slotKey]}
+                    availableSkills={ActiveSkills}
+                    excludedSkillNames={getSelectedActiveSkillNames()}
+                    onSkillChange={(skillName) =>
+                      handleSkillChange(slotKey, skillName)
+                    }
+                    onToggle={() => handleToggleSkill(slotKey)}
+                    onUpdateSupport={(supportKey, supportName) =>
+                      handleUpdateSkillSupport(slotKey, supportKey, supportName)
+                    }
                   />
-                ))
-              )}
+                ))}
+              </div>
             </div>
 
-            {/* Add Skill Section */}
-            <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg shadow">
-              <h3 className="text-lg font-semibold mb-3 text-zinc-800 dark:text-zinc-200">
-                Add Skill
-              </h3>
+            {/* Passive Skills Section */}
+            <div>
+              <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">
+                Passive Skills
+              </h2>
 
-              {loadout.skillPage.skills.length >= 4 ? (
-                <p className="text-yellow-600 dark:text-yellow-500">
-                  Maximum of 4 skills reached
-                </p>
-              ) : (
-                <div className="flex gap-2">
-                  <select
-                    className="flex-1 bg-white dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-lg px-3 py-2 text-zinc-900 dark:text-zinc-100"
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        handleAddSkill(e.target.value as Skill);
-                        e.target.value = "";
-                      }
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Select a skill...
-                    </option>
-                    {AVAILABLE_SKILLS.filter(
-                      (skill) =>
-                        !loadout.skillPage.skills.some(
-                          (s) => s.skill === skill,
-                        ),
-                    ).map((skill) => (
-                      <option key={skill} value={skill}>
-                        {skill}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div className="space-y-3">
+                {PASSIVE_SKILL_SLOTS.map((slotKey, index) => (
+                  <SkillSlot
+                    key={slotKey}
+                    slotLabel={`Passive ${index + 1}`}
+                    skill={loadout.skillPage[slotKey]}
+                    availableSkills={PassiveSkills}
+                    excludedSkillNames={getSelectedPassiveSkillNames()}
+                    onSkillChange={(skillName) =>
+                      handleSkillChange(slotKey, skillName)
+                    }
+                    onToggle={() => handleToggleSkill(slotKey)}
+                    onUpdateSupport={(supportKey, supportName) =>
+                      handleUpdateSkillSupport(slotKey, supportKey, supportName)
+                    }
+                  />
+                ))}
+              </div>
             </div>
           </div>
         )}

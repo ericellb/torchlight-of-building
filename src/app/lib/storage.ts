@@ -1,5 +1,10 @@
-import { RawLoadout } from "@/src/tli/core";
+import { RawLoadout, RawSkillWithSupports } from "@/src/tli/core";
 import { DEBUG_MODE_STORAGE_KEY } from "./constants";
+
+const createEmptySkillSlot = (): RawSkillWithSupports => ({
+  enabled: true,
+  supportSkills: {},
+});
 
 export const generateItemId = (): string => crypto.randomUUID();
 
@@ -27,7 +32,14 @@ export const createEmptyLoadout = (): RawLoadout => ({
   equipmentPage: {},
   talentPage: {},
   skillPage: {
-    skills: [],
+    activeSkill1: createEmptySkillSlot(),
+    activeSkill2: createEmptySkillSlot(),
+    activeSkill3: createEmptySkillSlot(),
+    activeSkill4: createEmptySkillSlot(),
+    passiveSkill1: createEmptySkillSlot(),
+    passiveSkill2: createEmptySkillSlot(),
+    passiveSkill3: createEmptySkillSlot(),
+    passiveSkill4: createEmptySkillSlot(),
   },
   itemsList: [],
 });

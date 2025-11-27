@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { parse_loadout } from "./loadout_parser";
-import { RawLoadout } from "./core";
+import { RawLoadout, RawSkillPage } from "./core";
+
+const createEmptySkillPage = (): RawSkillPage => ({
+  activeSkill1: { enabled: true, supportSkills: {} },
+  activeSkill2: { enabled: true, supportSkills: {} },
+  activeSkill3: { enabled: true, supportSkills: {} },
+  activeSkill4: { enabled: true, supportSkills: {} },
+  passiveSkill1: { enabled: true, supportSkills: {} },
+  passiveSkill2: { enabled: true, supportSkills: {} },
+  passiveSkill3: { enabled: true, supportSkills: {} },
+  passiveSkill4: { enabled: true, supportSkills: {} },
+});
 
 describe("parse_loadout", () => {
   it("should parse a simple loadout with single-line affixes", () => {
@@ -18,9 +29,7 @@ describe("parse_loadout", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -70,9 +79,7 @@ describe("parse_loadout", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -121,9 +128,7 @@ describe("parse_loadout", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -166,9 +171,7 @@ describe("parse_loadout", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -203,9 +206,7 @@ describe("parse_loadout", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -232,9 +233,7 @@ describe("parse_loadout", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -260,9 +259,7 @@ describe("parse_loadout", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -289,9 +286,7 @@ describe("talent tree parsing", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -321,9 +316,7 @@ describe("talent tree parsing", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -351,9 +344,7 @@ describe("talent tree parsing", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -393,9 +384,7 @@ describe("talent tree parsing", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -422,9 +411,7 @@ describe("talent tree parsing", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -445,9 +432,7 @@ describe("talent tree parsing", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 
@@ -470,9 +455,7 @@ describe("talent tree parsing", () => {
         tree3: { name: "Warrior", allocatedNodes: [] },
         tree4: { name: "Warrior", allocatedNodes: [] },
       },
-      skillPage: {
-        skills: [],
-      },
+      skillPage: createEmptySkillPage(),
       itemsList: [],
     };
 

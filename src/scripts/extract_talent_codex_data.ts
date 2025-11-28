@@ -71,7 +71,7 @@ const main = async () => {
     console.log(`Extracted ${items.length} talents`);
 
     console.log("Creating data directory...");
-    const dataDir = join(process.cwd(), "src", "data");
+    const dataDir = join(process.cwd(), "data");
     await mkdir(dataDir, { recursive: true });
 
     console.log("Writing JSON file...");

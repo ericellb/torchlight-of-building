@@ -47,7 +47,7 @@ const extractSkillData = (html: string): Skill[] => {
 const main = async () => {
   try {
     console.log("Reading HTML file...");
-    const htmlPath = join(process.cwd(), ".garbage", "codex_skill.html");
+    const htmlPath = join(process.cwd(), ".garbage", "codex.html");
     const html = await readFile(htmlPath, "utf-8");
 
     console.log("Extracting skill data...");

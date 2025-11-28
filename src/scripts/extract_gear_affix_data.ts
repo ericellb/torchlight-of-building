@@ -69,17 +69,11 @@ const parseAffixText = (
  * Extracts all crafting affix data from the HTML file
  */
 const extractCraftingData = (html: string): CraftingAffix[] => {
-  // The HTML has <tbody> outside of <table>, which cheerio's HTML parser strips.
-  // Fix by wrapping tbody in a table tag before parsing
-  const fixedHtml = html
-    .replace("<tbody>", "<table><tbody>")
-    .replace("</tbody>", "</tbody></table>");
-
-  const $ = cheerio.load(fixedHtml, { xml: false });
+  const $ = cheerio.load(html);
   const affixes: CraftingAffix[] = [];
 
-  // Select all <tr> elements with class "thing" or "thing contrast"
-  const rows = $('tr[class*="thing"]');
+  // Select all <tr> elements from the gear table with class "thing"
+  const rows = $('#gear tbody tr[class*="thing"]');
   console.log(`Found ${rows.length} rows`);
 
   rows.each((_, row) => {
@@ -111,12 +105,7 @@ const extractCraftingData = (html: string): CraftingAffix[] => {
 const main = async () => {
   try {
     console.log("Reading HTML file...");
-    const htmlPath = join(
-      process.cwd(),
-      ".garbage",
-      "crafting",
-      "codex_crafting.html",
-    );
+    const htmlPath = join(process.cwd(), ".garbage", "codex.html");
     const html = await readFile(htmlPath, "utf-8");
 
     console.log("Extracting crafting data...");

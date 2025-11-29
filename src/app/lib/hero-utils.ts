@@ -79,7 +79,7 @@ export const getBaseStatsForMemoryType = (
 ): string[] => {
   return HeroMemories.filter(
     (m) => m.item === memoryType && m.type === "Base Stats",
-  ).map((m) => m.effect);
+  ).map((m) => m.affix);
 };
 
 /**
@@ -90,7 +90,7 @@ export const getFixedAffixesForMemoryType = (
 ): string[] => {
   return HeroMemories.filter(
     (m) => m.item === memoryType && m.type === "Fixed Affix",
-  ).map((m) => m.effect);
+  ).map((m) => m.affix);
 };
 
 /**
@@ -101,7 +101,7 @@ export const getRandomAffixesForMemoryType = (
 ): string[] => {
   return HeroMemories.filter(
     (m) => m.item === memoryType && m.type === "Random Affix",
-  ).map((m) => m.effect);
+  ).map((m) => m.affix);
 };
 
 /**

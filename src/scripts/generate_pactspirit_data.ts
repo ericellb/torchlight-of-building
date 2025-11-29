@@ -2,32 +2,10 @@ import * as cheerio from "cheerio";
 import { readFile, writeFile, readdir, mkdir } from "fs/promises";
 import { join } from "path";
 import { execSync } from "child_process";
-
-export interface RawPactspiritRingDetails {
-  name: string;
-  affix: string;
-}
-
-interface RawPactspirit {
-  type: string;
-  rarity: string;
-  name: string;
-  innerRing1: RawPactspiritRingDetails;
-  innerRing2: RawPactspiritRingDetails;
-  innerRing3: RawPactspiritRingDetails;
-  innerRing4: RawPactspiritRingDetails;
-  innerRing5: RawPactspiritRingDetails;
-  innerRing6: RawPactspiritRingDetails;
-  midRing1: RawPactspiritRingDetails;
-  midRing2: RawPactspiritRingDetails;
-  midRing3: RawPactspiritRingDetails;
-  effect1: string;
-  effect2: string;
-  effect3: string;
-  effect4: string;
-  effect5: string;
-  effect6: string;
-}
+import type {
+  Pactspirit,
+  PactspiritRingDetails,
+} from "../data/pactspirit/types";
 
 const RARITIES = ["Magic", "Rare", "Legendary"] as const;
 
@@ -89,7 +67,7 @@ const cleanAffixText = (html: string): string => {
   return text.trim();
 };
 
-const emptyRingDetails = (): RawPactspiritRingDetails => ({
+const emptyRingDetails = (): PactspiritRingDetails => ({
   name: "",
   affix: "",
 });
@@ -97,7 +75,7 @@ const emptyRingDetails = (): RawPactspiritRingDetails => ({
 const extractPactspirit = (
   $: cheerio.CheerioAPI,
   filename: string,
-): RawPactspirit => {
+): Pactspirit => {
   // Name from filename: Red_Umbrella.html -> "Red Umbrella"
   const name = filename.replace(/\.html$/, "").replace(/_/g, " ");
 
@@ -116,8 +94,8 @@ const extractPactspirit = (
   });
 
   // Ring effects from flex-grow-1 ms-2 divs
-  const innerRings: RawPactspiritRingDetails[] = [];
-  const midRings: RawPactspiritRingDetails[] = [];
+  const innerRings: PactspiritRingDetails[] = [];
+  const midRings: PactspiritRingDetails[] = [];
 
   $("div.flex-grow-1.ms-2").each((_, ringDiv) => {
     const divs = $(ringDiv).children("div");
@@ -170,47 +148,12 @@ const extractPactspirit = (
   };
 };
 
-const generateTypesFile = (): string => {
-  return `export interface PactspiritRingDetails {
-  name: string
-  affix: string
-}
-
-export interface Pactspirit {
-  type: string;
-  rarity: string;
-  name: string;
-  innerRing1: PactspiritRingDetails;
-  innerRing2: PactspiritRingDetails;
-  innerRing3: PactspiritRingDetails;
-  innerRing4: PactspiritRingDetails;
-  innerRing5: PactspiritRingDetails;
-  innerRing6: PactspiritRingDetails;
-  midRing1: PactspiritRingDetails;
-  midRing2: PactspiritRingDetails;
-  midRing3: PactspiritRingDetails;
-  effect1: string;
-  effect2: string;
-  effect3: string;
-  effect4: string;
-  effect5: string;
-  effect6: string;
-}
-`;
-};
-
-const generateDataFile = (items: RawPactspirit[]): string => {
+const generateDataFile = (items: Pactspirit[]): string => {
   return `import type { Pactspirit } from "./types";
 
 export const Pactspirits = ${JSON.stringify(items, null, 2)} as const satisfies readonly Pactspirit[];
 
 export type PactspiritEntry = (typeof Pactspirits)[number];
-`;
-};
-
-const generateIndexFile = (): string => {
-  return `export * from "./types";
-export * from "./pactspirits";
 `;
 };
 
@@ -223,7 +166,7 @@ const main = async (): Promise<void> => {
   const htmlFiles = files.filter((f) => f.endsWith(".html"));
   console.log(`Found ${htmlFiles.length} HTML files`);
 
-  const pactspirits: RawPactspirit[] = [];
+  const pactspirits: Pactspirit[] = [];
 
   for (const filename of htmlFiles) {
     const filepath = join(inputDir, filename);
@@ -241,17 +184,9 @@ const main = async (): Promise<void> => {
 
   await mkdir(outDir, { recursive: true });
 
-  const typesPath = join(outDir, "types.ts");
-  await writeFile(typesPath, generateTypesFile(), "utf-8");
-  console.log(`Generated types.ts`);
-
   const dataPath = join(outDir, "pactspirits.ts");
   await writeFile(dataPath, generateDataFile(pactspirits), "utf-8");
   console.log(`Generated pactspirits.ts`);
-
-  const indexPath = join(outDir, "index.ts");
-  await writeFile(indexPath, generateIndexFile(), "utf-8");
-  console.log(`Generated index.ts`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });

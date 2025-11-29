@@ -2,14 +2,7 @@ import * as cheerio from "cheerio";
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { execSync } from "child_process";
-
-interface TalentCodex {
-  god: string;
-  tree: string;
-  type: string;
-  name: string;
-  effect: string;
-}
+import type { TalentCodex } from "../data/talent_codex/types";
 
 const cleanEffectText = (html: string): string => {
   // Replace <br> tags with placeholder to preserve intentional line breaks
@@ -69,29 +62,12 @@ const extractTalentCodexData = (html: string): TalentCodex[] => {
   return items;
 };
 
-const generateTypesFile = (): string => {
-  return `export interface TalentCodex {
-  god: string;
-  tree: string;
-  type: string;
-  name: string;
-  effect: string;
-}
-`;
-};
-
 const generateDataFile = (items: TalentCodex[]): string => {
   return `import type { TalentCodex } from "./types";
 
 export const TalentCodexEntries = ${JSON.stringify(items, null, 2)} as const satisfies readonly TalentCodex[];
 
 export type TalentCodexEntry = (typeof TalentCodexEntries)[number];
-`;
-};
-
-const generateIndexFile = (): string => {
-  return `export * from "./types";
-export * from "./talent_codex_entries";
 `;
 };
 
@@ -107,17 +83,9 @@ const main = async (): Promise<void> => {
   const outDir = join(process.cwd(), "src", "data", "talent_codex");
   await mkdir(outDir, { recursive: true });
 
-  const typesPath = join(outDir, "types.ts");
-  await writeFile(typesPath, generateTypesFile(), "utf-8");
-  console.log(`Generated types.ts`);
-
   const dataPath = join(outDir, "talent_codex_entries.ts");
   await writeFile(dataPath, generateDataFile(items), "utf-8");
   console.log(`Generated talent_codex_entries.ts (${items.length} items)`);
-
-  const indexPath = join(outDir, "index.ts");
-  await writeFile(indexPath, generateIndexFile(), "utf-8");
-  console.log(`Generated index.ts`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });

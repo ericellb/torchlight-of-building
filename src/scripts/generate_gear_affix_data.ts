@@ -128,7 +128,7 @@ const generateEquipmentAffixFile = (
   const constName = fileKey.toUpperCase() + "_AFFIXES";
   const typeName = toPascalCase(fileKey) + "Affix";
 
-  return `import { BaseGearAffix } from "./types";
+  return `import { BaseGearAffix } from "../../tli/gear_data_types";
 
 export const ${constName} = ${JSON.stringify(affixes, null, 2)} as const satisfies readonly BaseGearAffix[];
 
@@ -156,39 +156,6 @@ ${arraySpread}
 `;
 };
 
-const generateTypesFile = (
-  equipmentSlots: string[],
-  equipmentTypes: string[],
-  affixTypes: string[],
-  craftingPools: string[],
-): string => {
-  return `export const EQUIPMENT_SLOTS = ${JSON.stringify(equipmentSlots.sort(), null, 2)} as const;
-
-export type EquipmentSlot = (typeof EQUIPMENT_SLOTS)[number];
-
-export const EQUIPMENT_TYPES = ${JSON.stringify(equipmentTypes.sort(), null, 2)} as const;
-
-export type EquipmentType = (typeof EQUIPMENT_TYPES)[number];
-
-export const AFFIX_TYPES = ${JSON.stringify(affixTypes, null, 2)} as const;
-
-export type AffixType = (typeof AFFIX_TYPES)[number];
-
-export const CRAFTING_POOLS = ${JSON.stringify(craftingPools.sort(), null, 2)} as const;
-
-export type CraftingPool = (typeof CRAFTING_POOLS)[number];
-
-export interface BaseGearAffix {
-  equipmentSlot: EquipmentSlot;
-  equipmentType: EquipmentType;
-  affixType: AffixType;
-  craftingPool: CraftingPool;
-  tier: string;
-  craftableAffix: string;
-}
-`;
-};
-
 const main = async (): Promise<void> => {
   console.log("Reading HTML file...");
   const htmlPath = join(process.cwd(), ".garbage", "codex.html");
@@ -200,18 +167,9 @@ const main = async (): Promise<void> => {
 
   // Group by combination of equipmentType + affixType
   const grouped = new Map<string, BaseGearAffix[]>();
-  const equipmentSlotsSet = new Set<string>();
-  const equipmentTypesSet = new Set<string>();
-  const affixTypesSet = new Set<string>();
-  const craftingPoolsSet = new Set<string>();
 
   for (const raw of rawData) {
     const fileKey = normalizeFileKey(raw.equipmentType, raw.affixType);
-
-    equipmentSlotsSet.add(raw.equipmentSlot);
-    equipmentTypesSet.add(raw.equipmentType);
-    affixTypesSet.add(raw.affixType);
-    craftingPoolsSet.add(raw.craftingPool);
 
     const affixEntry: BaseGearAffix = {
       equipmentSlot: raw.equipmentSlot,
@@ -231,7 +189,7 @@ const main = async (): Promise<void> => {
   console.log(`Grouped into ${grouped.size} files`);
 
   // Create output directory
-  const outDir = join(process.cwd(), "src", "tli", "gear_affix_data");
+  const outDir = join(process.cwd(), "src", "data", "gear_affix");
   await mkdir(outDir, { recursive: true });
 
   // Generate individual affix files
@@ -246,17 +204,6 @@ const main = async (): Promise<void> => {
     await writeFile(filePath, content, "utf-8");
     console.log(`Generated ${fileName} (${affixes.length} affixes)`);
   }
-
-  // Generate types.ts
-  const typesPath = join(outDir, "types.ts");
-  const typesContent = generateTypesFile(
-    Array.from(equipmentSlotsSet),
-    Array.from(equipmentTypesSet),
-    Array.from(affixTypesSet),
-    Array.from(craftingPoolsSet),
-  );
-  await writeFile(typesPath, typesContent, "utf-8");
-  console.log(`Generated types.ts`);
 
   // Generate all_affixes.ts
   const allAffixesPath = join(outDir, "all_affixes.ts");

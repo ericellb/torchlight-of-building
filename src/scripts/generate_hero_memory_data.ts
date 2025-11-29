@@ -2,12 +2,7 @@ import * as cheerio from "cheerio";
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { execSync } from "child_process";
-
-interface HeroMemory {
-  type: string;
-  item: string;
-  effect: string;
-}
+import type { HeroMemory } from "../data/hero_memory/types";
 
 const cleanEffectText = (html: string): string => {
   // Replace <br> tags with placeholder to preserve intentional line breaks
@@ -66,27 +61,12 @@ const extractHeroMemoryData = (html: string): HeroMemory[] => {
   return items;
 };
 
-const generateTypesFile = (): string => {
-  return `export interface HeroMemory {
-  type: string;
-  item: string;
-  effect: string;
-}
-`;
-};
-
 const generateDataFile = (items: HeroMemory[]): string => {
   return `import type { HeroMemory } from "./types";
 
 export const HeroMemories = ${JSON.stringify(items, null, 2)} as const satisfies readonly HeroMemory[];
 
 export type HeroMemoryEntry = (typeof HeroMemories)[number];
-`;
-};
-
-const generateIndexFile = (): string => {
-  return `export * from "./types";
-export * from "./hero_memories";
 `;
 };
 
@@ -102,17 +82,9 @@ const main = async (): Promise<void> => {
   const outDir = join(process.cwd(), "src", "data", "hero_memory");
   await mkdir(outDir, { recursive: true });
 
-  const typesPath = join(outDir, "types.ts");
-  await writeFile(typesPath, generateTypesFile(), "utf-8");
-  console.log(`Generated types.ts`);
-
   const dataPath = join(outDir, "hero_memories.ts");
   await writeFile(dataPath, generateDataFile(items), "utf-8");
   console.log(`Generated hero_memories.ts (${items.length} items)`);
-
-  const indexPath = join(outDir, "index.ts");
-  await writeFile(indexPath, generateIndexFile(), "utf-8");
-  console.log(`Generated index.ts`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });

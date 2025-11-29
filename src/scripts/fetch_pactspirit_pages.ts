@@ -22,7 +22,7 @@ const extractNonDropPactspiritLinks = (html: string): string[] => {
   // Each pactspirit is in a <div class="col"> block
   // We need to find each block and check if it contains "Increases Drop Quantity"
   const colBlockRegex =
-    /<div class="col"><div class="d-flex[^>]*>.*?<\/div><\/div><\/div>/gs;
+    /<div class="col"><div class="d-flex[^>]*>[\s\S]*?<\/div><\/div><\/div>/g;
   const hrefRegex = /href="([^"]+)"/;
   const links: string[] = [];
 

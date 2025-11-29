@@ -657,7 +657,7 @@ export default function Home() {
     destiny: {
       destinyName: string;
       destinyType: string;
-      resolvedPercentage: number;
+      resolvedAffix: string;
     },
   ) => {
     const slotKey = `slot${slotIndex}` as keyof RawPactspiritPage;

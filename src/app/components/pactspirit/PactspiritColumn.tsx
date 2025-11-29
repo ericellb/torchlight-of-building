@@ -19,7 +19,7 @@ import { DestinySelectionModal } from "./DestinySelectionModal";
 interface InstalledDestinyResult {
   destinyName: string;
   destinyType: string;
-  resolvedPercentage: number;
+  resolvedAffix: string;
 }
 
 interface PactspiritColumnProps {

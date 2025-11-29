@@ -7,7 +7,7 @@ import { PactspiritColumn } from "./PactspiritColumn";
 interface InstalledDestinyResult {
   destinyName: string;
   destinyType: string;
-  resolvedPercentage: number;
+  resolvedAffix: string;
 }
 
 interface PactspiritTabProps {

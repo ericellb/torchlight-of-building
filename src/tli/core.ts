@@ -197,7 +197,7 @@ export interface RawRingSlotState {
   installedDestiny?: {
     destinyName: string;
     destinyType: string;
-    resolvedPercentage: number;
+    resolvedAffix: string;
   };
 }
 

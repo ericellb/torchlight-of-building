@@ -14,7 +14,7 @@ import {
 interface InstalledDestinyResult {
   destinyName: string;
   destinyType: string;
-  resolvedPercentage: number;
+  resolvedAffix: string;
 }
 
 interface DestinySelectionModalProps {
@@ -74,7 +74,7 @@ export const DestinySelectionModal: React.FC<DestinySelectionModalProps> = ({
     onConfirm({
       destinyName: selectedDestiny.name,
       destinyType: selectedDestiny.type,
-      resolvedPercentage: percentage,
+      resolvedAffix: previewAffix,
     });
     onClose();
   };

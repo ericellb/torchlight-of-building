@@ -4,11 +4,7 @@ import { useState } from "react";
 import { RawRingSlotState } from "@/src/tli/core";
 import { PactspiritRingDetails } from "@/src/data/pactspirit/types";
 import { RingSlotKey } from "../../lib/types";
-import {
-  getDestinyByName,
-  craftDestinyAffix,
-  isInnerRing,
-} from "../../lib/pactspirit-utils";
+import { isInnerRing } from "../../lib/pactspirit-utils";
 import { RingTooltip } from "./RingTooltip";
 
 interface RingSlotProps {
@@ -38,13 +34,10 @@ export const RingSlot: React.FC<RingSlotProps> = ({
   let destinyType: string | undefined;
 
   if (hasDestiny && ringState.installedDestiny) {
-    const { destinyName, destinyType: dType, resolvedPercentage } = ringState.installedDestiny;
-    const destiny = getDestinyByName(destinyName);
+    const { destinyName, destinyType: dType, resolvedAffix } = ringState.installedDestiny;
     destinyType = dType;
     displayName = destinyName;
-    displayAffix = destiny
-      ? craftDestinyAffix(destiny.affix, resolvedPercentage)
-      : "";
+    displayAffix = resolvedAffix;
   } else {
     displayName = originalRing.name;
     displayAffix = originalRing.affix;

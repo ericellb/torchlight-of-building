@@ -18,6 +18,12 @@ export const GRID_MASK: number[][] = [
 export const GRID_ROWS = 6;
 export const GRID_COLS = 6;
 
+// Display area extends 1 cell beyond grid in each direction for out-of-bounds visibility
+export const DISPLAY_ROW_START = -1;
+export const DISPLAY_ROW_END = GRID_ROWS + 1;
+export const DISPLAY_COL_START = -1;
+export const DISPLAY_COL_END = GRID_COLS + 1;
+
 export const isValidGridCell = (row: number, col: number): boolean => {
   if (row < 0 || row >= GRID_ROWS || col < 0 || col >= GRID_COLS) {
     return false;

@@ -419,6 +419,7 @@ export default function BuilderPage() {
     }
 
     if (slot !== "tree1" && isGodGoddessTree(newTreeName)) return;
+    if (slot === "tree1" && !isGodGoddessTree(newTreeName)) return;
 
     updateLoadout((prev) => ({
       ...prev,
@@ -1141,7 +1142,7 @@ export default function BuilderPage() {
                   className="flex-1 px-4 py-2 border border-zinc-700 rounded-lg bg-zinc-800 text-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">None</option>
-                  {activeTreeSlot === "tree1" && (
+                  {activeTreeSlot === "tree1" ? (
                     <optgroup label="God/Goddess Trees">
                       {GOD_GODDESS_TREES.map((tree) => (
                         <option key={tree} value={tree}>
@@ -1149,14 +1150,15 @@ export default function BuilderPage() {
                         </option>
                       ))}
                     </optgroup>
+                  ) : (
+                    <optgroup label="Profession Trees">
+                      {PROFESSION_TREES.map((tree) => (
+                        <option key={tree} value={tree}>
+                          {tree.replace(/_/g, " ")}
+                        </option>
+                      ))}
+                    </optgroup>
                   )}
-                  <optgroup label="Profession Trees">
-                    {PROFESSION_TREES.map((tree) => (
-                      <option key={tree} value={tree}>
-                        {tree.replace(/_/g, " ")}
-                      </option>
-                    ))}
-                  </optgroup>
                 </select>
 
                 <button

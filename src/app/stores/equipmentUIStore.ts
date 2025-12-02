@@ -3,11 +3,12 @@
 import { create } from "zustand";
 import { EquipmentType } from "@/src/tli/gear_data_types";
 import { AffixSlotState, GearSlot } from "../lib/types";
+import { DEFAULT_QUALITY } from "../lib/constants";
 
 const createEmptyAffixSlots = (): AffixSlotState[] =>
   Array(6)
     .fill(null)
-    .map(() => ({ affixIndex: null, percentage: 50 }));
+    .map(() => ({ affixIndex: null, percentage: DEFAULT_QUALITY }));
 
 interface LegendaryAffixSlotState {
   affixIndex: number | null;
@@ -64,7 +65,7 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
   clearAffixSlot: (index) =>
     set((state) => ({
       affixSlots: state.affixSlots.map((slot, i) =>
-        i === index ? { affixIndex: null, percentage: 50 } : slot
+        i === index ? { affixIndex: null, percentage: DEFAULT_QUALITY } : slot
       ),
     })),
 

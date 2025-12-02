@@ -76,6 +76,11 @@ export const SLOT_TO_VALID_EQUIPMENT_TYPES: Record<GearSlot, EquipmentType[]> =
     ],
   };
 
+// Crafting defaults
+export const DEFAULT_QUALITY = 50;
+export const MAX_SLATE_AFFIXES = 5;
+
+// Storage keys
 export const DEBUG_MODE_STORAGE_KEY = "tli-planner-debug-mode";
 export const SAVES_INDEX_STORAGE_KEY = "tli-planner-saves-index";
 export const SAVE_DATA_STORAGE_KEY_PREFIX = "tli-planner-save-";

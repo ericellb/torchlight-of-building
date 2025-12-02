@@ -14,6 +14,7 @@ import {
   craftHeroMemoryAffix,
 } from "../../lib/hero-utils";
 import { generateItemId } from "../../lib/storage";
+import { DEFAULT_QUALITY } from "../../lib/constants";
 import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
 import { useHeroUIStore } from "@/src/app/stores/heroUIStore";
 
@@ -205,7 +206,7 @@ export const MemoryCrafter = ({ onMemorySave }: MemoryCrafterProps) => {
                   onSelect={(effectIndex) =>
                     setFixedAffixSlot(idx, {
                       effectIndex,
-                      quality: effectIndex === undefined ? 50 : slot.quality,
+                      quality: effectIndex === undefined ? DEFAULT_QUALITY : slot.quality,
                     })
                   }
                   onQuality={(quality) =>
@@ -232,7 +233,7 @@ export const MemoryCrafter = ({ onMemorySave }: MemoryCrafterProps) => {
                   onSelect={(effectIndex) =>
                     setRandomAffixSlot(idx, {
                       effectIndex,
-                      quality: effectIndex === undefined ? 50 : slot.quality,
+                      quality: effectIndex === undefined ? DEFAULT_QUALITY : slot.quality,
                     })
                   }
                   onQuality={(quality) =>

@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { HeroMemoryType } from "../lib/save-data";
+import { DEFAULT_QUALITY } from "../lib/constants";
 
 interface MemoryAffixSlotState {
   effectIndex: number | undefined;
@@ -22,8 +23,6 @@ interface HeroUIState {
   setRandomAffixSlot: (index: number, update: Partial<MemoryAffixSlotState>) => void;
   resetMemoryCrafting: () => void;
 }
-
-const DEFAULT_QUALITY = 50;
 
 const createEmptyAffixSlots = (count: number): MemoryAffixSlotState[] =>
   Array(count)

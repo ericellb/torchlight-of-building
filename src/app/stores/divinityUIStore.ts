@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { DivinityGod, SlateShape, DivinityAffixType } from "../lib/save-data";
+import { MAX_SLATE_AFFIXES } from "../lib/constants";
 
 interface SelectedSlateAffix {
   effect: string;
@@ -28,8 +29,6 @@ interface DivinityUIState {
   setDraggingSlateId: (id: string | undefined) => void;
   setPreviewPosition: (position: { row: number; col: number } | undefined) => void;
 }
-
-const MAX_SLATE_AFFIXES = 5;
 
 export const useDivinityUIStore = create<DivinityUIState>((set) => ({
   // Initial state

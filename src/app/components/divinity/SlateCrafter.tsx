@@ -17,6 +17,7 @@ import {
   GOD_COLORS,
   GOD_BORDER_COLORS,
 } from "@/src/app/lib/divinity-utils";
+import { MAX_SLATE_AFFIXES } from "@/src/app/lib/constants";
 import { SlatePreview } from "./SlatePreview";
 import {
   SearchableSelect,
@@ -30,8 +31,6 @@ interface SlateCrafterProps {
   onCancel?: () => void;
   onRemoveFromGrid?: () => void;
 }
-
-const MAX_AFFIXES = 5;
 
 export const SlateCrafter: React.FC<SlateCrafterProps> = ({
   editingSlate,
@@ -98,7 +97,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
 
   const handleAddAffix = (effectValue: string | undefined) => {
     if (!effectValue) return;
-    if (selectedAffixes.length >= MAX_AFFIXES) return;
+    if (selectedAffixes.length >= MAX_SLATE_AFFIXES) return;
     const affix = availableAffixes.find((a) => a.effect === effectValue);
     if (!affix) return;
     if (selectedAffixes.some((a) => a.effect === affix.effect)) return;
@@ -224,7 +223,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
 
       <div className="mb-4">
         <label className="mb-2 block text-sm text-zinc-400">
-          Selected Affixes ({selectedAffixes.length}/{MAX_AFFIXES})
+          Selected Affixes ({selectedAffixes.length}/{MAX_SLATE_AFFIXES})
         </label>
         <div className="mb-2 flex flex-col gap-1">
           {selectedAffixes.map((affix, index) => (
@@ -263,11 +262,11 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
           onChange={handleAddAffix}
           options={affixOptions}
           placeholder={
-            selectedAffixes.length >= MAX_AFFIXES
+            selectedAffixes.length >= MAX_SLATE_AFFIXES
               ? "Max affixes reached"
               : "Search affixes..."
           }
-          disabled={selectedAffixes.length >= MAX_AFFIXES}
+          disabled={selectedAffixes.length >= MAX_SLATE_AFFIXES}
         />
       </div>
 

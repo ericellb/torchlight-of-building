@@ -6,6 +6,7 @@ import { Legendaries } from "@/src/data/legendary/legendaries";
 import { craft } from "@/src/tli/crafting/craft";
 import { generateItemId } from "../../lib/storage";
 import { getGearTypeFromEquipmentType } from "../../lib/equipment-utils";
+import { DEFAULT_QUALITY } from "../../lib/constants";
 import { SearchableSelect } from "../ui/SearchableSelect";
 import { LegendaryAffixRow, LegendaryAffixState } from "./LegendaryAffixRow";
 
@@ -49,7 +50,7 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
       setAffixStates(
         legendary.normalAffixes.map(() => ({
           isCorrupted: false,
-          percentage: 50,
+          percentage: DEFAULT_QUALITY,
         })),
       );
     } else {

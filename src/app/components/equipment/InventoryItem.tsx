@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { createPortal } from "react-dom";
 import { Gear } from "@/src/app/lib/save-data";
+import { useTooltip } from "@/src/app/hooks/useTooltip";
+import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
 
 interface InventoryItemProps {
   item: Gear;
@@ -17,8 +17,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { isHovered, mousePos, handlers } = useTooltip();
 
   const isLegendary = item.rarity === "legendary";
 
@@ -27,9 +26,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
       className={`group relative flex items-center justify-between p-3 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors border ${
         isLegendary ? "border-amber-500/50" : "border-transparent"
       }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+      {...handlers}
     >
       <div className="flex items-center gap-2">
         <span className="font-medium text-zinc-50 text-sm">
@@ -62,47 +59,30 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
         </button>
       </div>
 
-      {/* Hover tooltip showing item details - rendered via portal to escape scroll container */}
-      {isHovered &&
-        typeof document !== "undefined" &&
-        createPortal(
-          <div
-            className="fixed z-50 w-72 pointer-events-none"
-            style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
-          >
-            <div
-              className={`bg-zinc-950 text-zinc-50 p-3 rounded-lg shadow-xl border ${
-                isLegendary ? "border-amber-500/50" : "border-zinc-700"
-              }`}
-            >
-              <div className="font-semibold text-sm mb-2 text-amber-400">
-                {item.legendaryName ?? item.equipmentType}
-              </div>
-              {isLegendary && (
-                <div className="text-xs text-zinc-500 mb-2">
-                  {item.equipmentType}
-                </div>
-              )}
-              {item.baseStats && (
-                <div className="text-xs text-amber-300 mb-2">
-                  {item.baseStats}
-                </div>
-              )}
-              {item.affixes.length > 0 ? (
-                <ul className="space-y-1">
-                  {item.affixes.map((affix, idx) => (
-                    <li key={idx} className="text-xs text-zinc-400">
-                      {affix}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-xs text-zinc-500 italic">No affixes</p>
-              )}
-            </div>
-          </div>,
-          document.body,
+      <Tooltip
+        isVisible={isHovered}
+        mousePos={mousePos}
+        variant={isLegendary ? "legendary" : "default"}
+      >
+        <TooltipTitle>{item.legendaryName ?? item.equipmentType}</TooltipTitle>
+        {isLegendary && (
+          <div className="text-xs text-zinc-500 mb-2">{item.equipmentType}</div>
         )}
+        {item.baseStats && (
+          <div className="text-xs text-amber-300 mb-2">{item.baseStats}</div>
+        )}
+        {item.affixes.length > 0 ? (
+          <ul className="space-y-1">
+            {item.affixes.map((affix, idx) => (
+              <li key={idx} className="text-xs text-zinc-400">
+                {affix}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-zinc-500 italic">No affixes</p>
+        )}
+      </Tooltip>
     </div>
   );
 };

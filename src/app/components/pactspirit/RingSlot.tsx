@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { RingSlotState } from "@/src/app/lib/save-data";
 import { PactspiritRingDetails } from "@/src/data/pactspirit/types";
 import { RingSlotKey } from "../../lib/types";
 import { isInnerRing } from "../../lib/pactspirit-utils";
-import { RingTooltip } from "./RingTooltip";
+import { useTooltip } from "@/src/app/hooks/useTooltip";
+import {
+  Tooltip,
+  TooltipTitle,
+  TooltipContent,
+} from "@/src/app/components/ui/Tooltip";
 
 interface RingSlotProps {
   ringSlot: RingSlotKey;
@@ -22,8 +26,7 @@ export const RingSlot: React.FC<RingSlotProps> = ({
   onInstallClick,
   onRevert,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { isHovered, mousePos, handlers } = useTooltip();
 
   const hasDestiny = !!ringState.installedDestiny;
   const isInner = isInnerRing(ringSlot);
@@ -53,9 +56,7 @@ export const RingSlot: React.FC<RingSlotProps> = ({
           ? "bg-zinc-800 border-zinc-700"
           : "bg-zinc-750 border-amber-700/50"
       }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+      {...handlers}
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex-1 min-w-0">
@@ -91,14 +92,14 @@ export const RingSlot: React.FC<RingSlotProps> = ({
         </div>
       </div>
 
-      {isHovered && (
-        <RingTooltip
-          ringName={displayName}
-          affix={displayAffix}
-          destinyType={hasDestiny ? destinyType : undefined}
-          mousePos={mousePos}
-        />
-      )}
+      <Tooltip isVisible={isHovered} mousePos={mousePos}>
+        <TooltipTitle>
+          {hasDestiny && destinyType
+            ? `${destinyType}: ${displayName}`
+            : displayName}
+        </TooltipTitle>
+        <TooltipContent>{displayAffix}</TooltipContent>
+      </Tooltip>
     </div>
   );
 };

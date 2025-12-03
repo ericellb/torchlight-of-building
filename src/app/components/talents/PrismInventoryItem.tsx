@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { createPortal } from "react-dom";
 import { CraftedPrism } from "@/src/app/lib/save-data";
 import { getLegendaryGaugeAffixes } from "@/src/app/lib/prism-utils";
+import { useTooltip } from "@/src/app/hooks/useTooltip";
+import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
 
 interface PrismInventoryItemProps {
   prism: CraftedPrism;
@@ -24,30 +24,13 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
   onSelect,
   selectionMode = false,
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const itemRef = useRef<HTMLDivElement>(null);
+  const { isHovered, mousePos, handlers } = useTooltip();
 
   const legendaryGauges = getLegendaryGaugeAffixes();
   const legendaryCount = prism.gaugeAffixes.filter((a) =>
     legendaryGauges.some((lg) => lg.affix === a),
   ).length;
   const rareCount = prism.gaugeAffixes.length - legendaryCount;
-
-  const handleMouseEnter = () => {
-    if (itemRef.current) {
-      const rect = itemRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        top: rect.top,
-        left: rect.right + 8,
-      });
-      setShowTooltip(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setShowTooltip(false);
-  };
 
   const baseAffixFirstLine = prism.baseAffix.split("\n")[0];
   const displayText =
@@ -64,15 +47,13 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
   return (
     <>
       <div
-        ref={itemRef}
         className={`flex items-center gap-3 rounded border p-2 transition-colors ${
           isSelected
             ? "border-purple-500 bg-purple-500/20 ring-1 ring-purple-500"
             : "border-zinc-700 bg-zinc-900 hover:border-zinc-600"
         } ${selectionMode ? "cursor-pointer" : ""}`}
         onClick={handleClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        {...handlers}
       >
         <div className="flex-shrink-0">
           <span
@@ -127,48 +108,42 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
         </div>
       </div>
 
-      {showTooltip &&
-        typeof document !== "undefined" &&
-        createPortal(
-          <div
-            className="fixed z-50 max-w-sm rounded border border-zinc-600 bg-zinc-800 p-3 shadow-lg"
-            style={{
-              top: tooltipPosition.top,
-              left: tooltipPosition.left,
-            }}
-          >
-            <div className="mb-2 text-sm font-medium text-zinc-200 capitalize">
-              {prism.rarity} Prism
-            </div>
-            <div className="mb-2 text-xs text-zinc-300 whitespace-pre-line">
-              <span className="text-zinc-500">Base: </span>
-              {prism.baseAffix}
-            </div>
-            {prism.gaugeAffixes.length > 0 && (
-              <div className="space-y-1">
-                <span className="text-xs text-zinc-500">Gauge Affixes:</span>
-                {prism.gaugeAffixes.map((affix, i) => {
-                  const isLegendary = legendaryGauges.some(
-                    (lg) => lg.affix === affix,
-                  );
-                  return (
-                    <div key={i} className="flex items-start gap-1">
-                      <span
-                        className={`mt-1 h-2 w-2 flex-shrink-0 rounded-sm ${
-                          isLegendary ? "bg-orange-500" : "bg-purple-500"
-                        }`}
-                      />
-                      <span className="text-xs text-zinc-300 whitespace-pre-line">
-                        {affix}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>,
-          document.body,
+      <Tooltip
+        isVisible={isHovered}
+        mousePos={mousePos}
+        variant={prism.rarity === "legendary" ? "legendary" : "prism"}
+        width="lg"
+      >
+        <TooltipTitle>
+          <span className="capitalize">{prism.rarity} Prism</span>
+        </TooltipTitle>
+        <div className="mb-2 text-xs text-zinc-300 whitespace-pre-line">
+          <span className="text-zinc-500">Base: </span>
+          {prism.baseAffix}
+        </div>
+        {prism.gaugeAffixes.length > 0 && (
+          <div className="space-y-1">
+            <span className="text-xs text-zinc-500">Gauge Affixes:</span>
+            {prism.gaugeAffixes.map((affix, i) => {
+              const isLegendary = legendaryGauges.some(
+                (lg) => lg.affix === affix,
+              );
+              return (
+                <div key={i} className="flex items-start gap-1">
+                  <span
+                    className={`mt-1 h-2 w-2 flex-shrink-0 rounded-sm ${
+                      isLegendary ? "bg-orange-500" : "bg-purple-500"
+                    }`}
+                  />
+                  <span className="text-xs text-zinc-300 whitespace-pre-line">
+                    {affix}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         )}
+      </Tooltip>
     </>
   );
 };

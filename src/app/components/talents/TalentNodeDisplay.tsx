@@ -1,8 +1,12 @@
-import { useState } from "react";
-import { createPortal } from "react-dom";
 import { TalentNodeData } from "@/src/tli/talent_tree";
 import { CraftedPrism } from "@/src/app/lib/save-data";
 import type { NodeBonusAffix } from "@/src/app/lib/prism-utils";
+import { useTooltip } from "@/src/app/hooks/useTooltip";
+import {
+  Tooltip,
+  TooltipTitle,
+  TooltipContent,
+} from "@/src/app/components/ui/Tooltip";
 
 interface TalentNodeDisplayProps {
   node: TalentNodeData;
@@ -35,8 +39,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
   canRemovePrism = false,
   bonusAffixes = [],
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { isHovered, mousePos, handlers } = useTooltip();
 
   const isFullyAllocated = allocated >= node.maxPoints;
   const isLocked = !canAllocate && allocated === 0;
@@ -61,9 +64,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
     return (
       <div
         className="relative w-20 h-20 rounded-lg border-2 transition-all border-purple-500 bg-purple-500/15 cursor-default"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+        {...handlers}
       >
         {/* Prism Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -118,37 +119,22 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           </div>
         )}
 
-        {/* Tooltip */}
-        {isHovered &&
-          typeof document !== "undefined" &&
-          createPortal(
-            <div
-              className="fixed z-50 w-72 pointer-events-none"
-              style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
-            >
-              <div className="bg-zinc-950 text-zinc-50 p-3 rounded-lg shadow-xl border border-purple-500/50">
-                <div className="font-semibold text-sm mb-2 text-purple-400">
-                  Rare Prism
+        <Tooltip isVisible={isHovered} mousePos={mousePos} variant="prism">
+          <TooltipTitle>
+            <span className="text-purple-400">Rare Prism</span>
+          </TooltipTitle>
+          <TooltipContent>{prism.baseAffix}</TooltipContent>
+          {prism.gaugeAffixes.length > 0 && (
+            <div className="mt-2 pt-2 border-t border-zinc-700">
+              <div className="text-xs text-zinc-500 mb-1">Gauge Affixes:</div>
+              {prism.gaugeAffixes.map((affix, idx) => (
+                <div key={idx} className="text-xs text-zinc-400">
+                  {affix}
                 </div>
-                <div className="text-xs text-zinc-400 whitespace-pre-line">
-                  {prism.baseAffix}
-                </div>
-                {prism.gaugeAffixes.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-zinc-700">
-                    <div className="text-xs text-zinc-500 mb-1">
-                      Gauge Affixes:
-                    </div>
-                    {prism.gaugeAffixes.map((affix, idx) => (
-                      <div key={idx} className="text-xs text-zinc-400">
-                        {affix}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>,
-            document.body,
+              ))}
+            </div>
           )}
+        </Tooltip>
       </div>
     );
   }
@@ -171,9 +157,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         }
       `}
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+      {...handlers}
     >
       {/* Icon */}
       <div className="absolute inset-0 flex items-center justify-center">
@@ -236,46 +220,31 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         </div>
       )}
 
-      {/* Tooltip */}
-      {isHovered &&
-        typeof document !== "undefined" &&
-        createPortal(
-          <div
-            className="fixed z-50 w-72 pointer-events-none"
-            style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
-          >
-            <div
-              className={`bg-zinc-950 text-zinc-50 p-3 rounded-lg shadow-xl border ${
-                isLegendary ? "border-amber-500/50" : "border-zinc-700"
-              }`}
-            >
-              <div className="font-semibold text-sm mb-2 text-amber-400">
-                {talentTypeName}
+      <Tooltip
+        isVisible={isHovered}
+        mousePos={mousePos}
+        variant={isLegendary ? "legendary" : "default"}
+      >
+        <TooltipTitle>{talentTypeName}</TooltipTitle>
+        <TooltipContent>{node.rawAffix}</TooltipContent>
+        {bonusAffixes.length > 0 && (
+          <div className="mt-2 pt-2 border-t border-blue-500/30">
+            {bonusAffixes.map((bonus, idx) => (
+              <div
+                key={idx}
+                className="text-xs text-blue-400 whitespace-pre-line"
+              >
+                {bonus.bonusText}
               </div>
-              <div className="text-xs text-zinc-400 whitespace-pre-line">
-                {node.rawAffix}
-              </div>
-              {bonusAffixes.length > 0 && (
-                <div className="mt-2 pt-2 border-t border-blue-500/30">
-                  {bonusAffixes.map((bonus, idx) => (
-                    <div
-                      key={idx}
-                      className="text-xs text-blue-400 whitespace-pre-line"
-                    >
-                      {bonus.bonusText}
-                    </div>
-                  ))}
-                </div>
-              )}
-              {canPlacePrism && (
-                <div className="mt-2 pt-2 border-t border-zinc-700 text-xs text-purple-400">
-                  Click to place prism here
-                </div>
-              )}
-            </div>
-          </div>,
-          document.body,
+            ))}
+          </div>
         )}
+        {canPlacePrism && (
+          <div className="mt-2 pt-2 border-t border-zinc-700 text-xs text-purple-400">
+            Click to place prism here
+          </div>
+        )}
+      </Tooltip>
     </div>
   );
 };

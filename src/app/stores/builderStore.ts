@@ -411,7 +411,8 @@ export const useBuilderStore = create<BuilderState>()(
           const newInverseImageList = state.loadout.inverseImageList.filter(
             (ii) => ii.id !== inverseImageId,
           );
-          const placedInverseImage = state.loadout.talentPage.placedInverseImage;
+          const placedInverseImage =
+            state.loadout.talentPage.placedInverseImage;
           const newTalentPage = { ...state.loadout.talentPage };
           if (placedInverseImage?.inverseImage.id === inverseImageId) {
             delete newTalentPage.placedInverseImage;
@@ -448,7 +449,8 @@ export const useBuilderStore = create<BuilderState>()(
 
       removePlacedInverseImage: () =>
         set((state) => {
-          const placedInverseImage = state.loadout.talentPage.placedInverseImage;
+          const placedInverseImage =
+            state.loadout.talentPage.placedInverseImage;
           if (!placedInverseImage) return state;
 
           const newTalentPage = { ...state.loadout.talentPage };
@@ -469,12 +471,14 @@ export const useBuilderStore = create<BuilderState>()(
 
       allocateReflectedNode: (x, y, sourceX, sourceY) =>
         set((state) => {
-          const placedInverseImage = state.loadout.talentPage.placedInverseImage;
+          const placedInverseImage =
+            state.loadout.talentPage.placedInverseImage;
           if (!placedInverseImage) return state;
 
-          const existingIdx = placedInverseImage.reflectedAllocatedNodes.findIndex(
-            (n) => n.x === x && n.y === y,
-          );
+          const existingIdx =
+            placedInverseImage.reflectedAllocatedNodes.findIndex(
+              (n) => n.x === x && n.y === y,
+            );
 
           let updatedNodes: ReflectedAllocatedNode[];
           if (existingIdx >= 0) {
@@ -506,7 +510,8 @@ export const useBuilderStore = create<BuilderState>()(
 
       deallocateReflectedNode: (x, y) =>
         set((state) => {
-          const placedInverseImage = state.loadout.talentPage.placedInverseImage;
+          const placedInverseImage =
+            state.loadout.talentPage.placedInverseImage;
           if (!placedInverseImage) return state;
 
           const existing = placedInverseImage.reflectedAllocatedNodes.find(
@@ -516,8 +521,9 @@ export const useBuilderStore = create<BuilderState>()(
 
           let updatedNodes: ReflectedAllocatedNode[];
           if (existing.points > 1) {
-            updatedNodes = placedInverseImage.reflectedAllocatedNodes.map((n) =>
-              n.x === x && n.y === y ? { ...n, points: n.points - 1 } : n,
+            updatedNodes = placedInverseImage.reflectedAllocatedNodes.map(
+              (n) =>
+                n.x === x && n.y === y ? { ...n, points: n.points - 1 } : n,
             );
           } else {
             updatedNodes = placedInverseImage.reflectedAllocatedNodes.filter(
@@ -542,7 +548,8 @@ export const useBuilderStore = create<BuilderState>()(
 
       setReflectedAllocatedNodes: (nodes) =>
         set((state) => {
-          const placedInverseImage = state.loadout.talentPage.placedInverseImage;
+          const placedInverseImage =
+            state.loadout.talentPage.placedInverseImage;
           if (!placedInverseImage) return state;
 
           return {

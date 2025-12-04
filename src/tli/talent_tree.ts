@@ -398,7 +398,11 @@ export const canAllocateNodeWithInverseImage = (
   // Check column gating (include reflected nodes if inverse image is placed)
   const reflectedNodes = placedInverseImage?.reflectedAllocatedNodes ?? [];
   if (
-    !isColumnUnlockedWithReflected(allocatedNodes, reflectedNodes, node.position.x)
+    !isColumnUnlockedWithReflected(
+      allocatedNodes,
+      reflectedNodes,
+      node.position.x,
+    )
   ) {
     return false;
   }
@@ -623,7 +627,8 @@ export const canPlaceInverseImage = (
   if (treeSlot === "tree1") {
     return {
       canPlace: false,
-      reason: "Inverse images can only be placed on Profession Trees (Slots 2-4)",
+      reason:
+        "Inverse images can only be placed on Profession Trees (Slots 2-4)",
     };
   }
 
@@ -640,7 +645,8 @@ export const canPlaceInverseImage = (
   if (totalPoints > 0) {
     return {
       canPlace: false,
-      reason: "Inverse images can only be placed when the tree has 0 allocated points",
+      reason:
+        "Inverse images can only be placed when the tree has 0 allocated points",
     };
   }
 
@@ -648,7 +654,8 @@ export const canPlaceInverseImage = (
   if (placedPrism) {
     return {
       canPlace: false,
-      reason: "A prism is already placed. Remove it first to place an inverse image.",
+      reason:
+        "A prism is already placed. Remove it first to place an inverse image.",
     };
   }
 

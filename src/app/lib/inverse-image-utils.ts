@@ -1,7 +1,4 @@
-import type {
-  CraftedInverseImage,
-  PlacedInverseImage,
-} from "./save-data";
+import type { CraftedInverseImage, PlacedInverseImage } from "./save-data";
 import type { TalentNodeData } from "@/src/data/talent_tree";
 
 // Reflection formula: source (x, y) -> target (6-x, 4-y)
@@ -112,7 +109,14 @@ export const getSourcePositionForTarget = (
   targetY: number,
   placedInverseImage: PlacedInverseImage,
 ): { x: number; y: number } | undefined => {
-  if (!isInTargetArea(targetX, targetY, placedInverseImage, placedInverseImage.treeSlot)) {
+  if (
+    !isInTargetArea(
+      targetX,
+      targetY,
+      placedInverseImage,
+      placedInverseImage.treeSlot,
+    )
+  ) {
     return undefined;
   }
 
@@ -180,7 +184,14 @@ export const getReflectedNodeBonusAffixes = (
     return [];
   }
 
-  if (!isInTargetArea(nodePosition.x, nodePosition.y, placedInverseImage, treeSlot)) {
+  if (
+    !isInTargetArea(
+      nodePosition.x,
+      nodePosition.y,
+      placedInverseImage,
+      treeSlot,
+    )
+  ) {
     return [];
   }
 

@@ -354,7 +354,9 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
 
         <Tooltip isVisible={isHovered} mousePos={mousePos} variant="default">
           <TooltipTitle>
-            <span className="text-cyan-400">{reflectedTypeName} (Reflected)</span>
+            <span className="text-cyan-400">
+              {reflectedTypeName} (Reflected)
+            </span>
           </TooltipTitle>
           <TooltipContent>{reflectedNodeData.rawAffix}</TooltipContent>
           {bonusAffixes.length > 0 && (

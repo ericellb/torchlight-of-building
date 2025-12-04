@@ -41,9 +41,7 @@ export const TalentsSection = () => {
   const deleteInverseImage = useBuilderStore(
     (state) => state.deleteInverseImage,
   );
-  const placeInverseImage = useBuilderStore(
-    (state) => state.placeInverseImage,
-  );
+  const placeInverseImage = useBuilderStore((state) => state.placeInverseImage);
   const removePlacedInverseImage = useBuilderStore(
     (state) => state.removePlacedInverseImage,
   );
@@ -435,11 +433,10 @@ export const TalentsSection = () => {
         return;
       }
 
-      placeInverseImage(
-        inverseImage,
-        treeSlot as "tree2" | "tree3" | "tree4",
-        { x, y },
-      );
+      placeInverseImage(inverseImage, treeSlot as "tree2" | "tree3" | "tree4", {
+        x,
+        y,
+      });
 
       setSelectedInverseImageId(undefined);
     },

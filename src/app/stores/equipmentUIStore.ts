@@ -19,6 +19,7 @@ interface EquipmentUIState {
   // Crafting state
   selectedEquipmentType: EquipmentType | undefined;
   affixSlots: AffixSlotState[];
+  blendAffixIndex: number | null;
 
   // Legendary crafting state
   selectedLegendaryIndex: number | undefined;
@@ -31,6 +32,7 @@ interface EquipmentUIState {
   setSelectedEquipmentType: (type: EquipmentType | undefined) => void;
   setAffixSlot: (index: number, update: Partial<AffixSlotState>) => void;
   clearAffixSlot: (index: number) => void;
+  setBlendAffixIndex: (index: number | null) => void;
   resetCrafting: () => void;
 
   setSelectedLegendaryIndex: (index: number | undefined) => void;
@@ -47,6 +49,7 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
   // Initial state
   selectedEquipmentType: undefined,
   affixSlots: createEmptyAffixSlots(),
+  blendAffixIndex: null,
   selectedLegendaryIndex: undefined,
   legendaryAffixSlots: [],
   selectedGearSlot: "helmet",
@@ -56,6 +59,7 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
     set({
       selectedEquipmentType: type,
       affixSlots: createEmptyAffixSlots(),
+      blendAffixIndex: null,
     }),
 
   setAffixSlot: (index, update) =>
@@ -72,10 +76,13 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
       ),
     })),
 
+  setBlendAffixIndex: (index) => set({ blendAffixIndex: index }),
+
   resetCrafting: () =>
     set({
       selectedEquipmentType: undefined,
       affixSlots: createEmptyAffixSlots(),
+      blendAffixIndex: null,
     }),
 
   setSelectedLegendaryIndex: (index) =>

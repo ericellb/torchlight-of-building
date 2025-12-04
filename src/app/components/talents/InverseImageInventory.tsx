@@ -58,8 +58,7 @@ export const InverseImageInventory: React.FC<InverseImageInventoryProps> = ({
     return "Click an inverse image to select it for placement.";
   };
 
-  const canSelect =
-    !hasInverseImagePlaced && !hasPrismPlaced && selectionMode;
+  const canSelect = !hasInverseImagePlaced && !hasPrismPlaced && selectionMode;
 
   return (
     <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-4">

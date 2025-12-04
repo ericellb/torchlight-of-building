@@ -58,7 +58,8 @@ export const InverseImageInventoryItem: React.FC<
           <div className="text-xs text-zinc-400 truncate">
             Micro: {formatEffectModifier(inverseImage.microTalentEffect)} |
             Medium: {formatEffectModifier(inverseImage.mediumTalentEffect)} |
-            Legendary: {formatEffectModifier(inverseImage.legendaryTalentEffect)}
+            Legendary:{" "}
+            {formatEffectModifier(inverseImage.legendaryTalentEffect)}
           </div>
         </div>
 
@@ -93,7 +94,12 @@ export const InverseImageInventoryItem: React.FC<
         </div>
       </div>
 
-      <Tooltip isVisible={isHovered} mousePos={mousePos} variant="default" width="lg">
+      <Tooltip
+        isVisible={isHovered}
+        mousePos={mousePos}
+        variant="default"
+        width="lg"
+      >
         <TooltipTitle>
           <span className="text-cyan-400">Inverse Image</span>
         </TooltipTitle>
@@ -107,8 +113,8 @@ export const InverseImageInventoryItem: React.FC<
             Micro Talent Effects
           </div>
           <div className="text-blue-400">
-            {formatEffectModifier(inverseImage.mediumTalentEffect)} all reflected
-            Medium Talent Effects
+            {formatEffectModifier(inverseImage.mediumTalentEffect)} all
+            reflected Medium Talent Effects
           </div>
           <div className="text-blue-400">
             {formatEffectModifier(inverseImage.legendaryTalentEffect)} all

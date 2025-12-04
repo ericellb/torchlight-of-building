@@ -11,13 +11,18 @@ import { GEAR_SLOTS } from "../../lib/constants";
 import { GearSlot } from "../../lib/types";
 import { getFilteredAffixes } from "../../lib/affix-utils";
 import {
+  getBlendAffixes,
+  formatBlendAffix,
+  formatBlendOption,
+} from "../../lib/blend-utils";
+import {
   getValidEquipmentTypes,
   getCompatibleItems,
   getGearTypeFromEquipmentType,
 } from "../../lib/equipment-utils";
 import { craft } from "@/src/tli/crafting/craft";
 import { Gear } from "../../lib/save-data";
-import { EquipmentType } from "@/src/tli/gear_data_types";
+import { BaseGearAffix, EquipmentType } from "@/src/tli/gear_data_types";
 import { generateItemId } from "../../lib/storage";
 
 export const EquipmentSection = () => {
@@ -41,6 +46,10 @@ export const EquipmentSection = () => {
   );
   const setAffixSlot = useEquipmentUIStore((state) => state.setAffixSlot);
   const clearAffixSlot = useEquipmentUIStore((state) => state.clearAffixSlot);
+  const blendAffixIndex = useEquipmentUIStore((state) => state.blendAffixIndex);
+  const setBlendAffixIndex = useEquipmentUIStore(
+    (state) => state.setBlendAffixIndex,
+  );
   const resetCrafting = useEquipmentUIStore((state) => state.resetCrafting);
 
   const prefixAffixes = useMemo(
@@ -58,6 +67,13 @@ export const EquipmentSection = () => {
         : [],
     [selectedEquipmentType],
   );
+
+  const blendAffixes = useMemo(
+    () => (selectedEquipmentType === "Belt" ? getBlendAffixes() : []),
+    [selectedEquipmentType],
+  );
+
+  const isBelt = selectedEquipmentType === "Belt";
 
   const allEquipmentTypes = useMemo(() => {
     return getValidEquipmentTypes("mainHand")
@@ -107,10 +123,30 @@ export const EquipmentSection = () => {
     [clearAffixSlot],
   );
 
+  const handleBlendSelect = useCallback(
+    (_slotIndex: number, value: string) => {
+      const index = value === "" ? null : parseInt(value);
+      setBlendAffixIndex(index);
+    },
+    [setBlendAffixIndex],
+  );
+
+  const handleClearBlend = useCallback(() => {
+    setBlendAffixIndex(null);
+  }, [setBlendAffixIndex]);
+
   const handleSaveToInventory = useCallback(() => {
     if (!selectedEquipmentType) return;
 
     const affixes: string[] = [];
+
+    // Add blend affix first if selected (belt only)
+    if (isBelt && blendAffixIndex !== null) {
+      const selectedBlend = blendAffixes[blendAffixIndex];
+      affixes.push(formatBlendAffix(selectedBlend));
+    }
+
+    // Add prefix/suffix affixes
     affixSlots.forEach((selection, idx) => {
       if (selection.affixIndex === null) return;
       const affixType = idx < 3 ? "Prefix" : "Suffix";
@@ -136,6 +172,9 @@ export const EquipmentSection = () => {
     suffixAffixes,
     addItemToInventory,
     resetCrafting,
+    isBelt,
+    blendAffixIndex,
+    blendAffixes,
   ]);
 
   const handleSelectItemForSlot = useCallback(
@@ -198,6 +237,54 @@ export const EquipmentSection = () => {
 
           {selectedEquipmentType ? (
             <>
+              {/* Blending Affix Section (Belts Only) */}
+              {isBelt && (
+                <div className="mb-6">
+                  <h3 className="mb-3 text-lg font-semibold text-zinc-50">
+                    Blending (1 max)
+                  </h3>
+                  <AffixSlotComponent
+                    slotIndex={-1}
+                    affixType="Blend"
+                    affixes={
+                      blendAffixes.map((blend) => ({
+                        craftableAffix: blend.affix,
+                        tier: "0",
+                        equipmentSlot: "Trinket",
+                        equipmentType: "Belt",
+                        affixType: "Prefix",
+                        craftingPool: "",
+                      })) as BaseGearAffix[]
+                    }
+                    selection={{
+                      affixIndex: blendAffixIndex,
+                      percentage: 100,
+                    }}
+                    onAffixSelect={handleBlendSelect}
+                    onSliderChange={() => {}}
+                    onClear={handleClearBlend}
+                    hideQualitySlider
+                    formatOption={(affix) => {
+                      const blend = blendAffixes.find(
+                        (b) => b.affix === affix.craftableAffix,
+                      );
+                      return blend
+                        ? formatBlendOption(blend)
+                        : affix.craftableAffix;
+                    }}
+                    formatCraftedText={(affix) => {
+                      const blend = blendAffixes.find(
+                        (b) => b.affix === affix.craftableAffix,
+                      );
+                      return blend
+                        ? formatBlendAffix(blend)
+                        : affix.craftableAffix;
+                    }}
+                  />
+                </div>
+              )}
+true
+                    formatCraftedText=
               <div className="mb-6">
                 <h3 className="mb-3 text-lg font-semibold text-zinc-50">
                   Prefixes (3 max)

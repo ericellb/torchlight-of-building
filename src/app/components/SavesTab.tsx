@@ -78,12 +78,14 @@ const SaveCard: React.FC<SaveCardProps> = ({
                 autoFocus
               />
               <button
+                type="button"
                 onClick={handleRenameSubmit}
                 className="px-2 py-1 bg-amber-500 text-zinc-950 rounded text-sm font-medium hover:bg-amber-600 transition-colors"
               >
                 Save
               </button>
               <button
+                type="button"
                 onClick={handleRenameCancel}
                 className="px-2 py-1 bg-zinc-700 text-zinc-50 rounded text-sm hover:bg-zinc-600 transition-colors"
               >
@@ -118,6 +120,7 @@ const SaveCard: React.FC<SaveCardProps> = ({
           </p>
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={() => {
                 onDelete();
                 setShowDeleteConfirm(false);
@@ -127,6 +130,7 @@ const SaveCard: React.FC<SaveCardProps> = ({
               Delete
             </button>
             <button
+              type="button"
               onClick={() => setShowDeleteConfirm(false)}
               className="px-3 py-1.5 bg-zinc-700 text-zinc-50 rounded text-sm hover:bg-zinc-600 transition-colors"
             >
@@ -138,6 +142,7 @@ const SaveCard: React.FC<SaveCardProps> = ({
         <div className="mt-4 flex flex-wrap gap-2">
           {!isCurrent && (
             <button
+              type="button"
               onClick={onLoad}
               className="px-3 py-1.5 bg-amber-500 text-zinc-950 rounded text-sm font-medium hover:bg-amber-600 transition-colors"
             >
@@ -145,6 +150,7 @@ const SaveCard: React.FC<SaveCardProps> = ({
             </button>
           )}
           <button
+            type="button"
             onClick={() => {
               setRenameValue(save.name);
               setIsRenaming(true);
@@ -154,12 +160,14 @@ const SaveCard: React.FC<SaveCardProps> = ({
             Rename
           </button>
           <button
+            type="button"
             onClick={onCopy}
             className="px-3 py-1.5 bg-zinc-700 text-zinc-50 rounded text-sm hover:bg-zinc-600 transition-colors"
           >
             Copy
           </button>
           <button
+            type="button"
             onClick={() => setShowDeleteConfirm(true)}
             className="px-3 py-1.5 bg-zinc-700 text-red-400 rounded text-sm hover:bg-zinc-600 transition-colors"
           >

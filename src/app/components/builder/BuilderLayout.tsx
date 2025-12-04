@@ -108,6 +108,7 @@ export const BuilderLayout = ({
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
+              type="button"
               onClick={handleBackToSaves}
               className="text-zinc-400 transition-colors hover:text-zinc-200"
               title="Back to Saves"
@@ -118,6 +119,7 @@ export const BuilderLayout = ({
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -142,6 +144,7 @@ export const BuilderLayout = ({
 
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={handleSave}
               disabled={!currentSaveId || !hasUnsavedChanges}
               className="rounded-lg bg-blue-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-500"
@@ -149,6 +152,7 @@ export const BuilderLayout = ({
               Save
             </button>
             <button
+              type="button"
               onClick={handleDebugToggle}
               className={`rounded-lg px-3 py-1 text-sm font-medium transition-colors ${
                 debugMode
@@ -168,12 +172,14 @@ export const BuilderLayout = ({
 
         <div className="mt-8 flex gap-4">
           <button
+            type="button"
             onClick={handleExport}
             className="flex-1 rounded-lg bg-green-500 px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-green-600"
           >
             Export
           </button>
           <button
+            type="button"
             onClick={() => setImportModalOpen(true)}
             className="flex-1 rounded-lg bg-amber-500 px-6 py-3 text-lg font-semibold text-zinc-950 transition-colors hover:bg-amber-600"
           >

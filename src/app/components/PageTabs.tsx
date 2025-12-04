@@ -12,6 +12,7 @@ export const PageTabs: React.FC<PageTabsProps> = ({
   return (
     <div className="mb-8 flex gap-4 border-b border-zinc-800">
       <button
+        type="button"
         onClick={() => setActivePage("equipment")}
         className={`px-6 py-3 font-medium transition-colors ${
           activePage === "equipment"
@@ -22,6 +23,7 @@ export const PageTabs: React.FC<PageTabsProps> = ({
         Equipment
       </button>
       <button
+        type="button"
         onClick={() => setActivePage("talents")}
         className={`px-6 py-3 font-medium transition-colors ${
           activePage === "talents"
@@ -32,6 +34,7 @@ export const PageTabs: React.FC<PageTabsProps> = ({
         Talents
       </button>
       <button
+        type="button"
         onClick={() => setActivePage("skills")}
         className={`px-6 py-3 font-medium transition-colors ${
           activePage === "skills"
@@ -42,6 +45,7 @@ export const PageTabs: React.FC<PageTabsProps> = ({
         Skills
       </button>
       <button
+        type="button"
         onClick={() => setActivePage("hero")}
         className={`px-6 py-3 font-medium transition-colors ${
           activePage === "hero"
@@ -52,6 +56,7 @@ export const PageTabs: React.FC<PageTabsProps> = ({
         Hero
       </button>
       <button
+        type="button"
         onClick={() => setActivePage("pactspirit")}
         className={`px-6 py-3 font-medium transition-colors ${
           activePage === "pactspirit"
@@ -62,6 +67,7 @@ export const PageTabs: React.FC<PageTabsProps> = ({
         Pactspirit
       </button>
       <button
+        type="button"
         onClick={() => setActivePage("divinity")}
         className={`px-6 py-3 font-medium transition-colors ${
           activePage === "divinity"

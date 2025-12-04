@@ -617,7 +617,6 @@ export const canDeallocateReflectedNode = (
 // Check if an inverse image can be placed at a position
 export const canPlaceInverseImage = (
   x: number,
-  y: number,
   treeSlot: string,
   allocatedNodes: AllocatedTalentNode[],
   placedPrism?: PlacedPrism,

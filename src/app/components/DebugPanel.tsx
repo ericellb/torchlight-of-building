@@ -34,6 +34,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
         </div>
         <div className="flex gap-2">
           <button
+            type="button"
             onClick={copyDebugJson}
             className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-zinc-950 text-sm rounded transition-colors"
             title="Copy JSON to clipboard"
@@ -41,12 +42,14 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
             Copy JSON
           </button>
           <button
+            type="button"
             onClick={() => setDebugPanelExpanded(!debugPanelExpanded)}
             className="px-3 py-1 bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 text-zinc-50 text-sm rounded transition-colors"
           >
             {debugPanelExpanded ? "Minimize" : "Expand"}
           </button>
           <button
+            type="button"
             onClick={onClose}
             className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition-colors"
             title="Close debug panel"

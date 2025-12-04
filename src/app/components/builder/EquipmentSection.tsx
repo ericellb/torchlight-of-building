@@ -77,9 +77,11 @@ export const EquipmentSection = () => {
 
   const allEquipmentTypes = useMemo(() => {
     const types = new Set<EquipmentType>();
-    Object.values(SLOT_TO_VALID_EQUIPMENT_TYPES).forEach((slotTypes) => {
-      slotTypes.forEach((type) => types.add(type));
-    });
+    for (const slotTypes of Object.values(SLOT_TO_VALID_EQUIPMENT_TYPES)) {
+      for (const type of slotTypes) {
+        types.add(type);
+      }
+    }
     return Array.from(types).sort();
   }, []);
 
@@ -93,7 +95,7 @@ export const EquipmentSection = () => {
 
   const handleAffixSelect = useCallback(
     (slotIndex: number, value: string) => {
-      const affixIndex = value === "" ? undefined : parseInt(value);
+      const affixIndex = value === "" ? undefined : parseInt(value, 10);
       setAffixSlot(slotIndex, {
         affixIndex,
         percentage:
@@ -105,7 +107,7 @@ export const EquipmentSection = () => {
 
   const handleSliderChange = useCallback(
     (slotIndex: number, value: string) => {
-      const percentage = parseInt(value);
+      const percentage = parseInt(value, 10);
       setAffixSlot(slotIndex, { percentage });
     },
     [setAffixSlot],
@@ -120,7 +122,7 @@ export const EquipmentSection = () => {
 
   const handleBlendSelect = useCallback(
     (_slotIndex: number, value: string) => {
-      const index = value === "" ? undefined : parseInt(value);
+      const index = value === "" ? undefined : parseInt(value, 10);
       setBlendAffixIndex(index);
     },
     [setBlendAffixIndex],
@@ -213,10 +215,14 @@ export const EquipmentSection = () => {
           </h2>
 
           <div className="mb-6">
-            <label className="mb-2 block text-sm font-medium text-zinc-50">
+            <label
+              htmlFor="equipment-type-select"
+              className="mb-2 block text-sm font-medium text-zinc-50"
+            >
               Equipment Type
             </label>
             <select
+              id="equipment-type-select"
               value={selectedEquipmentType || ""}
               onChange={handleEquipmentTypeChange}
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
@@ -319,6 +325,7 @@ export const EquipmentSection = () => {
               </div>
 
               <button
+                type="button"
                 onClick={handleSaveToInventory}
                 className="w-full rounded-lg bg-amber-500 px-4 py-3 font-semibold text-zinc-950 transition-colors hover:bg-amber-600"
               >

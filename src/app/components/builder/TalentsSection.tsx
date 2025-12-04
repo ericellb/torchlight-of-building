@@ -423,7 +423,6 @@ export const TalentsSection = () => {
       if (
         !canPlaceInverseImage(
           x,
-          y,
           treeSlot as "tree2" | "tree3" | "tree4",
           tree.allocatedNodes,
           loadout.talentPage.placedPrism,

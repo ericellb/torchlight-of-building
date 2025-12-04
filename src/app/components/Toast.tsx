@@ -42,6 +42,7 @@ export const Toast: React.FC<ToastProps> = ({
               className="h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
+              aria-hidden="true"
             >
               <path
                 fillRule="evenodd"
@@ -55,6 +56,7 @@ export const Toast: React.FC<ToastProps> = ({
               className="h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
+              aria-hidden="true"
             >
               <path
                 fillRule="evenodd"
@@ -66,6 +68,7 @@ export const Toast: React.FC<ToastProps> = ({
         </div>
         <p className="text-zinc-200 text-sm flex-1">{message}</p>
         <button
+          type="button"
           onClick={onDismiss}
           className="text-zinc-400 hover:text-zinc-200 transition-colors"
         >
@@ -74,6 +77,7 @@ export const Toast: React.FC<ToastProps> = ({
             className="h-5 w-5"
             viewBox="0 0 20 20"
             fill="currentColor"
+            aria-hidden="true"
           >
             <path
               fillRule="evenodd"

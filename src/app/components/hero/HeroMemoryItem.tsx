@@ -40,6 +40,7 @@ export const HeroMemoryItem: React.FC<HeroMemoryItemProps> = ({
       </div>
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={() => onCopy(memory)}
           className="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-zinc-950 rounded text-xs"
           title="Copy memory"
@@ -47,6 +48,7 @@ export const HeroMemoryItem: React.FC<HeroMemoryItemProps> = ({
           Copy
         </button>
         <button
+          type="button"
           onClick={() => onDelete(memory.id)}
           className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs"
           title="Delete memory"

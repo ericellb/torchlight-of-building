@@ -154,6 +154,7 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
 
           {/* Save Button */}
           <button
+            type="button"
             onClick={handleSaveToInventory}
             className="w-full px-4 py-3 bg-amber-500 text-zinc-950 rounded-lg font-semibold hover:bg-amber-600 transition-colors"
           >

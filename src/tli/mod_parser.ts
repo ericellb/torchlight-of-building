@@ -8,8 +8,6 @@ import {
 } from "./constants";
 import type { Mod, ModOfType } from "./mod";
 
-type ParseResult = "unrecognized" | "unimplemented" | Mod;
-
 const isValidDmgModType = (value: string): value is DmgModType => {
   return DMG_MOD_TYPES.includes(value as DmgModType);
 };

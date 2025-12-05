@@ -80,7 +80,7 @@ const parseAffixString = (affixString: string): Affix => {
 
   return {
     mods,
-    raw: affixString,
+    text: affixString,
   };
 };
 
@@ -137,7 +137,7 @@ const parseTalentTree = (rawTree: TalentTree): Affix[] => {
     // Create the final affix with metadata
     const affix: Affix = {
       mods: scaledMods,
-      raw: baseAffix.raw,
+      text: baseAffix.text,
       src: `${rawTree.name} (${allocatedNode.x},${allocatedNode.y}) x${allocatedNode.points}`,
     };
 

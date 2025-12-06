@@ -5,10 +5,11 @@ import {
 } from "@/src/app/components/ui/Tooltip";
 import { useTooltip } from "@/src/app/hooks/useTooltip";
 import { formatEffectModifier } from "@/src/app/lib/inverse-image-utils";
-import type {
-  CraftedInverseImage,
-  CraftedPrism,
-  TalentNode,
+import {
+  getAffixText,
+  type CraftedInverseImage,
+  type CraftedPrism,
+  type TalentNode,
 } from "@/src/tli/core";
 
 interface BonusAffix {
@@ -91,7 +92,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
   };
 
   // Get tooltip affix text - for reflected nodes, show the raw affix text
-  const tooltipAffixText = node.affix.text ?? "";
+  const tooltipAffixText = getAffixText(node.affix);
 
   // Prism node rendering
   if (hasPrism && prism) {

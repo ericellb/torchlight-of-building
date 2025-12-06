@@ -4,12 +4,22 @@ import type { Mod } from "./mod";
 export const PRISM_RARITIES = ["rare", "legendary"] as const;
 export type PrismRarity = (typeof PRISM_RARITIES)[number];
 
+export interface AffixLine {
+  text: string;
+  mod?: Mod;
+}
+
 export interface Affix {
-  mods?: Mod[];
+  affixLines: AffixLine[];
   maxDivinity?: number;
   src?: string;
-  text?: string;
 }
+
+export const getAffixText = (affix: Affix): string =>
+  affix.affixLines.map((l) => l.text).join("\n");
+
+export const getAffixMods = (affix: Affix): Mod[] =>
+  affix.affixLines.flatMap((l) => (l.mod ? [l.mod] : []));
 
 export interface DmgRange {
   // inclusive on both ends

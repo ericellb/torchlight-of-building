@@ -3,12 +3,13 @@ import {
   getTargetAreaPositions,
   isInSourceArea as isInSourceAreaUtil,
 } from "@/src/app/lib/inverse-image-utils";
-import type {
-  CraftedInverseImage,
-  CraftedPrism,
-  PlacedInverseImage,
-  PlacedPrism,
-  TalentNode,
+import {
+  getAffixText,
+  type CraftedInverseImage,
+  type CraftedPrism,
+  type PlacedInverseImage,
+  type PlacedPrism,
+  type TalentNode,
 } from "@/src/tli/core";
 import {
   canAllocateNodeWithInverseImage,
@@ -55,9 +56,7 @@ const getNodeCenter = (x: number, y: number) => ({
 const formatPrismBonusAffixes = (
   prismAffixes: TalentNode["prismAffixes"],
 ): { bonusText: string }[] => {
-  return prismAffixes
-    .filter((affix) => affix.text)
-    .map((affix) => ({ bonusText: affix.text! }));
+  return prismAffixes.map((affix) => ({ bonusText: getAffixText(affix) }));
 };
 
 // Helper to format inverse image bonus affixes for display

@@ -80,7 +80,9 @@ const calculateAddn = (bonuses: number[]) => {
 };
 
 const collectModsFromAffixes = (affixes: Affix[]): Mod.Mod[] => {
-  return affixes?.flatMap((a) => a.mods || []) || [];
+  return affixes.flatMap((a) =>
+    a.affixLines.map((l) => l.mod).filter((m) => m !== undefined),
+  );
 };
 
 const getGearAffixes = (
@@ -185,7 +187,7 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod.Mod[]): GearDmg => {
   if (mainhand === undefined) {
     return emptyGearDmg();
   }
-  const mainhandMods = getAllAffixes(mainhand).flatMap((a) => a.mods || []);
+  const mainhandMods = collectModsFromAffixes(getAllAffixes(mainhand));
   const basePhysDmg = findAffix(mainhandMods, "GearBasePhysFlatDmg");
   if (basePhysDmg === undefined) {
     return emptyGearDmg();

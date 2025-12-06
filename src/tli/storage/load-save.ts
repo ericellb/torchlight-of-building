@@ -17,6 +17,7 @@ import {
 import type { TalentNodeData, TreeName } from "@/src/data/talent_tree";
 import type {
   Affix,
+  AffixLine,
   EquippedGear,
   Gear,
   GearPage,
@@ -45,18 +46,17 @@ const getSrc = (gearSlot: GearSlot): string => {
 };
 
 const convertAffix = (affixText: string, src: string | undefined): Affix => {
-  const affixLines = affixText.split(/\n/);
-  const mods: Mod[] = [];
-  for (const affixLine of affixLines) {
-    const mod = parseMod(affixLine);
-    if (mod !== undefined) {
-      mods.push({ ...mod, src });
-    }
-  }
+  const lines = affixText.split(/\n/);
+  const affixLines: AffixLine[] = lines.map((lineText) => {
+    const mod = parseMod(lineText);
+    return {
+      text: lineText,
+      mod: mod ? { ...mod, src } : undefined,
+    };
+  });
 
   return {
-    text: affixText,
-    mods: mods.length > 0 ? mods : undefined,
+    affixLines,
     src,
   };
 };
@@ -138,7 +138,7 @@ const createTalentNode = (
   const affix =
     points > 0
       ? scaleTalentAffix(nodeData.rawAffix, points, src)
-      : { text: nodeData.rawAffix };
+      : { affixLines: [{ text: nodeData.rawAffix }] };
 
   const prismAffixes =
     !isReflected && points > 0

@@ -4,7 +4,7 @@ import {
   type TalentNodeData,
   type TreeName,
 } from "@/src/data/talent_tree";
-import type { Affix } from "./core";
+import type { Affix, AffixLine } from "./core";
 import type { Mod } from "./mod";
 import { parseMod } from "./mod_parser";
 
@@ -26,18 +26,17 @@ export const findTalentNodeData = (
 };
 
 const convertAffixTextToAffix = (affixText: string, src: string): Affix => {
-  const affixLines = affixText.split(/\n/);
-  const mods: Mod[] = [];
-  for (const affixLine of affixLines) {
-    const mod = parseMod(affixLine);
-    if (mod !== undefined) {
-      mods.push({ ...mod, src });
-    }
-  }
+  const lines = affixText.split(/\n/);
+  const affixLines: AffixLine[] = lines.map((lineText) => {
+    const mod = parseMod(lineText);
+    return {
+      text: lineText,
+      mod: mod ? { ...mod, src } : undefined,
+    };
+  });
 
   return {
-    text: affixText,
-    mods: mods.length > 0 ? mods : undefined,
+    affixLines,
     src,
   };
 };

@@ -2,7 +2,7 @@
 
 import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
 import { useTooltip } from "@/src/app/hooks/useTooltip";
-import { getAllAffixes, type Gear } from "@/src/tli/core";
+import { getAllAffixes, getAffixText, type Gear } from "@/src/tli/core";
 
 interface InventoryItemProps {
   item: Gear;
@@ -71,9 +71,9 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
         {isLegendary && (
           <div className="text-xs text-zinc-500 mb-2">{item.equipmentType}</div>
         )}
-        {item.baseStats?.text && (
+        {item.baseStats && (
           <div className="text-xs text-amber-300 mb-2">
-            {item.baseStats.text}
+            {getAffixText(item.baseStats)}
           </div>
         )}
         {getAllAffixes(item).length > 0 ? (
@@ -84,7 +84,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
                 key={idx}
                 className="text-xs text-zinc-400"
               >
-                {affix.text}
+                {getAffixText(affix)}
               </li>
             ))}
           </ul>

@@ -18,14 +18,14 @@ export const HeroMemoryItem: React.FC<HeroMemoryItemProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
   const craftedAffixes = formatCraftedMemoryAffixes(memory);
 
   return (
     <div
       className="group relative flex items-center justify-between p-3 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors"
-      {...handlers}
+      ref={triggerRef}
     >
       <div className="flex items-center gap-2">
         <span className="font-medium text-zinc-50 text-sm">
@@ -57,7 +57,11 @@ export const HeroMemoryItem: React.FC<HeroMemoryItemProps> = ({
         </button>
       </div>
 
-      <Tooltip isVisible={isHovered} mousePos={mousePos}>
+      <Tooltip
+        isVisible={isVisible}
+        triggerRect={triggerRect}
+        {...tooltipHandlers}
+      >
         <TooltipTitle>{memory.memoryType}</TooltipTitle>
         {craftedAffixes.length > 0 ? (
           <ul className="space-y-1">

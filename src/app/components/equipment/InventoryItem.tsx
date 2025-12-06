@@ -17,7 +17,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
   const isLegendary = item.rarity === "legendary";
 
@@ -26,7 +26,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
       className={`group relative flex items-center justify-between p-3 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors border ${
         isLegendary ? "border-amber-500/50" : "border-transparent"
       }`}
-      {...handlers}
+      ref={triggerRef}
     >
       <div className="flex items-center gap-2">
         <span className="font-medium text-zinc-50 text-sm">
@@ -62,9 +62,10 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
       </div>
 
       <Tooltip
-        isVisible={isHovered}
-        mousePos={mousePos}
+        isVisible={isVisible}
+        triggerRect={triggerRect}
         variant={isLegendary ? "legendary" : "default"}
+        {...tooltipHandlers}
       >
         <TooltipTitle>{item.legendaryName ?? item.equipmentType}</TooltipTitle>
         {isLegendary && (

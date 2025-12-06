@@ -43,7 +43,7 @@ const TraitItem = ({
   level,
   onSelect,
 }: TraitItemProps) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
   const content = (
     <div className="flex-1">
@@ -52,7 +52,12 @@ const TraitItem = ({
   );
 
   const tooltip = (
-    <Tooltip isVisible={isHovered} mousePos={mousePos} width="lg">
+    <Tooltip
+      isVisible={isVisible}
+      triggerRect={triggerRect}
+      width="lg"
+      {...tooltipHandlers}
+    >
       <TooltipTitle>{trait.name}</TooltipTitle>
       <TooltipContent>
         <div className="max-h-64 overflow-y-auto">{trait.affix}</div>
@@ -64,7 +69,7 @@ const TraitItem = ({
     return (
       <div
         className="bg-zinc-900 p-3 rounded border border-zinc-700 cursor-help"
-        {...handlers}
+        ref={triggerRef}
       >
         {content}
         {tooltip}
@@ -79,7 +84,7 @@ const TraitItem = ({
           ? "bg-amber-500/10 border-amber-500"
           : "bg-zinc-900 border-zinc-700 hover:border-zinc-600"
       }`}
-      {...handlers}
+      ref={triggerRef}
     >
       <input
         type="radio"

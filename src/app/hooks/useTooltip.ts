@@ -1,45 +1,152 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 
-interface MousePosition {
-  x: number;
-  y: number;
-}
+// Global state for "one tooltip at a time" behavior
+let activeTooltipId: string | undefined;
+let closeActiveTooltip: (() => void) | undefined;
 
 interface UseTooltipReturn {
-  isHovered: boolean;
-  mousePos: MousePosition;
-  handlers: {
+  isVisible: boolean;
+  triggerRef: <T extends HTMLElement>(node: T | null) => void;
+  triggerRect: DOMRect | undefined;
+  tooltipHandlers: {
     onMouseEnter: () => void;
     onMouseLeave: () => void;
-    onMouseMove: (e: React.MouseEvent) => void;
   };
 }
 
+const HIDE_DELAY_MS = 120;
+
 export const useTooltip = (): UseTooltipReturn => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState<MousePosition>({ x: 0, y: 0 });
+  const tooltipId = useId();
+  const [isVisible, setIsVisible] = useState(false);
+  const [triggerRect, setTriggerRect] = useState<DOMRect | undefined>(
+    undefined,
+  );
+  const triggerElementRef = useRef<HTMLElement | null>(null);
 
-  const onMouseEnter = useCallback(() => {
-    setIsHovered(true);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const triggerHoveredRef = useRef(false);
+  const tooltipHoveredRef = useRef(false);
+
+  const cancelHideTimeout = useCallback(() => {
+    if (hideTimeoutRef.current !== undefined) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = undefined;
+    }
   }, []);
 
-  const onMouseLeave = useCallback(() => {
-    setIsHovered(false);
+  const hide = useCallback(() => {
+    cancelHideTimeout();
+    triggerHoveredRef.current = false;
+    tooltipHoveredRef.current = false;
+    setIsVisible(false);
+    if (activeTooltipId === tooltipId) {
+      activeTooltipId = undefined;
+      closeActiveTooltip = undefined;
+    }
+  }, [cancelHideTimeout, tooltipId]);
+
+  const scheduleHide = useCallback(() => {
+    cancelHideTimeout();
+    hideTimeoutRef.current = setTimeout(() => {
+      if (!triggerHoveredRef.current && !tooltipHoveredRef.current) {
+        hide();
+      }
+    }, HIDE_DELAY_MS);
+  }, [cancelHideTimeout, hide]);
+
+  const show = useCallback(() => {
+    // Close any other open tooltip instantly
+    if (activeTooltipId !== tooltipId && closeActiveTooltip) {
+      closeActiveTooltip();
+    }
+
+    // Register this tooltip as active
+    activeTooltipId = tooltipId;
+    closeActiveTooltip = hide;
+
+    // Capture trigger element's position
+    if (triggerElementRef.current) {
+      setTriggerRect(triggerElementRef.current.getBoundingClientRect());
+    }
+
+    cancelHideTimeout();
+    setIsVisible(true);
+  }, [cancelHideTimeout, hide, tooltipId]);
+
+  // Callback ref that handles attaching/detaching event listeners
+  const handlersRef = useRef<{
+    handleMouseEnter: () => void;
+    handleMouseLeave: () => void;
+  } | null>(null);
+
+  // Keep handlers in sync with latest show/scheduleHide
+  useEffect(() => {
+    handlersRef.current = {
+      handleMouseEnter: () => {
+        triggerHoveredRef.current = true;
+        show();
+      },
+      handleMouseLeave: () => {
+        triggerHoveredRef.current = false;
+        scheduleHide();
+      },
+    };
+  }, [show, scheduleHide]);
+
+  const triggerRef = useCallback(<T extends HTMLElement>(node: T | null) => {
+    // Clean up old element
+    if (triggerElementRef.current && handlersRef.current) {
+      triggerElementRef.current.removeEventListener(
+        "mouseenter",
+        handlersRef.current.handleMouseEnter,
+      );
+      triggerElementRef.current.removeEventListener(
+        "mouseleave",
+        handlersRef.current.handleMouseLeave,
+      );
+    }
+
+    // Set up new element
+    triggerElementRef.current = node;
+    if (node && handlersRef.current) {
+      node.addEventListener("mouseenter", handlersRef.current.handleMouseEnter);
+      node.addEventListener("mouseleave", handlersRef.current.handleMouseLeave);
+    }
   }, []);
 
-  const onMouseMove = useCallback((e: React.MouseEvent) => {
-    setMousePos({ x: e.clientX, y: e.clientY });
-  }, []);
+  const onTooltipMouseEnter = useCallback(() => {
+    tooltipHoveredRef.current = true;
+    cancelHideTimeout();
+  }, [cancelHideTimeout]);
+
+  const onTooltipMouseLeave = useCallback(() => {
+    tooltipHoveredRef.current = false;
+    scheduleHide();
+  }, [scheduleHide]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cancelHideTimeout();
+      if (activeTooltipId === tooltipId) {
+        activeTooltipId = undefined;
+        closeActiveTooltip = undefined;
+      }
+    };
+  }, [cancelHideTimeout, tooltipId]);
 
   return {
-    isHovered,
-    mousePos,
-    handlers: {
-      onMouseEnter,
-      onMouseLeave,
-      onMouseMove,
+    isVisible,
+    triggerRef,
+    triggerRect,
+    tooltipHandlers: {
+      onMouseEnter: onTooltipMouseEnter,
+      onMouseLeave: onTooltipMouseLeave,
     },
   };
 };

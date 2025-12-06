@@ -65,7 +65,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
   isInTargetArea = false,
   reflectedNodeData,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
   const isFullyAllocated = allocated >= node.maxPoints;
   const isLocked = !canAllocate && allocated === 0;
@@ -99,7 +99,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
     return (
       <div
         className="relative w-20 h-20 rounded-lg border-2 transition-all border-purple-500 bg-purple-500/15 cursor-default"
-        {...handlers}
+        ref={triggerRef}
       >
         {/* Prism Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -133,7 +133,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         </div>
 
         {/* Remove Button (shown on hover) */}
-        {isHovered && onRemovePrism && (
+        {isVisible && onRemovePrism && (
           <div className="absolute -top-2 -right-2 flex gap-1">
             <button
               type="button"
@@ -155,7 +155,12 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           </div>
         )}
 
-        <Tooltip isVisible={isHovered} mousePos={mousePos} variant="prism">
+        <Tooltip
+          isVisible={isVisible}
+          triggerRect={triggerRect}
+          variant="prism"
+          {...tooltipHandlers}
+        >
           <TooltipTitle>
             <span className="text-purple-400">
               {prism.rarity === "legendary" ? "Legendary" : "Rare"} Prism
@@ -182,7 +187,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
     return (
       <div
         className="relative w-20 h-20 rounded-lg border-2 transition-all border-cyan-500 bg-cyan-500/15 cursor-default"
-        {...handlers}
+        ref={triggerRef}
       >
         {/* Inverse Image Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -235,7 +240,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         </div>
 
         {/* Remove Button (shown on hover) */}
-        {isHovered && onRemoveInverseImage && (
+        {isVisible && onRemoveInverseImage && (
           <div className="absolute -top-2 -right-2 flex gap-1">
             <button
               type="button"
@@ -257,7 +262,12 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           </div>
         )}
 
-        <Tooltip isVisible={isHovered} mousePos={mousePos} variant="default">
+        <Tooltip
+          isVisible={isVisible}
+          triggerRect={triggerRect}
+          variant="default"
+          {...tooltipHandlers}
+        >
           <TooltipTitle>
             <span className="text-cyan-400">Inverse Image</span>
           </TooltipTitle>
@@ -305,7 +315,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               ? "border-cyan-400 bg-cyan-500/15"
               : "border-cyan-600 bg-cyan-500/10"
         }`}
-        {...handlers}
+        ref={triggerRef}
       >
         {/* Reflected Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -359,7 +369,12 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           </button>
         </div>
 
-        <Tooltip isVisible={isHovered} mousePos={mousePos} variant="default">
+        <Tooltip
+          isVisible={isVisible}
+          triggerRect={triggerRect}
+          variant="default"
+          {...tooltipHandlers}
+        >
           <TooltipTitle>
             <span className="text-cyan-400">
               {reflectedTypeName} (Reflected)
@@ -403,7 +418,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         }
       `}
       onClick={handleClick}
-      {...handlers}
+      ref={triggerRef}
     >
       {/* Icon */}
       <div className="absolute inset-0 flex items-center justify-center">
@@ -478,9 +493,10 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
       )}
 
       <Tooltip
-        isVisible={isHovered}
-        mousePos={mousePos}
+        isVisible={isVisible}
+        triggerRect={triggerRect}
         variant={isLegendary ? "legendary" : "default"}
+        {...tooltipHandlers}
       >
         <TooltipTitle>{talentTypeName}</TooltipTitle>
         <TooltipContent>{node.rawAffix}</TooltipContent>

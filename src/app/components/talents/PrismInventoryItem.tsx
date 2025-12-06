@@ -24,7 +24,7 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
   onSelect,
   selectionMode = false,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
   const legendaryGauges = getLegendaryGaugeAffixes();
   const legendaryCount = prism.gaugeAffixes.filter((a) =>
@@ -53,7 +53,7 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
             : "border-zinc-700 bg-zinc-900 hover:border-zinc-600"
         } ${selectionMode ? "cursor-pointer" : ""}`}
         onClick={handleClick}
-        {...handlers}
+        ref={triggerRef}
       >
         <div className="flex-shrink-0">
           <span
@@ -112,10 +112,11 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
       </div>
 
       <Tooltip
-        isVisible={isHovered}
-        mousePos={mousePos}
+        isVisible={isVisible}
+        triggerRect={triggerRect}
         variant={prism.rarity === "legendary" ? "legendary" : "prism"}
         width="lg"
+        {...tooltipHandlers}
       >
         <TooltipTitle>
           <span className="capitalize">{prism.rarity} Prism</span>

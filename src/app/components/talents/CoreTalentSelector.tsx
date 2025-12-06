@@ -142,26 +142,16 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
   allTalentsForTree,
   onSelect,
 }) => {
-  const { mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
   const [hoveredTalent, setHoveredTalent] = React.useState<
     CoreTalent | undefined
   >();
 
-  const handleMouseEnter = (
-    e: React.MouseEvent,
-    talent: CoreTalent | undefined,
-  ) => {
-    handlers.onMouseEnter();
-    handlers.onMouseMove(e);
+  const handleMouseEnter = (talent: CoreTalent | undefined) => {
     setHoveredTalent(talent);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    handlers.onMouseMove(e);
-  };
-
   const handleMouseLeave = () => {
-    handlers.onMouseLeave();
     setHoveredTalent(undefined);
   };
 
@@ -174,6 +164,7 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
             : "border-zinc-600 bg-zinc-800"
           : "border-zinc-800 bg-zinc-900 opacity-50"
       }`}
+      ref={triggerRef}
     >
       <div className="text-xs text-zinc-400 mb-2">{label}</div>
 
@@ -185,8 +176,7 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
               onClick={() =>
                 onSelect(selected === ct.name ? undefined : ct.name)
               }
-              onMouseEnter={(e) => handleMouseEnter(e, ct)}
-              onMouseMove={handleMouseMove}
+              onMouseEnter={() => handleMouseEnter(ct)}
               onMouseLeave={handleMouseLeave}
               className={`w-full px-3 py-2 border rounded-lg text-sm text-left transition-colors ${
                 selected === ct.name
@@ -206,8 +196,7 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
               return (
                 <button
                   onClick={() => onSelect(undefined)}
-                  onMouseEnter={(e) => handleMouseEnter(e, orphanedTalent)}
-                  onMouseMove={handleMouseMove}
+                  onMouseEnter={() => handleMouseEnter(orphanedTalent)}
                   onMouseLeave={handleMouseLeave}
                   className="w-full px-3 py-2 border border-amber-500 bg-amber-500/20 text-amber-400 rounded-lg text-sm text-left"
                 >
@@ -221,9 +210,10 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
       )}
 
       <Tooltip
-        isVisible={!!hoveredTalent}
-        mousePos={mousePos}
+        isVisible={isVisible && !!hoveredTalent}
+        triggerRect={triggerRect}
         variant="legendary"
+        {...tooltipHandlers}
       >
         {hoveredTalent && (
           <>

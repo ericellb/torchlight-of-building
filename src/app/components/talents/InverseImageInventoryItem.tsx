@@ -26,7 +26,7 @@ export const InverseImageInventoryItem: React.FC<
   onSelect,
   selectionMode = false,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
   const handleClick = () => {
     if (selectionMode && onSelect) {
@@ -43,7 +43,7 @@ export const InverseImageInventoryItem: React.FC<
             : "border-zinc-700 bg-zinc-900 hover:border-zinc-600"
         } ${selectionMode ? "cursor-pointer" : ""}`}
         onClick={handleClick}
-        {...handlers}
+        ref={triggerRef}
       >
         <div className="flex-shrink-0">
           <span className="inline-block h-4 w-4 rounded bg-cyan-500" />
@@ -98,10 +98,11 @@ export const InverseImageInventoryItem: React.FC<
       </div>
 
       <Tooltip
-        isVisible={isHovered}
-        mousePos={mousePos}
+        isVisible={isVisible}
+        triggerRect={triggerRect}
         variant="default"
         width="lg"
+        {...tooltipHandlers}
       >
         <TooltipTitle>
           <span className="text-cyan-400">Inverse Image</span>

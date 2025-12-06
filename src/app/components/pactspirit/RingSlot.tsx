@@ -26,7 +26,7 @@ export const RingSlot: React.FC<RingSlotProps> = ({
   onInstallClick,
   onRevert,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
   const hasDestiny = !!ringState.installedDestiny;
   const isInner = isInnerRing(ringSlot);
@@ -56,7 +56,7 @@ export const RingSlot: React.FC<RingSlotProps> = ({
           ? "bg-zinc-800 border-zinc-700"
           : "bg-zinc-750 border-amber-700/50"
       }`}
-      {...handlers}
+      ref={triggerRef}
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex-1 min-w-0">
@@ -92,7 +92,11 @@ export const RingSlot: React.FC<RingSlotProps> = ({
         </div>
       </div>
 
-      <Tooltip isVisible={isHovered} mousePos={mousePos}>
+      <Tooltip
+        isVisible={isVisible}
+        triggerRect={triggerRect}
+        {...tooltipHandlers}
+      >
         <TooltipTitle>
           {hasDestiny && destinyType
             ? `${destinyType}: ${displayName}`

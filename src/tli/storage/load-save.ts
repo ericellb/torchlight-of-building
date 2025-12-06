@@ -137,7 +137,7 @@ const createTalentNode = (
   const affix =
     points > 0
       ? scaleTalentAffix(nodeData.rawAffix, points, src)
-      : { text: "", src };
+      : { text: nodeData.rawAffix };
 
   const prismAffixes =
     !isReflected && points > 0
@@ -265,8 +265,8 @@ const convertCraftedPrism = (
   return {
     id: prism.id,
     rarity: prism.rarity,
-    baseAffix: convertAffix(prism.baseAffix, src),
-    gaugeAffixes: prism.gaugeAffixes.map((text) => convertAffix(text, src)),
+    baseAffix: prism.baseAffix,
+    gaugeAffixes: prism.gaugeAffixes,
   };
 };
 

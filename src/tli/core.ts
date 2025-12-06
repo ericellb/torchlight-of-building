@@ -1,12 +1,9 @@
 import type { EquipmentType } from "./gear_data_types";
 import type { Mod } from "./mod";
-import type {
-  CraftedInverseImage,
-  CraftedPrism as SaveDataCraftedPrism,
-  PrismRarity,
-} from "@/src/app/lib/save-data";
+import type { CraftedPrism as SaveDataCraftedPrism } from "@/src/app/lib/save-data";
 
-export type { CraftedInverseImage, PrismRarity };
+export const PRISM_RARITIES = ["rare", "legendary"] as const;
+export type PrismRarity = (typeof PRISM_RARITIES)[number];
 
 export interface Affix {
   mods?: Mod[];
@@ -105,14 +102,22 @@ export interface TalentTree {
 export interface CraftedPrism {
   id: string;
   rarity: PrismRarity;
-  baseAffix: Affix;
-  gaugeAffixes: Affix[];
+  // prism affixes are a special case that are not parsed into normal mods
+  baseAffix: string;
+  gaugeAffixes: string[];
 }
 
 export interface PlacedPrism {
   prism: CraftedPrism;
   treeSlot: "tree1" | "tree2" | "tree3" | "tree4";
   position: { x: number; y: number };
+}
+
+export interface CraftedInverseImage {
+  id: string;
+  microTalentEffect: number; // -100 to 200
+  mediumTalentEffect: number; // -100 to 100
+  legendaryTalentEffect: number; // -100 to 50
 }
 
 export interface PlacedInverseImage {
@@ -131,7 +136,7 @@ export interface TalentTrees {
 }
 
 export interface TalentInventory {
-  prismList: SaveDataCraftedPrism[];
+  prismList: CraftedPrism[];
   inverseImageList: CraftedInverseImage[];
 }
 
@@ -163,11 +168,6 @@ export const getTalentAffixes = (talentPage: TalentPage): Affix[] => {
         }
       }
     }
-  }
-
-  if (allocatedTalents.placedPrism) {
-    affixes.push(allocatedTalents.placedPrism.prism.baseAffix);
-    affixes.push(...allocatedTalents.placedPrism.prism.gaugeAffixes);
   }
 
   return affixes;

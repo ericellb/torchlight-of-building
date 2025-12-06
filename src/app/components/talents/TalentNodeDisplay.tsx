@@ -162,13 +162,13 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               {prism.rarity === "legendary" ? "Legendary" : "Rare"} Prism
             </span>
           </TooltipTitle>
-          <TooltipContent>{prism.baseAffix.text}</TooltipContent>
+          <TooltipContent>{prism.baseAffix}</TooltipContent>
           {prism.gaugeAffixes.length > 0 && (
             <div className="mt-2 pt-2 border-t border-zinc-700">
               <div className="text-xs text-zinc-500 mb-1">Gauge Affixes:</div>
               {prism.gaugeAffixes.map((affix) => (
-                <div key={affix.text} className="text-xs text-zinc-400">
-                  {affix.text}
+                <div key={affix} className="text-xs text-zinc-400">
+                  {affix}
                 </div>
               ))}
             </div>

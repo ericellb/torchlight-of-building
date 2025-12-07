@@ -2,7 +2,7 @@
 
 import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
 import { useTooltip } from "@/src/app/hooks/useTooltip";
-import { type Gear, getAffixText, getAllAffixes } from "@/src/tli/core";
+import { type Gear, getAllAffixes } from "@/src/tli/core";
 
 interface InventoryItemProps {
   item: Gear;
@@ -73,20 +73,25 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
         )}
         {item.baseStats && (
           <div className="text-xs text-amber-300 mb-2">
-            {getAffixText(item.baseStats)}
+            {item.baseStats.affixLines.map((line, idx) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: lines can have duplicate text, index is stable
+              <div key={idx}>{line.text}</div>
+            ))}
           </div>
         )}
         {getAllAffixes(item).length > 0 ? (
           <ul className="space-y-1">
-            {getAllAffixes(item).map((affix, idx) => (
-              <li
-                // biome-ignore lint/suspicious/noArrayIndexKey: affixes can have duplicate text, index is stable
-                key={idx}
-                className="text-xs text-zinc-400"
-              >
-                {getAffixText(affix)}
-              </li>
-            ))}
+            {getAllAffixes(item).map((affix, affixIdx) =>
+              affix.affixLines.map((line, lineIdx) => (
+                <li
+                  // biome-ignore lint/suspicious/noArrayIndexKey: affixes can have duplicate text, index is stable
+                  key={`${affixIdx}-${lineIdx}`}
+                  className="text-xs text-zinc-400"
+                >
+                  {line.text}
+                </li>
+              )),
+            )}
           </ul>
         ) : (
           <p className="text-xs text-zinc-500 italic">No affixes</p>

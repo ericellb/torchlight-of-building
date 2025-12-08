@@ -10,63 +10,14 @@ import {
   type Loadout,
 } from "./core";
 import type * as Mod from "./mod";
+import {
+  offensiveSkillConfs,
+  SkillTag,
+  SkillConfiguration,
+  Skill,
+} from "./skill_confs";
 
-type Stat = "dex" | "int" | "str";
-
-type SkillTag =
-  | "Attack"
-  | "Spell"
-  | "Cold"
-  | "Melee"
-  | "Area"
-  | "Physical"
-  | "Projectile"
-  | "Horizontal"
-  | "Slash-Stike"
-  | "Shadow Strike"
-  | "Persistent";
-
-interface SkillConfiguration {
-  skill: string;
-  tags: SkillTag[];
-  stats: Stat[];
-  addedDmgEffPct: number;
-}
-
-const offensiveSkillConfs = [
-  {
-    skill: "[Test] Simple Attack",
-    tags: ["Attack"],
-    stats: ["dex", "str"],
-    addedDmgEffPct: 1,
-  },
-  {
-    skill: "Berserking Blade",
-    tags: ["Attack", "Melee", "Area", "Physical", "Slash-Stike", "Persistent"],
-    stats: ["dex", "str"],
-    addedDmgEffPct: 2.1,
-  },
-  {
-    skill: "Frost Spike",
-    tags: [
-      "Attack",
-      "Melee",
-      "Projectile",
-      "Shadow Strike",
-      "Cold",
-      "Area",
-      "Horizontal",
-    ],
-    stats: ["dex", "int"],
-    addedDmgEffPct: 2.01,
-  },
-] as const satisfies readonly SkillConfiguration[];
-
-// Derive Skill type from the actual skills array (single source of truth)
-export type Skill = (typeof offensiveSkillConfs)[number]["skill"];
-
-// Export available skills for UI
-export const AVAILABLE_SKILLS = offensiveSkillConfs.map((c) => c.skill);
+export type Stat = "dex" | "int" | "str";
 
 const addDR = (dr1: DmgRange, dr2: DmgRange): DmgRange => {
   return {

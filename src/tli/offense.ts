@@ -345,7 +345,10 @@ const calculateCritDmg = (
 
 const calculateAspd = (loadout: Loadout, allMods: Mod.Mod[]): number => {
   const gearAspd = calculateGearAspd(loadout, allMods);
-  const aspdPctMods = filterAffix(allMods, "AspdPct");
+  const aspdPctMods = R.concat(
+    filterAffix(allMods, "AspdPct"),
+    filterAffix(allMods, "AspdAndCspdPct"),
+  );
   const inc = calculateInc(
     aspdPctMods.filter((m) => !m.addn).map((v) => v.value),
   );

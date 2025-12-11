@@ -663,13 +663,18 @@ const calculateSkillHit = (
   };
 };
 
+export interface OffenseInput {
+  loadout: Loadout;
+  mods: Mod.Mod[];
+  skillName: ImplementedOffenseSkillName;
+  configuration: Configuration;
+}
+
 // return undefined if skill unimplemented or it's not an offensive skill
 export const calculateOffense = (
-  loadout: Loadout,
-  equipmentMods: Mod.Mod[],
-  skillName: ImplementedOffenseSkillName,
-  configuration: Configuration,
+  input: OffenseInput,
 ): OffenseSummary | undefined => {
+  const { loadout, mods: equipmentMods, skillName, configuration } = input;
   const skillConf = offensiveSkillConfs.find((c) => c.skillName === skillName);
   if (skillConf === undefined) {
     return undefined;

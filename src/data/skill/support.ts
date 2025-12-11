@@ -265,7 +265,11 @@ export const SupportSkills: readonly SupportSkill[] = [
       "Supports Active Skills.\nReplace Mana Cost from the supported skill with Life cost",
       "Replace Mana Cost from the supported skill with Life cost",
     ],
-    supportTargets: ["active_skill"],
+    supportTargets: [
+      {
+        skillType: "active",
+      },
+    ],
     cannotSupportTargets: [],
   },
   {
@@ -967,7 +971,11 @@ export const SupportSkills: readonly SupportSkill[] = [
       "Supports Passive Skill.\n15.5% Sealed Mana Compensation for the supported skill",
       "15.5% Sealed Mana Compensation for the supported skill",
     ],
-    supportTargets: ["passive_skill"],
+    supportTargets: [
+      {
+        skillType: "passive",
+      },
+    ],
     cannotSupportTargets: [],
   },
   {
@@ -1113,7 +1121,11 @@ export const SupportSkills: readonly SupportSkill[] = [
       "Supports Passive Skill.\nReplaces Sealed Mana of the supported skill with Sealed Life\n-60% additional Sealed Mana Compensation for the supported skill",
       "Replaces Sealed Mana of the supported skill with Sealed Life\n-60% additional Sealed Mana Compensation for the supported skill",
     ],
-    supportTargets: ["passive_skill"],
+    supportTargets: [
+      {
+        skillType: "passive",
+      },
+    ],
     cannotSupportTargets: [],
   },
   {
@@ -1199,7 +1211,11 @@ export const SupportSkills: readonly SupportSkill[] = [
       "Supports Active Skills. Cannot support Channeled Skills or Attack Skills.\nPrepares the supported skill every 9.9 s",
       "Prepares the supported skill every 9.9 s",
     ],
-    supportTargets: ["active_skill"],
+    supportTargets: [
+      {
+        skillType: "active",
+      },
+    ],
     cannotSupportTargets: [
       {
         tags: ["Channeled"],
@@ -1461,7 +1477,11 @@ export const SupportSkills: readonly SupportSkill[] = [
       "Supports Passive Skill.\n0.5% Sealed Mana Compensation for the supported skill",
       "0.5% Sealed Mana Compensation for the supported skill",
     ],
-    supportTargets: ["passive_skill"],
+    supportTargets: [
+      {
+        skillType: "passive",
+      },
+    ],
     cannotSupportTargets: [],
   },
   {
@@ -1498,7 +1518,11 @@ export const SupportSkills: readonly SupportSkill[] = [
       "Supports Passive Skill.\nReplaces Sealed Mana of the supported skill with Sealed Life\n-70% additional Sealed Mana Compensation for the supported skill",
       "Replaces Sealed Mana of the supported skill with Sealed Life\n-70% additional Sealed Mana Compensation for the supported skill",
     ],
-    supportTargets: ["passive_skill"],
+    supportTargets: [
+      {
+        skillType: "passive",
+      },
+    ],
     cannotSupportTargets: [],
   },
   {

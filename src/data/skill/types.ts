@@ -66,14 +66,13 @@ export interface BaseSkill {
 // Multiple skill tags means the target must have all specified tags
 export type SupportTarget =
   | { tags: SkillTag[] }
-  | "active_skill"
+  | { skillType: "active" | "passive" }
   | "any"
   | "deal_damage"
   | "dot"
   | "dot_and_ailment"
   | "hit_enemies"
   | "inflict_ailment"
-  | "passive_skill"
   | "spell_burst"
   | "summon_minions"
   | "summon_spirit_magus"

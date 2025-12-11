@@ -139,11 +139,11 @@ const parseSupportTargets = (
     // Skill type patterns (Active/Passive are skill types, not tags)
     {
       pattern: /Supports? Active Skills?/i,
-      targets: ["active_skill"],
+      targets: [{ skillType: "active" as const }],
     },
     {
       pattern: /Supports? Passive Skills?/i,
-      targets: ["passive_skill"],
+      targets: [{ skillType: "passive" as const }],
     },
     // Generic patterns
     {

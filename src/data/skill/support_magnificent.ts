@@ -1,4 +1,4 @@
-import type { MagnificentSupportSkill } from "./types";
+import type { BaseMagnificentSupportSkill } from "./types";
 
 export const MagnificentSupportSkills = [
   {
@@ -1387,5 +1387,5 @@ export const MagnificentSupportSkills = [
     ],
     supportTarget: "Wilting Beam",
   },
-] as const satisfies readonly (MagnificentSupportSkill &
+] as const satisfies readonly (BaseMagnificentSupportSkill &
   Record<string, unknown>)[];

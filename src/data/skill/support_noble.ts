@@ -1,4 +1,4 @@
-import type { NobleSupportSkill } from "./types";
+import type { BaseNobleSupportSkill } from "./types";
 
 export const NobleSupportSkills = [
   {
@@ -1468,4 +1468,5 @@ export const NobleSupportSkills = [
     ],
     supportTarget: "Wilting Beam",
   },
-] as const satisfies readonly (NobleSupportSkill & Record<string, unknown>)[];
+] as const satisfies readonly (BaseNobleSupportSkill &
+  Record<string, unknown>)[];

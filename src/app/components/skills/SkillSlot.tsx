@@ -6,7 +6,7 @@ import {
   type SearchableSelectOption,
 } from "@/src/app/components/ui/SearchableSelect";
 import type { SkillWithSupports, SupportSkills } from "@/src/app/lib/save-data";
-import type { ActiveSkill, BaseSkill } from "@/src/data/skill/types";
+import type { BaseActiveSkill, BaseSkill } from "@/src/data/skill/types";
 import { SupportSkillSelector } from "./SupportSkillSelector";
 
 type SupportSkillKey = keyof SupportSkills;
@@ -22,7 +22,7 @@ const SUPPORT_SKILL_KEYS: SupportSkillKey[] = [
 interface SkillSlotProps {
   slotLabel: string;
   skill: SkillWithSupports | undefined;
-  availableSkills: readonly (ActiveSkill | BaseSkill)[];
+  availableSkills: readonly (BaseActiveSkill | BaseSkill)[];
   excludedSkillNames: string[];
   onSkillChange: (skillName: string | undefined) => void;
   onToggle: () => void;

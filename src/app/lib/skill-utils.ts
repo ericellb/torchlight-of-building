@@ -5,14 +5,14 @@ import {
   SupportSkills,
 } from "@/src/data/skill";
 import type {
-  ActiveSkill,
+  BaseActiveSkill,
   BaseSkill,
   InferredSkillKind,
-  SupportSkill,
+  BaseSupportSkill,
   SupportTarget,
 } from "@/src/data/skill/types";
 
-type TargetSkill = ActiveSkill | BaseSkill;
+type TargetSkill = BaseActiveSkill | BaseSkill;
 
 const matchesTarget = (skill: TargetSkill, target: SupportTarget): boolean => {
   if (target === "any") return true;
@@ -31,7 +31,9 @@ const matchesTarget = (skill: TargetSkill, target: SupportTarget): boolean => {
   // InferredSkillKind string - only active skills have kinds
   if (typeof target === "string") {
     if (skill.type !== "Active") return false;
-    return (skill as ActiveSkill).kinds.includes(target as InferredSkillKind);
+    return (skill as BaseActiveSkill).kinds.includes(
+      target as InferredSkillKind,
+    );
   }
 
   // { skillType: "active" | "passive" } optionally with requiredKind
@@ -45,7 +47,7 @@ const matchesTarget = (skill: TargetSkill, target: SupportTarget): boolean => {
     // Check requiredKind if present
     if ("requiredKind" in target) {
       if (skill.type !== "Active") return false;
-      return (skill as ActiveSkill).kinds.includes(target.requiredKind);
+      return (skill as BaseActiveSkill).kinds.includes(target.requiredKind);
     }
     return true;
   }
@@ -58,7 +60,7 @@ const matchesTarget = (skill: TargetSkill, target: SupportTarget): boolean => {
     // Check requiredKind if present
     if ("requiredKind" in target) {
       if (skill.type !== "Active") return false;
-      return (skill as ActiveSkill).kinds.includes(target.requiredKind);
+      return (skill as BaseActiveSkill).kinds.includes(target.requiredKind);
     }
     return true;
   }
@@ -68,7 +70,7 @@ const matchesTarget = (skill: TargetSkill, target: SupportTarget): boolean => {
 
 export const canSupport = (
   skill: TargetSkill,
-  supportSkill: SupportSkill,
+  supportSkill: BaseSupportSkill,
 ): boolean => {
   // cannotSupportTargets takes precedence
   if (supportSkill.cannotSupportTargets.some((t) => matchesTarget(skill, t))) {

@@ -104,23 +104,23 @@ export type SupportTarget =
   // Can be applied to any skill with the Spell tags, but not Summon, Channeled, or Sentry skills.
   | "spell_burst";
 
-export interface SupportSkill extends BaseSkill {
+export interface BaseSupportSkill extends BaseSkill {
   // support can target skill if any of the targets match
   supportTargets: SupportTarget[];
   // cannot support any of the matched targets (takes precedence over supportTargets)
   cannotSupportTargets: SupportTarget[];
 }
 
-export interface MagnificentSupportSkill extends BaseSkill {
+export interface BaseMagnificentSupportSkill extends BaseSkill {
   // name of skill that can be supported
   supportTarget: string;
 }
 
-export interface NobleSupportSkill extends BaseSkill {
+export interface BaseNobleSupportSkill extends BaseSkill {
   // name of skill that can be supported
   supportTarget: string;
 }
 
-export interface ActiveSkill extends BaseSkill {
+export interface BaseActiveSkill extends BaseSkill {
   kinds: InferredSkillKind[];
 }

@@ -1,4 +1,4 @@
-import type { ActiveSkill } from "./types";
+import type { BaseActiveSkill } from "./types";
 
 export const ActiveSkills = [
   {
@@ -2127,4 +2127,4 @@ export const ActiveSkills = [
     ],
     kinds: ["hit_enemies"],
   },
-] as const satisfies readonly (ActiveSkill & Record<string, unknown>)[];
+] as const satisfies readonly (BaseActiveSkill & Record<string, unknown>)[];

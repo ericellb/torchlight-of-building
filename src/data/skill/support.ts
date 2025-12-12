@@ -1,4 +1,4 @@
-import type { SupportSkill } from "./types";
+import type { BaseSupportSkill } from "./types";
 
 export const SupportSkills = [
   {
@@ -1335,4 +1335,4 @@ export const SupportSkills = [
     supportTargets: [{ tags: ["Projectile"] }],
     cannotSupportTargets: [],
   },
-] as const satisfies readonly (SupportSkill & Record<string, unknown>)[];
+] as const satisfies readonly (BaseSupportSkill & Record<string, unknown>)[];

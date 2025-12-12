@@ -1,4 +1,4 @@
-import type { SupportSkill } from "./types";
+import type { BaseSupportSkill } from "./types";
 
 export const ActivationMediumSkills = [
   {
@@ -412,4 +412,4 @@ export const ActivationMediumSkills = [
     supportTargets: [{ tags: ["Spell"], requiredKind: "deal_damage" }],
     cannotSupportTargets: [{ skillType: "passive" }, { tags: ["Channeled"] }],
   },
-] as const satisfies readonly (SupportSkill & Record<string, unknown>)[];
+] as const satisfies readonly (BaseSupportSkill & Record<string, unknown>)[];

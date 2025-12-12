@@ -3,13 +3,13 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
 import {
-  type ActiveSkill,
+  type BaseActiveSkill,
   type BaseSkill,
-  type MagnificentSupportSkill,
-  type NobleSupportSkill,
+  type BaseMagnificentSupportSkill,
+  type BaseNobleSupportSkill,
   SKILL_TAGS,
   type SkillTag,
-  type SupportSkill,
+  type BaseSupportSkill,
   type SupportTarget,
 } from "../data/skill/types";
 import { readAllTlidbSkills, type TlidbSkillFile } from "./lib/tlidb";
@@ -515,11 +515,11 @@ const extractSkillFromTlidbHtml = (
 
 const generateActiveSkillFile = (
   constName: string,
-  skills: ActiveSkill[],
+  skills: BaseActiveSkill[],
 ): string => {
-  return `import type { ActiveSkill } from "./types";
+  return `import type { BaseActiveSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (ActiveSkill & Record<string, unknown>)[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (BaseActiveSkill & Record<string, unknown>)[];
 `;
 };
 
@@ -535,31 +535,31 @@ export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies r
 
 const generateSupportSkillFile = (
   constName: string,
-  skills: SupportSkill[],
+  skills: BaseSupportSkill[],
 ): string => {
-  return `import type { SupportSkill } from "./types";
+  return `import type { BaseSupportSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (SupportSkill & Record<string, unknown>)[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (BaseSupportSkill & Record<string, unknown>)[];
 `;
 };
 
 const generateMagnificentSupportSkillFile = (
   constName: string,
-  skills: MagnificentSupportSkill[],
+  skills: BaseMagnificentSupportSkill[],
 ): string => {
-  return `import type { MagnificentSupportSkill } from "./types";
+  return `import type { BaseMagnificentSupportSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (MagnificentSupportSkill & Record<string, unknown>)[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (BaseMagnificentSupportSkill & Record<string, unknown>)[];
 `;
 };
 
 const generateNobleSupportSkillFile = (
   constName: string,
-  skills: NobleSupportSkill[],
+  skills: BaseNobleSupportSkill[],
 ): string => {
-  return `import type { NobleSupportSkill } from "./types";
+  return `import type { BaseNobleSupportSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (NobleSupportSkill & Record<string, unknown>)[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (BaseNobleSupportSkill & Record<string, unknown>)[];
 `;
 };
 
@@ -585,14 +585,17 @@ const main = async (): Promise<void> => {
   console.log(`Extracted ${rawData.length} skills`);
 
   // Group by skill type - separate maps for different skill interfaces
-  const activeSkillGroups = new Map<SkillTypeKey, ActiveSkill[]>();
+  const activeSkillGroups = new Map<SkillTypeKey, BaseActiveSkill[]>();
   const baseSkillGroups = new Map<SkillTypeKey, BaseSkill[]>();
-  const supportSkillGroups = new Map<SkillTypeKey, SupportSkill[]>();
+  const supportSkillGroups = new Map<SkillTypeKey, BaseSupportSkill[]>();
   const magnificentSupportSkillGroups = new Map<
     SkillTypeKey,
-    MagnificentSupportSkill[]
+    BaseMagnificentSupportSkill[]
   >();
-  const nobleSupportSkillGroups = new Map<SkillTypeKey, NobleSupportSkill[]>();
+  const nobleSupportSkillGroups = new Map<
+    SkillTypeKey,
+    BaseNobleSupportSkill[]
+  >();
 
   for (const raw of rawData) {
     const skillType = raw.type as SkillTypeKey;
@@ -612,10 +615,10 @@ const main = async (): Promise<void> => {
         raw.name,
       );
 
-      const skillEntry: SupportSkill = {
-        type: raw.type as SupportSkill["type"],
+      const skillEntry: BaseSupportSkill = {
+        type: raw.type as BaseSupportSkill["type"],
         name: raw.name,
-        tags: raw.tags as unknown as SupportSkill["tags"],
+        tags: raw.tags as unknown as BaseSupportSkill["tags"],
         description: raw.description,
         supportTargets,
         cannotSupportTargets,
@@ -628,10 +631,10 @@ const main = async (): Promise<void> => {
     } else if (config.supportType === "magnificent") {
       const supportTarget = parseSkillSupportTarget(firstDescription);
 
-      const skillEntry: MagnificentSupportSkill = {
-        type: raw.type as MagnificentSupportSkill["type"],
+      const skillEntry: BaseMagnificentSupportSkill = {
+        type: raw.type as BaseMagnificentSupportSkill["type"],
         name: raw.name,
-        tags: raw.tags as unknown as MagnificentSupportSkill["tags"],
+        tags: raw.tags as unknown as BaseMagnificentSupportSkill["tags"],
         description: raw.description,
         supportTarget,
       };
@@ -643,10 +646,10 @@ const main = async (): Promise<void> => {
     } else if (config.supportType === "noble") {
       const supportTarget = parseSkillSupportTarget(firstDescription);
 
-      const skillEntry: NobleSupportSkill = {
-        type: raw.type as NobleSupportSkill["type"],
+      const skillEntry: BaseNobleSupportSkill = {
+        type: raw.type as BaseNobleSupportSkill["type"],
         name: raw.name,
-        tags: raw.tags as unknown as NobleSupportSkill["tags"],
+        tags: raw.tags as unknown as BaseNobleSupportSkill["tags"],
         description: raw.description,
         supportTarget,
       };
@@ -665,7 +668,7 @@ const main = async (): Promise<void> => {
       };
       const kinds = classifyWithRegex(baseSkill);
 
-      const skillEntry: ActiveSkill = {
+      const skillEntry: BaseActiveSkill = {
         ...baseSkill,
         kinds,
       };

@@ -11,10 +11,10 @@ import {
   NobleSupportSkills,
   SupportSkills,
 } from "@/src/data/skill";
-import type { ActiveSkill, BaseSkill } from "@/src/data/skill/types";
+import type { BaseActiveSkill, BaseSkill } from "@/src/data/skill/types";
 
 interface SupportSkillSelectorProps {
-  mainSkill: ActiveSkill | BaseSkill | undefined;
+  mainSkill: BaseActiveSkill | BaseSkill | undefined;
   selectedSkill?: string;
   excludedSkills: string[];
   onChange: (skillName: string | undefined) => void;

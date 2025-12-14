@@ -177,3 +177,51 @@ export const criticalStrikeDamageIncreaseParser: SupportLevelParser = (
 
   return [critDmgPctLevels];
 };
+
+export const criticalStrikeRatingIncreaseParser: SupportLevelParser = (
+  input,
+) => {
+  const { skillName, progressionTable } = input;
+
+  // Extract crit rating from progression table values
+  const critRatingPctLevels: Record<number, number> = {};
+  for (const [levelStr, values] of Object.entries(progressionTable.values)) {
+    const level = Number(levelStr);
+    const critRatingValue = values[0];
+    if (critRatingValue === undefined) {
+      throw new Error(`${skillName} level ${level}: missing crit rating value`);
+    }
+
+    critRatingPctLevels[level] = parseNumericValue(critRatingValue, {
+      asPercentage: true,
+    });
+  }
+
+  validateAllLevels(critRatingPctLevels, skillName);
+
+  return [critRatingPctLevels];
+};
+
+export const enhancedAilmentParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  // Extract ailment damage from progression table values
+  const ailmentDmgPctLevels: Record<number, number> = {};
+  for (const [levelStr, values] of Object.entries(progressionTable.values)) {
+    const level = Number(levelStr);
+    const ailmentDmgValue = values[0];
+    if (ailmentDmgValue === undefined) {
+      throw new Error(
+        `${skillName} level ${level}: missing ailment damage value`,
+      );
+    }
+
+    ailmentDmgPctLevels[level] = parseNumericValue(ailmentDmgValue, {
+      asPercentage: true,
+    });
+  }
+
+  validateAllLevels(ailmentDmgPctLevels, skillName);
+
+  return [ailmentDmgPctLevels];
+};

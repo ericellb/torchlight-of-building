@@ -39,4 +39,10 @@ export const skillModTemplates: Partial<
   "Critical Strike Damage Increase": {
     levelMods: [{ type: "CritDmgPct", addn: true, modType: "global" }],
   },
+  "Critical Strike Rating Increase": {
+    levelMods: [{ type: "CritRatingPct", modType: "global" }],
+  },
+  "Enhanced Ailment": {
+    levelMods: [{ type: "DmgPct", modType: "ailment", addn: true }],
+  },
 };

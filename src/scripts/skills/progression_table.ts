@@ -90,7 +90,18 @@ export const parseNumericValue = (
   options?: { asPercentage?: boolean },
 ): number => {
   const cleaned = value.replace(/^\+/, "").trim();
-  let num = Number.parseFloat(cleaned);
+
+  // Handle fraction notation (e.g., "31/2" = 15.5)
+  const fractionMatch = cleaned.match(/^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
+  let num: number;
+
+  if (fractionMatch) {
+    const numerator = Number.parseFloat(fractionMatch[1]);
+    const denominator = Number.parseFloat(fractionMatch[2]);
+    num = numerator / denominator;
+  } else {
+    num = Number.parseFloat(cleaned);
+  }
 
   if (Number.isNaN(num)) {
     throw new Error(`Failed to parse numeric value: "${value}"`);

@@ -12,6 +12,7 @@ import {
   type SkillTag,
   type SupportTarget,
 } from "../data/skill/types";
+import { activeSkillTemplates } from "../tli/skills/active_templates";
 import { skillModTemplates } from "../tli/skills/support_templates";
 import { readAllTlidbSkills, type TlidbSkillFile } from "./lib/tlidb";
 import { classifyWithRegex } from "./skill_kind_patterns";
@@ -743,9 +744,60 @@ const main = async (): Promise<void> => {
       };
       const kinds = classifyWithRegex(baseSkill);
 
+      // Look up active skill template for levelOffense/levelMods
+      const template =
+        activeSkillTemplates[raw.name as keyof typeof activeSkillTemplates];
+
+      // Build levelOffense and levelMods from template + parsed values
+      let levelOffense: BaseActiveSkill["levelOffense"];
+      let levelMods: BaseActiveSkill["levelMods"];
+
+      if (template !== undefined && raw.parsedLevelModValues !== undefined) {
+        const parsedValues = raw.parsedLevelModValues;
+
+        // Calculate expected count: levelOffense templates + levelMods templates
+        const offenseCount = template.levelOffense?.length ?? 0;
+        const modsCount = template.levelMods?.length ?? 0;
+        const expectedCount = offenseCount + modsCount;
+
+        if (parsedValues.length !== expectedCount) {
+          throw new Error(
+            `Skill "${raw.name}": template expects ${expectedCount} level arrays (${offenseCount} offense + ${modsCount} mods) but parser returned ${parsedValues.length}`,
+          );
+        }
+
+        // First N arrays are for levelOffense
+        if (template.levelOffense !== undefined && offenseCount > 0) {
+          levelOffense = template.levelOffense.map((offenseTemplate, i) => {
+            const levels = parsedValues[i];
+            if (levels === undefined) {
+              throw new Error(
+                `Skill "${raw.name}": missing parsed offense levels at index ${i}`,
+              );
+            }
+            return { template: offenseTemplate, levels };
+          });
+        }
+
+        // Remaining arrays are for levelMods
+        if (template.levelMods !== undefined && modsCount > 0) {
+          levelMods = template.levelMods.map((modTemplate, i) => {
+            const levels = parsedValues[offenseCount + i];
+            if (levels === undefined) {
+              throw new Error(
+                `Skill "${raw.name}": missing parsed mod levels at index ${offenseCount + i}`,
+              );
+            }
+            return { template: modTemplate, levels };
+          });
+        }
+      }
+
       const skillEntry: BaseActiveSkill = {
         ...baseSkill,
         kinds,
+        ...(levelOffense !== undefined && { levelOffense }),
+        ...(levelMods !== undefined && { levelMods }),
       };
 
       if (!activeSkillGroups.has(skillType)) {

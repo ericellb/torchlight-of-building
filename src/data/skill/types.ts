@@ -138,18 +138,24 @@ export interface BaseNobleSupportSkill extends BaseSkill {
   supportTarget: string;
 }
 
-export type SkillOffense = { type: "WeaponAtkDmgPct"; value: number };
+export type SkillOffense =
+  | { type: "WeaponAtkDmgPct"; value: number }
+  | { type: "AddedDmgEffPct"; value: number };
 
-export type SkillOffenseTemplate = { type: "WeaponAtkDmgPct" };
+export type SkillOffenseTemplate = SkillOffense extends infer M
+  ? M extends SkillOffense
+    ? Omit<M, "value">
+    : never
+  : never;
 
 export interface BaseActiveSkill extends BaseSkill {
   kinds: InferredSkillKind[];
   levelOffense?: {
     template: SkillOffenseTemplate;
     levels: Record<number, number | DmgRange>;
-  };
+  }[];
   levelMods?: {
     template: ModWithoutValue;
     levels: Record<number, number | DmgRange>;
-  };
+  }[];
 }

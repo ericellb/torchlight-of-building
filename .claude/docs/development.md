@@ -46,6 +46,7 @@ src/data/                # Scraped JSON data
 - **Path alias:** `@/src/...` maps to project root
 - Functions must have return types
 - Do not rely on implicit truthiness of values for conditionals. Always make sure conditionals are using booleans instead. For example, do not do something like `if (foo) { ... }` to check if foo is defined. Instead, do `if (foo !== undefined) { ... }`
+- Percentages are represented as decimal fractions, e.g. 25% is equivalent to .25
 
 ## Data Flow
 

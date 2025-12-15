@@ -7,7 +7,11 @@ import type { DmgRange } from "./core";
 
 export type DmgType = "physical" | "cold" | "lightning" | "fire" | "erosion";
 
-export type Stackable = "willpower" | "main_stat";
+export type Stackable =
+  | "willpower"
+  | "main_stat"
+  | "frostbite_rating"
+  | "projectile";
 
 export type StatType = "str" | "dex" | "int";
 
@@ -15,7 +19,7 @@ export type StatType = "str" | "dex" | "int";
 // e.g. per 35 frostbite with 105 frostbite means x3
 export interface PerStackable {
   stackable: Stackable;
-  amt?: number;  // default 1
+  amt?: number; // default 1
 }
 
 export type Mod =
@@ -253,13 +257,24 @@ export type Mod =
   | {
       type: "MaxWillpowerStacks";
       value: number;
-      per?: PerStackable;
       src?: string;
     }
   | {
       type: "ShadowQuant";
       value: number;
       src?: string;
+    }
+  | {
+      type: "Projectile";
+      value: number;
+      per?: PerStackable;
+      src?: string;
+    }
+  | {
+      type: "MaxProjectile";
+      value: number;
+      src?: string;
+      override?: boolean;
     }
   | {
       type: "CoreTalent";

@@ -1791,7 +1791,7 @@ export const SupportSkills = [
           type: "DmgPct",
           modType: "global",
           addn: false,
-          per: "willpower",
+          per: { stackable: "willpower" },
         },
         levels: {
           1: 0.041,

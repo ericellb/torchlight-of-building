@@ -1700,7 +1700,6 @@ describe("resolveSelectedSkillMods via calculateOffense", () => {
       configuration: defaultConfiguration,
     });
 
-    expect(actual).toBeDefined();
     const mods = actual!.resolvedMods;
     const skillMods = mods.filter((m) => m.src?.includes("Frost Spike L20"));
 
@@ -1711,12 +1710,10 @@ describe("resolveSelectedSkillMods via calculateOffense", () => {
     const convertMod = skillMods
       .filter((m) => m.type === "ConvertDmgPct")
       .find((m) => m.from === "physical" && m.to === "cold");
-    expect(convertMod).toBeDefined();
     expect(convertMod?.value).toBe(1);
 
     // Check MaxProjectile mod
     const maxProjMod = skillMods.find((m) => m.type === "MaxProjectile");
-    expect(maxProjMod).toBeDefined();
     expect(maxProjMod?.value).toBe(5);
     expect((maxProjMod as { override?: boolean }).override).toBe(true);
 
@@ -1731,7 +1728,6 @@ describe("resolveSelectedSkillMods via calculateOffense", () => {
 
     // Check DmgPct per projectile mod (normalized to 0 with no projectile stacks)
     const dmgPctMod = skillMods.find((m) => m.type === "DmgPct");
-    expect(dmgPctMod).toBeDefined();
     expect(dmgPctMod?.value).toBe(0); // 0.08 * 0 stacks = 0
     expect((dmgPctMod as { addn?: boolean }).addn).toBe(true);
   });

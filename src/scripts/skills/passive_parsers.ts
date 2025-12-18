@@ -4,9 +4,9 @@ import type { SupportLevelParser } from "./types";
 export const preciseCrueltyParser: SupportLevelParser = (input) => {
   const { skillName, progressionTable } = input;
 
-  // levelBuffMods: DmgPct attack additional damage from Descript column (values[0])
+  // levelBuffMods[0]: DmgPct attack additional damage from Descript column (values[0])
   const buffDmgPctLevels: Record<number, number> = {};
-  // levelBuffMods: AuraEffPct per cruelty_buff stack from Descript column
+  // levelMods[0]: AuraEffPct per cruelty_buff stack from Descript column
   const auraEffPctLevels: Record<number, number> = {};
 
   for (const [levelStr, values] of Object.entries(progressionTable.values)) {
@@ -40,6 +40,6 @@ export const preciseCrueltyParser: SupportLevelParser = (input) => {
   validateAllLevels(auraEffPctLevels, skillName);
 
   // Return array matching template order:
-  // levelBuffMods: [DmgPct attack, AuraEffPct]
+  // levelBuffMods: [DmgPct attack], levelMods: [AuraEffPct]
   return [buffDmgPctLevels, auraEffPctLevels];
 };

@@ -242,12 +242,13 @@ export const PassiveSkills = [
           40: 0.2725,
         },
       },
+    ],
+    levelMods: [
       {
         template: {
           type: "AuraEffPct",
           addn: true,
           per: { stackable: "cruelty_buff", limit: 40 },
-          target: "own_skill_only",
           unscalable: true,
         },
         levels: {

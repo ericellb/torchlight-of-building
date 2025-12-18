@@ -2416,9 +2416,9 @@ describe("resolveBuffSkillMods", () => {
     expect(preciseCrueltyBuffMod?.value).toBeCloseTo(0.22 * 1.5);
   });
 
-  test("AuraEffPct with target own_skill_only does not appear in resolvedMods", () => {
-    // The AuraEffPct mod from Precise: Cruelty has target: "own_skill_only"
-    // It should not be included in the resolvedMods output
+  test("AuraEffPct from levelMods does not appear in resolvedMods", () => {
+    // The AuraEffPct mod from Precise: Cruelty is in levelMods (not levelBuffMods)
+    // so it should not be included in the resolvedMods output
     const loadout = initLoadout({
       gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
@@ -2448,7 +2448,7 @@ describe("resolveBuffSkillMods", () => {
     const actual = results["[Test] Simple Attack"];
 
     expect(actual).toBeDefined();
-    // AuraEffPct with own_skill_only target should not be in resolvedMods
+    // AuraEffPct from levelMods should not be in resolvedMods
     const auraEffMod = actual?.resolvedMods.find(
       (m) => m.type === "AuraEffPct",
     );

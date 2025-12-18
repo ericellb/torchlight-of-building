@@ -854,11 +854,6 @@ const findSkill = (
   return PassiveSkills.find((s) => s.name === name) as BasePassiveSkill;
 };
 
-// Checks if a mod has target: "own_skill_only" property
-const hasOwnSkillOnlyTarget = (mod: Mod): boolean => {
-  return "target" in mod && mod.target === "own_skill_only";
-};
-
 // resolves mods coming from skills that provide buffs (levelBuffMods)
 // for example, "Bull's Rage" provides a buff that increases all melee damage
 const resolveBuffSkillMods = (
@@ -886,19 +881,25 @@ const resolveBuffSkillMods = (
 
     // Get support skill mods (includes SkillEffPct, AuraEffPct, etc.)
     const supportMods = resolveSelectedSkillSupportMods(skillSlot);
+    const levelMods =
+      skill.levelMods?.map((m) => {
+        return {
+          ...m.template,
+          value: m.levels[level],
+          src: `${skill.name} Lv.${level}`,
+        } as Mod;
+      }) ?? [];
+    const mods = [...loadoutMods, ...supportMods, ...levelMods];
 
     // === Calculate SkillEffPct multiplier (from support skills + loadout mods) ===
     // todo: add area, cdr, duration, and other buff-skill modifiers
     const effNormContext = calculateNormalizationContext({
-      mods: [...loadoutMods, ...supportMods],
+      mods,
       config,
       stats,
       skill,
     });
-    const skillEffMods = [
-      ...filterAffix(loadoutMods, "SkillEffPct"),
-      ...filterAffix(supportMods, "SkillEffPct"),
-    ]
+    const skillEffMods = filterAffix(mods, "SkillEffPct")
       .map((m) => normalizeMod(m, effNormContext, config))
       .filter((m) => m !== undefined);
     const skillEffMult = calculateEffMultiplier(skillEffMods);
@@ -917,27 +918,14 @@ const resolveBuffSkillMods = (
     // Only applies if this is an Aura skill
     let auraEffMult = 1;
     if (isAuraSkill) {
-      const ownAuraEffMods = filterAffix(rawBuffMods, "AuraEffPct").filter(
-        hasOwnSkillOnlyTarget,
-      );
-      const allAuraEffMods = [
-        ...filterAffix(loadoutMods, "AuraEffPct"),
-        ...filterAffix(supportMods, "AuraEffPct"),
-        ...ownAuraEffMods,
-      ]
+      const allAuraEffMods = filterAffix(mods, "AuraEffPct")
         .map((m) => normalizeMod(m, effNormContext, config))
         .filter((m) => m !== undefined);
       auraEffMult = calculateEffMultiplier(allAuraEffMods);
     }
 
-    // === Apply multipliers and filter own_skill_only mods ===
+    // === Apply multipliers to buff mods ===
     for (const mod of rawBuffMods) {
-      // Skip mods with target: "own_skill_only" from shared output
-      // (they were already used to calculate multipliers above)
-      if (hasOwnSkillOnlyTarget(mod)) {
-        continue;
-      }
-
       // Skip mods without value property (like CoreTalent)
       if (!("value" in mod)) {
         resolvedMods.push(mod);

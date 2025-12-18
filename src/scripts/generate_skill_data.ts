@@ -871,28 +871,45 @@ const main = async (): Promise<void> => {
       }
       activeSkillGroups.get(skillType)?.push(skillEntry);
     } else if (skillType === "Passive") {
-      // Look up passive skill template for levelBuffMods
+      // Look up passive skill template for levelBuffMods and levelMods
       const template =
         passiveSkillTemplates[raw.name as keyof typeof passiveSkillTemplates];
 
       let levelBuffMods: BasePassiveSkill["levelBuffMods"];
+      let levelMods: BasePassiveSkill["levelMods"];
 
       if (template !== undefined && raw.parsedLevelModValues !== undefined) {
         const parsedValues = raw.parsedLevelModValues;
         const buffModsCount = template.levelBuffMods?.length ?? 0;
+        const modsCount = template.levelMods?.length ?? 0;
+        const expectedCount = buffModsCount + modsCount;
 
-        if (parsedValues.length !== buffModsCount) {
+        if (parsedValues.length !== expectedCount) {
           throw new Error(
-            `Skill "${raw.name}": template expects ${buffModsCount} level arrays but parser returned ${parsedValues.length}`,
+            `Skill "${raw.name}": template expects ${expectedCount} level arrays (${buffModsCount} buffMods + ${modsCount} mods) but parser returned ${parsedValues.length}`,
           );
         }
 
+        // First N arrays are for levelBuffMods
         if (template.levelBuffMods !== undefined && buffModsCount > 0) {
           levelBuffMods = template.levelBuffMods.map((modTemplate, i) => {
             const levels = parsedValues[i];
             if (levels === undefined) {
               throw new Error(
                 `Skill "${raw.name}": missing parsed buff mod levels at index ${i}`,
+              );
+            }
+            return { template: modTemplate, levels };
+          });
+        }
+
+        // Remaining arrays are for levelMods
+        if (template.levelMods !== undefined && modsCount > 0) {
+          levelMods = template.levelMods.map((modTemplate, i) => {
+            const levels = parsedValues[buffModsCount + i];
+            if (levels === undefined) {
+              throw new Error(
+                `Skill "${raw.name}": missing parsed mod levels at index ${buffModsCount + i}`,
               );
             }
             return { template: modTemplate, levels };
@@ -907,6 +924,7 @@ const main = async (): Promise<void> => {
         description: raw.description,
         ...(raw.mainStats !== undefined && { mainStats: raw.mainStats }),
         ...(levelBuffMods !== undefined && { levelBuffMods }),
+        ...(levelMods !== undefined && { levelMods }),
       };
 
       if (!passiveSkillGroups.has(skillType)) {

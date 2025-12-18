@@ -97,6 +97,10 @@ export interface BasePassiveSkill extends BaseSkill {
     template: ModWithoutValue;
     levels: Record<number, number | DmgRange>;
   }[];
+  levelMods?: {
+    template: ModWithoutValue;
+    levels: Record<number, number | DmgRange>;
+  }[];
 }
 
 // Support targets which cannot be identified using easily

@@ -1,4 +1,3 @@
-import { SkillTag } from "../data/skill";
 import type {
   CritDmgModType,
   CritRatingModType,
@@ -35,8 +34,6 @@ export interface PerStackable {
 }
 
 export type Condition = "enemy_frostbitten";
-
-export type Target = "own_skill_only";
 
 export type Mod =
   | {
@@ -306,7 +303,6 @@ export type Mod =
       addn?: boolean;
       per?: PerStackable;
       src?: string;
-      target?: Target;
       unscalable?: boolean;
     }
   | {

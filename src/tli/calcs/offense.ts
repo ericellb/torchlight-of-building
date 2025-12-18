@@ -176,7 +176,7 @@ const emptyDmgRanges = (): DmgRanges => {
   };
 };
 
-const findAffix = <T extends Mod["type"]>(
+const findMod = <T extends Mod["type"]>(
   mods: Mod[],
   type: T,
 ): Extract<Mod, { type: T }> | undefined => {
@@ -185,7 +185,7 @@ const findAffix = <T extends Mod["type"]>(
     | undefined;
 };
 
-const filterAffix = <T extends Mod["type"]>(
+const filterMod = <T extends Mod["type"]>(
   mods: Mod[],
   type: T,
 ): Extract<Mod, { type: T }>[] => {
@@ -242,7 +242,7 @@ export const convertDmg = (dmgRanges: DmgRanges, allMods: Mod[]): DmgPools => {
   for (const sourceType of CONVERSION_ORDER) {
     // Step 1: Process "Gain as Extra" mods (calculated BEFORE conversion)
     // This adds extra damage to target pools but does NOT remove from source
-    const addsDmgAsMods = filterAffix(allMods, "AddsDmgAs").filter(
+    const addsDmgAsMods = filterMod(allMods, "AddsDmgAs").filter(
       (m) => m.from === sourceType,
     );
     for (const chunk of pools[sourceType]) {
@@ -255,7 +255,7 @@ export const convertDmg = (dmgRanges: DmgRanges, allMods: Mod[]): DmgPools => {
     }
 
     // Step 2: Process conversion mods (removes from source, adds to target)
-    const convMods = filterAffix(allMods, "ConvertDmgPct").filter(
+    const convMods = filterMod(allMods, "ConvertDmgPct").filter(
       (m) => m.from === sourceType,
     );
     if (convMods.length === 0) continue;
@@ -314,12 +314,12 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod[]): GearDmg => {
   phys.max += basePhysDmg;
   let physBonusPct = 0;
 
-  const gearPhysDmgPct = findAffix(mainhandMods, "GearPhysDmgPct");
+  const gearPhysDmgPct = findMod(mainhandMods, "GearPhysDmgPct");
   if (gearPhysDmgPct !== undefined) {
     physBonusPct += gearPhysDmgPct.value;
   }
 
-  filterAffix(mainhandMods, "FlatGearDmg").forEach((a) => {
+  filterMod(mainhandMods, "FlatGearDmg").forEach((a) => {
     match(a.modType)
       .with("physical", () => {
         phys = addDR(phys, a.value);
@@ -345,7 +345,7 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod[]): GearDmg => {
   });
 
   let addnMHDmgMult = 1;
-  filterAffix(allMods, "AddnMainHandDmgPct").forEach((a) => {
+  filterMod(allMods, "AddnMainHandDmgPct").forEach((a) => {
     addnMHDmgMult *= 1 + a.value;
   });
 
@@ -379,8 +379,8 @@ const calculateFlatDmg = (
   let erosion = emptyDamageRange();
 
   const affixes = R.concat(
-    filterAffix(allMods, "FlatDmgToAtks"),
-    filterAffix(allMods, "FlatDmgToAtksAndSpells"),
+    filterMod(allMods, "FlatDmgToAtks"),
+    filterMod(allMods, "FlatDmgToAtksAndSpells"),
   );
   for (const a of affixes) {
     match(a.dmgType)
@@ -416,7 +416,7 @@ const calculateGearAspd = (loadout: Loadout, allMods: Mod[]): number => {
       (l) => l.mod?.type === "AttackSpeed",
     )?.mod?.value || 0;
   const gearAspdPctBonus = calculateInc(
-    filterAffix(allMods, "GearAspdPct").map((b) => b.value),
+    filterMod(allMods, "GearAspdPct").map((b) => b.value),
   );
   return baseAspd * (1 + gearAspdPctBonus);
 };
@@ -425,7 +425,7 @@ const calculateCritRating = (
   allMods: Mod[],
   configuration: Configuration,
 ): number => {
-  const critRatingPctMods = filterAffix(allMods, "CritRatingPct");
+  const critRatingPctMods = filterMod(allMods, "CritRatingPct");
   const mods = critRatingPctMods.map((a) => {
     return {
       type: "CritRatingPct",
@@ -438,7 +438,7 @@ const calculateCritRating = (
   // Add fervor bonus if enabled
   if (configuration.fervor.enabled) {
     // Collect FervorEff modifiers and calculate total effectiveness
-    const fervorEffMods = filterAffix(allMods, "FervorEff");
+    const fervorEffMods = filterMod(allMods, "FervorEff");
     const fervorEffTotal = calculateInc(fervorEffMods.map((a) => a.value));
 
     // Base fervor: 2% per point, modified by FervorEff
@@ -462,7 +462,7 @@ const calculateCritDmg = (
   allMods: Mod[],
   configuration: Configuration,
 ): number => {
-  const critDmgPctMods = filterAffix(allMods, "CritDmgPct");
+  const critDmgPctMods = filterMod(allMods, "CritDmgPct");
   const mods = critDmgPctMods.map((a) => {
     return {
       type: "CritDmgPct",
@@ -475,7 +475,7 @@ const calculateCritDmg = (
 
   // Handle CritDmgPerFervor mods
   if (configuration.fervor.enabled) {
-    const critDmgPerFervorMods = filterAffix(allMods, "CritDmgPerFervor");
+    const critDmgPerFervorMods = filterMod(allMods, "CritDmgPerFervor");
     critDmgPerFervorMods.forEach((a) => {
       // Calculate bonus: value * fervor points
       // Example: 0.005 (0.5%) * 100 points = 0.5 (50% increased crit damage)
@@ -499,8 +499,8 @@ const calculateCritDmg = (
 const calculateAspd = (loadout: Loadout, allMods: Mod[]): number => {
   const gearAspd = calculateGearAspd(loadout, allMods);
   const aspdPctMods = R.concat(
-    filterAffix(allMods, "AspdPct"),
-    filterAffix(allMods, "AspdAndCspdPct"),
+    filterMod(allMods, "AspdPct"),
+    filterMod(allMods, "AspdAndCspdPct"),
   );
   const inc = calculateInc(
     aspdPctMods.filter((m) => !m.addn).map((v) => v.value),
@@ -657,7 +657,7 @@ const calculateSkillHit = (
   const dmgPools = convertDmg(skillBaseDmg, allMods);
 
   // Apply % bonuses to each pool, considering conversion history
-  const allDmgPcts = filterAffix(allMods, "DmgPct");
+  const allDmgPcts = filterMod(allMods, "DmgPct");
   const phys = calculatePoolTotal(
     dmgPools.physical,
     "physical",
@@ -750,7 +750,7 @@ const calculateNormalizationContext = (
 ): NormalizationContext => {
   const { mods, config, stats, skill } = options;
 
-  const willpower = findAffix(mods, "MaxWillpowerStacks")?.value || 0;
+  const willpower = findMod(mods, "MaxWillpowerStacks")?.value || 0;
   const mainStats = skill.mainStats || [];
   let mainStat = 0;
   for (const mainStatType of mainStats) {
@@ -807,7 +807,7 @@ interface Stats {
 
 // todo: very basic stat calculation, will definitely need to handle things like pct, per, and conditionals
 const calculateStats = (mods: Mod[]): Stats => {
-  const statMods = filterAffix(mods, "Stat");
+  const statMods = filterMod(mods, "Stat");
   return {
     str: R.sumBy(
       statMods.filter((m) => m.statType === "str"),
@@ -899,7 +899,7 @@ const resolveBuffSkillMods = (
       stats,
       skill,
     });
-    const skillEffMods = filterAffix(mods, "SkillEffPct")
+    const skillEffMods = filterMod(mods, "SkillEffPct")
       .map((m) => normalizeMod(m, effNormContext, config))
       .filter((m) => m !== undefined);
     const skillEffMult = calculateEffMultiplier(skillEffMods);
@@ -918,7 +918,7 @@ const resolveBuffSkillMods = (
     // Only applies if this is an Aura skill
     let auraEffMult = 1;
     if (isAuraSkill) {
-      const allAuraEffMods = filterAffix(mods, "AuraEffPct")
+      const allAuraEffMods = filterMod(mods, "AuraEffPct")
         .map((m) => normalizeMod(m, effNormContext, config))
         .filter((m) => m !== undefined);
       auraEffMult = calculateEffMultiplier(allAuraEffMods);
@@ -1018,7 +1018,7 @@ const resolveSharedMods = (
     stats,
   );
   const allMods = [...loadoutMods, ...buffSkillMods];
-  const willpowerStacks = findAffix(allMods, "MaxWillpowerStacks")?.value || 0;
+  const willpowerStacks = findMod(allMods, "MaxWillpowerStacks")?.value || 0;
   return { loadoutMods, buffSkillMods, stats, willpowerStacks };
 };
 

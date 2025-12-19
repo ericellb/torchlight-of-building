@@ -1,5 +1,4 @@
 import type {
-  DivinityAffixType,
   DivinityGod,
   HeroMemoryType,
   Rotation,
@@ -37,7 +36,6 @@ export interface DivinitySlate {
   flippedH: boolean;
   flippedV: boolean;
   affixes: string[];
-  affixTypes: DivinityAffixType[];
   isLegendary?: boolean;
   legendaryName?: string;
 }

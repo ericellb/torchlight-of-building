@@ -20,12 +20,6 @@ export const SlateInventoryItem: React.FC<SlateInventoryItemProps> = ({
   onDelete,
 }) => {
   const isLegendary = slate.isLegendary === true;
-  const coreCount = slate.affixTypes.filter((t) => t === "Core").length;
-  const legendaryMediumCount = slate.affixTypes.filter(
-    (t) => t === "Legendary Medium",
-  ).length;
-  const mediumCount = slate.affixTypes.filter((t) => t === "Medium").length;
-  const microCount = slate.affixTypes.filter((t) => t === "Micro").length;
 
   const displayName = isLegendary
     ? (slate.legendaryName ?? "Legendary Slate")
@@ -66,34 +60,6 @@ export const SlateInventoryItem: React.FC<SlateInventoryItemProps> = ({
             <span className="rounded bg-zinc-600 px-1.5 py-0.5 text-xs text-zinc-300">
               Placed
             </span>
-          )}
-        </div>
-        <div className="flex items-center gap-1 mt-1">
-          {coreCount > 0 && (
-            <div className="flex items-center gap-0.5">
-              <span className="h-2 w-2 rounded-sm bg-yellow-500" />
-              <span className="text-xs text-zinc-400">×{coreCount}</span>
-            </div>
-          )}
-          {legendaryMediumCount > 0 && (
-            <div className="flex items-center gap-0.5 ml-1">
-              <span className="h-2 w-2 rounded-sm bg-orange-500" />
-              <span className="text-xs text-zinc-400">
-                ×{legendaryMediumCount}
-              </span>
-            </div>
-          )}
-          {mediumCount > 0 && (
-            <div className="flex items-center gap-0.5 ml-1">
-              <span className="h-2 w-2 rounded-sm bg-purple-500" />
-              <span className="text-xs text-zinc-400">×{mediumCount}</span>
-            </div>
-          )}
-          {microCount > 0 && (
-            <div className="flex items-center gap-0.5 ml-1">
-              <span className="h-2 w-2 rounded-sm bg-blue-500" />
-              <span className="text-xs text-zinc-400">×{microCount}</span>
-            </div>
           )}
         </div>
       </div>

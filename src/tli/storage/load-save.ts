@@ -552,7 +552,6 @@ const convertDivinitySlate = (slate: SaveDataDivinitySlate): DivinitySlate => {
     flippedH: slate.flippedH,
     flippedV: slate.flippedV,
     affixes: slate.affixes.map((text) => convertAffix(text, src)),
-    affixTypes: slate.affixTypes,
     isLegendary: slate.isLegendary,
     legendaryName: slate.legendaryName,
   };

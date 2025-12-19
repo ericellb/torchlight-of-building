@@ -148,23 +148,15 @@ export const LegendarySlateCrafter: React.FC<LegendarySlateCrafterProps> = ({
   const handleSave = (): void => {
     if (template === undefined) return;
 
-    let affixes: Affix[];
-    let affixTypes: DivinityAffixType[];
-
-    if (hasFixedAffixes) {
-      const fixedText = getFixedAffixText();
-      affixes = [createMinimalAffix(fixedText)];
-      affixTypes = ["Legendary Medium"];
-    } else {
-      affixes = selectedAffixes.map((a) =>
-        createMinimalAffix(
-          a.isCoreTalent && a.displayName !== undefined
-            ? a.displayName
-            : a.effect,
-        ),
-      );
-      affixTypes = selectedAffixes.map((a) => a.type);
-    }
+    const affixes: Affix[] = hasFixedAffixes
+      ? [createMinimalAffix(getFixedAffixText())]
+      : selectedAffixes.map((a) =>
+          createMinimalAffix(
+            a.isCoreTalent && a.displayName !== undefined
+              ? a.displayName
+              : a.effect,
+          ),
+        );
 
     const slate: DivinitySlate = {
       id: generateItemId(),
@@ -174,7 +166,6 @@ export const LegendarySlateCrafter: React.FC<LegendarySlateCrafterProps> = ({
       flippedH: template.canFlip ? flippedH : false,
       flippedV: template.canFlip ? flippedV : false,
       affixes,
-      affixTypes,
       isLegendary: true,
       legendaryName: template.displayName,
     };

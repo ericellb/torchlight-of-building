@@ -88,7 +88,6 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({ onSave }) => {
       flippedH,
       flippedV,
       affixes: selectedAffixes.map((a) => createMinimalAffix(a.effect)),
-      affixTypes: selectedAffixes.map((a) => a.type),
     };
     onSave(slate);
 

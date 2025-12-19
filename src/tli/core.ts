@@ -245,7 +245,6 @@ export interface DivinitySlate {
   flippedH: boolean;
   flippedV: boolean;
   affixes: Affix[];
-  affixTypes: DivinityAffixType[];
   isLegendary?: boolean;
   legendaryName?: string;
 }

@@ -1,3 +1,4 @@
+import type { HeroTraitName } from "@/src/data/hero_trait/types";
 import type { BaseStatMod } from "./base_stat_mod";
 import type { EquipmentType } from "./gear_data_types";
 import type { Mod } from "./mod";
@@ -335,10 +336,10 @@ export interface HeroMemory {
 }
 
 export interface HeroTraits {
-  level1?: Affix;
-  level45?: Affix;
-  level60?: Affix;
-  level75?: Affix;
+  level1?: HeroTraitName;
+  level45?: HeroTraitName;
+  level60?: HeroTraitName;
+  level75?: HeroTraitName;
 }
 
 export interface HeroMemorySlots {

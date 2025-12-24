@@ -172,8 +172,7 @@ const TraitRow = ({
       : [];
 
   const traitLevelKey = `level${level}` as keyof HeroTraits;
-  const selectedTraitAffix = heroPage.traits[traitLevelKey];
-  const selectedTraitName = selectedTraitAffix?.affixLines[0]?.text;
+  const selectedTraitName = heroPage.traits[traitLevelKey];
   const isLevel1 = level === 1;
 
   const slot: HeroMemorySlot | undefined =

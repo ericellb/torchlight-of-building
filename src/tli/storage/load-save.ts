@@ -414,32 +414,12 @@ const convertHeroPage = (
   saveDataHeroPage: SaveDataHeroPage,
   heroMemoryList: SaveDataHeroMemory[],
 ): HeroPage => {
-  const traits: HeroTraits = {};
-
-  if (saveDataHeroPage.traits.level1) {
-    traits.level1 = convertAffix(
-      saveDataHeroPage.traits.level1,
-      getHeroSrc("trait", "level1"),
-    );
-  }
-  if (saveDataHeroPage.traits.level45) {
-    traits.level45 = convertAffix(
-      saveDataHeroPage.traits.level45,
-      getHeroSrc("trait", "level45"),
-    );
-  }
-  if (saveDataHeroPage.traits.level60) {
-    traits.level60 = convertAffix(
-      saveDataHeroPage.traits.level60,
-      getHeroSrc("trait", "level60"),
-    );
-  }
-  if (saveDataHeroPage.traits.level75) {
-    traits.level75 = convertAffix(
-      saveDataHeroPage.traits.level75,
-      getHeroSrc("trait", "level75"),
-    );
-  }
+  const traits: HeroTraits = {
+    level1: saveDataHeroPage.traits.level1 as HeroTraits["level1"],
+    level45: saveDataHeroPage.traits.level45 as HeroTraits["level45"],
+    level60: saveDataHeroPage.traits.level60 as HeroTraits["level60"],
+    level75: saveDataHeroPage.traits.level75 as HeroTraits["level75"],
+  };
 
   const memorySlots: HeroMemorySlots = {};
 

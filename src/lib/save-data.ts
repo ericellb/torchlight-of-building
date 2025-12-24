@@ -8,9 +8,10 @@ import type {
 import type { EquipmentType } from "@/src/tli/gear_data_types";
 
 export type {
+  ActiveSkillSlots,
+  PassiveSkillSlots,
   SkillPage,
   SkillSlot,
-  SkillSlots,
   SupportSkillSlot as SupportSkill,
   SupportSkills,
 } from "@/src/tli/core";

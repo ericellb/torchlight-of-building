@@ -550,7 +550,10 @@ export const internalStore = create(
       },
 
       // Skills actions
-      setActiveSkill: (slot: 1 | 2 | 3 | 4, skillName: string | undefined) => {
+      setActiveSkill: (
+        slot: 1 | 2 | 3 | 4 | 5,
+        skillName: string | undefined,
+      ) => {
         set((state) => {
           if (skillName === undefined) {
             state.saveData.skillPage.activeSkills[slot] = undefined;
@@ -580,7 +583,7 @@ export const internalStore = create(
 
       setSupportSkill: (
         skillType: "active" | "passive",
-        skillSlot: 1 | 2 | 3 | 4,
+        skillSlot: 1 | 2 | 3 | 4 | 5,
         supportSlot: 1 | 2 | 3 | 4 | 5,
         supportName: string | undefined,
       ) => {
@@ -588,7 +591,8 @@ export const internalStore = create(
           const skillSlots =
             skillType === "active"
               ? state.saveData.skillPage.activeSkills
-              : state.saveData.skillPage.passiveSkills;
+              : (state.saveData.skillPage
+                  .passiveSkills as typeof state.saveData.skillPage.activeSkills);
           const skill = skillSlots[skillSlot];
           if (skill === undefined) return;
           skill.supportSkills[supportSlot] =
@@ -598,13 +602,14 @@ export const internalStore = create(
 
       toggleSkillEnabled: (
         skillType: "active" | "passive",
-        slot: 1 | 2 | 3 | 4,
+        slot: 1 | 2 | 3 | 4 | 5,
       ) => {
         set((state) => {
           const skillSlots =
             skillType === "active"
               ? state.saveData.skillPage.activeSkills
-              : state.saveData.skillPage.passiveSkills;
+              : (state.saveData.skillPage
+                  .passiveSkills as typeof state.saveData.skillPage.activeSkills);
           const skill = skillSlots[slot];
           if (skill === undefined) return;
           skill.enabled = !skill.enabled;
@@ -613,14 +618,15 @@ export const internalStore = create(
 
       setSkillLevel: (
         skillType: "active" | "passive",
-        slot: 1 | 2 | 3 | 4,
+        slot: 1 | 2 | 3 | 4 | 5,
         level: number,
       ) => {
         set((state) => {
           const skillSlots =
             skillType === "active"
               ? state.saveData.skillPage.activeSkills
-              : state.saveData.skillPage.passiveSkills;
+              : (state.saveData.skillPage
+                  .passiveSkills as typeof state.saveData.skillPage.activeSkills);
           const skill = skillSlots[slot];
           if (skill === undefined) return;
           skill.level = level;
@@ -629,7 +635,7 @@ export const internalStore = create(
 
       setSupportSkillLevel: (
         skillType: "active" | "passive",
-        skillSlot: 1 | 2 | 3 | 4,
+        skillSlot: 1 | 2 | 3 | 4 | 5,
         supportSlot: 1 | 2 | 3 | 4 | 5,
         level: number,
       ) => {
@@ -637,7 +643,8 @@ export const internalStore = create(
           const skillSlots =
             skillType === "active"
               ? state.saveData.skillPage.activeSkills
-              : state.saveData.skillPage.passiveSkills;
+              : (state.saveData.skillPage
+                  .passiveSkills as typeof state.saveData.skillPage.activeSkills);
           const skill = skillSlots[skillSlot];
           if (skill === undefined) return;
           const support = skill.supportSkills[supportSlot];

@@ -299,7 +299,15 @@ export interface SkillSlot {
   supportSkills: SupportSkills;
 }
 
-export interface SkillSlots {
+export interface ActiveSkillSlots {
+  1?: SkillSlot;
+  2?: SkillSlot;
+  3?: SkillSlot;
+  4?: SkillSlot;
+  5?: SkillSlot;
+}
+
+export interface PassiveSkillSlots {
   1?: SkillSlot;
   2?: SkillSlot;
   3?: SkillSlot;
@@ -307,8 +315,8 @@ export interface SkillSlots {
 }
 
 export interface SkillPage {
-  activeSkills: SkillSlots;
-  passiveSkills: SkillSlots;
+  activeSkills: ActiveSkillSlots;
+  passiveSkills: PassiveSkillSlots;
 }
 
 export const HERO_MEMORY_TYPES = [

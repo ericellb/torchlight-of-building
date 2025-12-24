@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
-import type { CoreTalent } from "../data/core_talent/types";
+import type { BaseCoreTalent } from "../data/core_talent/types";
 import { isTree } from "../data/talent";
 
 const cleanAffixText = (html: string): string => {
@@ -39,8 +39,8 @@ const cleanAffixText = (html: string): string => {
   return text.trim();
 };
 
-const extractCoreTalents = ($: cheerio.CheerioAPI): CoreTalent[] => {
-  const talents: CoreTalent[] = [];
+const extractCoreTalents = ($: cheerio.CheerioAPI): BaseCoreTalent[] => {
+  const talents: BaseCoreTalent[] = [];
 
   $("div.col").each((_, col) => {
     const contentDiv = $(col).find("div.flex-grow-1.mx-2.my-1");
@@ -72,10 +72,10 @@ const extractCoreTalents = ($: cheerio.CheerioAPI): CoreTalent[] => {
   return talents;
 };
 
-const generateDataFile = (talents: CoreTalent[]): string => {
-  return `import type { CoreTalent } from "./types";
+const generateDataFile = (talents: BaseCoreTalent[]): string => {
+  return `import type { BaseCoreTalent } from "./types";
 
-export const CoreTalents: readonly CoreTalent[] = ${JSON.stringify(talents)};
+export const CoreTalents = ${JSON.stringify(talents)} as const satisfies readonly BaseCoreTalent[];
 `;
 };
 

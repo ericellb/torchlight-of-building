@@ -1,6 +1,6 @@
-import type { CoreTalent } from "./types";
+import type { BaseCoreTalent } from "./types";
 
-export const CoreTalents: readonly CoreTalent[] = [
+export const CoreTalents = [
   {
     name: "Elimination",
     tree: "God of Might",
@@ -750,4 +750,4 @@ export const CoreTalents: readonly CoreTalent[] = [
     affix:
       "Triggers the Sentry Main Skill when there are no Sentries within 10 m. Interval: 1 s\nThe number of Sentries that can be deployed at a time is equal to the Max Sentry Quantity\n+25% additional Sentry Damage",
   },
-];
+] as const satisfies readonly BaseCoreTalent[];

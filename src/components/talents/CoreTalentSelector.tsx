@@ -4,7 +4,7 @@ import {
   TooltipContent,
   TooltipTitle,
 } from "@/src/components/ui/Tooltip";
-import type { CoreTalent } from "@/src/data/core_talent";
+import type { BaseCoreTalent } from "@/src/data/core_talent";
 import { useTooltip } from "@/src/hooks/useTooltip";
 import {
   getAvailableGodGoddessCoreTalents,
@@ -32,7 +32,7 @@ interface SlotConfig {
   index: number;
   label: string;
   unlocked: boolean;
-  available: CoreTalent[];
+  available: BaseCoreTalent[];
   selected: string | undefined;
 }
 
@@ -128,9 +128,9 @@ export const CoreTalentSelector: React.FC<CoreTalentSelectorProps> = ({
 interface CoreTalentSlotProps {
   label: string;
   unlocked: boolean;
-  available: CoreTalent[];
+  available: BaseCoreTalent[];
   selected: string | undefined;
-  allTalentsForTree: CoreTalent[];
+  allTalentsForTree: BaseCoreTalent[];
   onSelect: (name: string | undefined) => void;
 }
 
@@ -144,10 +144,10 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
 }) => {
   const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
   const [hoveredTalent, setHoveredTalent] = React.useState<
-    CoreTalent | undefined
+    BaseCoreTalent | undefined
   >();
 
-  const handleMouseEnter = (talent: CoreTalent | undefined) => {
+  const handleMouseEnter = (talent: BaseCoreTalent | undefined) => {
     setHoveredTalent(talent);
   };
 

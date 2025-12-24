@@ -1,9 +1,9 @@
-import { type CoreTalent, CoreTalents } from "@/src/data/core_talent";
+import { type BaseCoreTalent, CoreTalents } from "@/src/data/core_talent";
 import { isGodGoddessTree } from "@/src/tli/talent_tree";
 
 export type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
 
-export const getCoreTalentsForTree = (treeName: string): CoreTalent[] => {
+export const getCoreTalentsForTree = (treeName: string): BaseCoreTalent[] => {
   const normalizedName = treeName.replace(/_/g, " ");
   return CoreTalents.filter((ct) => ct.tree === normalizedName);
 };
@@ -12,12 +12,12 @@ export const getAvailableGodGoddessCoreTalents = (
   treeName: string,
   pointsSpent: number,
   alreadySelected: string[],
-): { firstSlot: CoreTalent[]; secondSlot: CoreTalent[] } => {
+): { firstSlot: BaseCoreTalent[]; secondSlot: BaseCoreTalent[] } => {
   const allTalents = getCoreTalentsForTree(treeName);
   const firstThree = allTalents.slice(0, 3);
   const lastThree = allTalents.slice(3, 6);
 
-  const filterSelected = (talents: CoreTalent[]) =>
+  const filterSelected = (talents: BaseCoreTalent[]) =>
     talents.filter((ct) => !alreadySelected.includes(ct.name));
 
   return {
@@ -30,7 +30,7 @@ export const getAvailableProfessionCoreTalents = (
   treeName: string,
   pointsSpent: number,
   alreadySelected: string[],
-): CoreTalent[] => {
+): BaseCoreTalent[] => {
   if (pointsSpent < 24) return [];
   return getCoreTalentsForTree(treeName).filter(
     (ct) => !alreadySelected.includes(ct.name),

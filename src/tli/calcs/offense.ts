@@ -20,6 +20,7 @@ import {
   type DivinityPage,
   type DmgRange,
   getAllAffixes,
+  getHeroAffixes,
   getTalentAffixes,
   type Loadout,
   type SkillSlot,
@@ -136,7 +137,7 @@ const getDivinityAffixes = (divinityPage: DivinityPage): Affix[] => {
 
 export const collectMods = (loadout: Loadout): Mod[] => {
   return [
-    // todo: handle hero stuff
+    ...collectModsFromAffixes(getHeroAffixes(loadout.heroPage)),
     ...collectModsFromAffixes(getDivinityAffixes(loadout.divinityPage)),
     ...collectModsFromAffixes(getPactspiritAffixes(loadout.pactspiritPage)),
     ...collectModsFromAffixes(getTalentAffixes(loadout.talentPage)),

@@ -564,6 +564,28 @@ const parseGearAspdPct = (
   return { type: "GearAspdPct", value };
 };
 
+const parseGearAspdWithDmgPenalty = (
+  input: string,
+): [ModOfType<"GearAspdPct">, ModOfType<"DmgPct">] | undefined => {
+  // Regex to parse: +57% Gear Attack Speed. -12% additional Attack Damage
+  const pattern =
+    /^([+-])?(\d+(?:\.\d+)?)% gear attack speed\. ([+-])(\d+(?:\.\d+)?)% additional attack damage$/i;
+  const match = input.match(pattern);
+
+  if (!match) {
+    return undefined;
+  }
+
+  const aspdValue = parseFloat(match[2]) / 100;
+  const dmgSign = match[3] === "-" ? -1 : 1;
+  const dmgValue = (dmgSign * parseFloat(match[4])) / 100;
+
+  return [
+    { type: "GearAspdPct", value: aspdValue },
+    { type: "DmgPct", value: dmgValue, addn: true, modType: "attack" },
+  ];
+};
+
 /**
  * Parses an affix line string and returns extracted mods.
  *
@@ -574,6 +596,16 @@ const parseGearAspdPct = (
  */
 export const parseMod = (input: string): Mod[] | undefined => {
   const normalized = input.trim().toLowerCase();
+
+  // Multi-mod parsers (return arrays directly)
+  const multiModParsers = [parseGearAspdWithDmgPenalty];
+
+  for (const parser of multiModParsers) {
+    const result = parser(normalized);
+    if (result !== undefined) {
+      return result;
+    }
+  }
 
   const parsers = [
     // Offense

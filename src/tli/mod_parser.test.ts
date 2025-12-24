@@ -567,3 +567,21 @@ test("parse gear attack speed", () => {
     },
   ]);
 });
+
+test("parse gear attack speed with damage penalty", () => {
+  const result = parseMod(
+    "+57% Gear Attack Speed. -12% additional Attack Damage",
+  );
+  expect(result).toEqual([
+    {
+      type: "GearAspdPct",
+      value: 0.57,
+    },
+    {
+      type: "DmgPct",
+      value: -0.12,
+      addn: true,
+      modType: "attack",
+    },
+  ]);
+});

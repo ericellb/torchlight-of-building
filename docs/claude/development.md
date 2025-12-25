@@ -203,12 +203,10 @@ Scripts in `src/scripts/`. Key patterns:
 
 ## Gotchas
 
-1. **useLoadout() is expensive** - Does JSON stringify/parse for memoization. Use `useBuilderState()` for metadata access.
+* **Store exports are restricted** - `builderStore/index.ts` only exports hooks/actions, not the internal store. This prevents accidental mutations.
 
-2. **Store exports are restricted** - `builderStore/index.ts` only exports hooks/actions, not the internal store. This prevents accidental mutations.
+* **Build codes are shareable** - Compressed JSON (fflate) + base64url encoding. Version field allows future migrations.
 
-3. **Build codes are shareable** - Compressed JSON (fflate) + base64url encoding. Version field allows future migrations.
+* **No backwards compatibility** - Changing SaveData schema invalidates old builds. Users lose old saves.
 
-4. **No backwards compatibility** - Changing SaveData schema invalidates old builds. Users lose old saves.
-
-5. **Two data formats** - Raw strings in app layer, parsed Mods in engine layer. `loadSave()` in `src/tli/storage/load-save.ts` bridges them.
+* **Two data formats** - Raw strings in app layer, parsed Mods in engine layer. `loadSave()` in `src/tli/storage/load-save.ts` bridges them.

@@ -3488,3 +3488,161 @@ describe("double damage chance", () => {
     validate(results, skillName, { avgDps: 102.5 });
   });
 });
+
+describe("resource pool: mana and mercury pts", () => {
+  const skillName = "[Test] Simple Attack" as const;
+
+  // Cold damage weapon for testing elemental damage scaling
+  const coldWeapon = {
+    equipmentType: "One-Handed Sword" as const,
+    baseStats: {
+      baseStatLines: [
+        {
+          text: "100 - 100 cold damage",
+          mod: { type: "FlatPhysDmg", value: 0 } as const,
+        },
+      ],
+    },
+    base_affixes: [
+      {
+        affixLines: [
+          {
+            text: "100 cold damage",
+            mods: [
+              {
+                type: "FlatGearDmg",
+                value: { min: 100, max: 100 },
+                modType: "cold",
+              } as const,
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  // Base mana at level 95 = 40 + 95*5 = 515
+  // Add 485 flat mana → 1000 total mana
+  const flatManaTo1000 = { type: "MaxMana", value: 485 } as const;
+
+  const createInput = (mods: Affix[]) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: { mainHand: coldWeapon }, inventory: [] },
+      customConfiguration: mods,
+      skillPage: simpleAttackSkillPage(),
+    }),
+    configuration: defaultConfiguration,
+  });
+
+  test("mercury pts scale from max mana", () => {
+    // 1000 mana
+    // MaxMercuryPtsPct: 1.0 per 1000 mana → 100% bonus → 200 mercury pts
+    // DmgPct: 0.01 per mercury pt → 200 * 0.01 = 2.0 (200% more) → 3x
+    // 100 cold * 3 = 300
+    const input = createInput([
+      affix([
+        flatManaTo1000,
+        {
+          type: "MaxMercuryPtsPct",
+          value: 1.0,
+          per: { stackable: "max_mana", amt: 1000 },
+        },
+        {
+          type: "DmgPct",
+          value: 0.01,
+          modType: "cold",
+          addn: true,
+          per: { stackable: "mercury_pt" },
+        },
+      ]),
+    ]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 300 });
+  });
+
+  test("mercury pts scale linearly with more mana", () => {
+    // 2000 mana (add 1485 instead of 485)
+    // MaxMercuryPtsPct: 1.0 per 1000 mana → 200% bonus → 300 mercury pts
+    // DmgPct: 0.01 per mercury pt → 300 * 0.01 = 3.0 (300% more) → 4x
+    // 100 cold * 4 = 400
+    const input = createInput([
+      affix([
+        { type: "MaxMana", value: 1485 },
+        {
+          type: "MaxMercuryPtsPct",
+          value: 1.0,
+          per: { stackable: "max_mana", amt: 1000 },
+        },
+        {
+          type: "DmgPct",
+          value: 0.01,
+          modType: "cold",
+          addn: true,
+          per: { stackable: "mercury_pt" },
+        },
+      ]),
+    ]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 400 });
+  });
+
+  test("mercury pts respect valueLimit cap", () => {
+    // 2000 mana, but mercury pts capped at 50% bonus
+    // MaxMercuryPtsPct: 1.0 per 1000 mana, valueLimit 0.5 → capped at 50% → 150 mercury pts
+    // DmgPct: 0.01 per mercury pt → 150 * 0.01 = 1.5 (150% more) → 2.5x
+    // 100 cold * 2.5 = 250
+    const input = createInput([
+      affix([
+        { type: "MaxMana", value: 1485 },
+        {
+          type: "MaxMercuryPtsPct",
+          value: 1.0,
+          per: { stackable: "max_mana", amt: 1000, valueLimit: 0.5 },
+        },
+        {
+          type: "DmgPct",
+          value: 0.01,
+          modType: "cold",
+          addn: true,
+          per: { stackable: "mercury_pt" },
+        },
+      ]),
+    ]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 250 });
+  });
+
+  test("multiple more multipliers from mana and mercury pts", () => {
+    // 1000 mana → 200 mercury pts (same as first test)
+    // DmgPct per mercury: 0.01 * 200 = 2.0 → 3x
+    // Additional DmgPct per mana: 0.001 * 1000 = 1.0 → 2x
+    // Combined more multipliers: 3 * 2 = 6x
+    // 100 cold * 6 = 600
+    const input = createInput([
+      affix([
+        flatManaTo1000,
+        {
+          type: "MaxMercuryPtsPct",
+          value: 1.0,
+          per: { stackable: "max_mana", amt: 1000 },
+        },
+        {
+          type: "DmgPct",
+          value: 0.01,
+          modType: "cold",
+          addn: true,
+          per: { stackable: "mercury_pt" },
+        },
+        {
+          type: "DmgPct",
+          value: 0.001,
+          modType: "cold",
+          addn: true,
+          per: { stackable: "max_mana" },
+        },
+      ]),
+    ]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 600 });
+  });
+});

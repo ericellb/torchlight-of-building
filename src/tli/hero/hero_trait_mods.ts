@@ -16,17 +16,26 @@ const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory[]>> = {
   "Cleanse Filth": [
     (i) => ({
       type: "DmgPct",
-      value: [0.6, 0.7, 0.8, 0.9, 1.0][i],
+      value: [0.03, 0.035, 0.4, 0.045, 0.05][i],
       modType: "elemental",
       addn: true,
+      per: {
+        stackable: "max_mana",
+        valueLimit: [0.6, 0.7, 0.8, 0.9, 1][i],
+        amt: 1000,
+      },
     }),
     () => ({ type: "ManaBeforeLife", value: 0.25, cond: "realm_of_mercury" }),
   ],
   "Utmost Devotion": [
     (i) => ({
-      type: "MaxMecuryPtsPct",
+      type: "MaxMercuryPtsPct",
       value: 0.1,
-      per: { stackable: "mana", valueLimit: [2, 2.5, 3, 3.5, 4][i], amt: 1000 },
+      per: {
+        stackable: "max_mana",
+        valueLimit: [2, 2.5, 3, 3.5, 4][i],
+        amt: 1000,
+      },
     }),
     (i) => ({
       type: "DmgPct",

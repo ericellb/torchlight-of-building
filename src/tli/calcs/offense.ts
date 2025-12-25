@@ -1254,6 +1254,12 @@ const calculateNumShadowHits = (mods: Mod[], config: Configuration): number => {
   return config.numShadowHits ?? shadowQuant;
 };
 
+const calculateMercuryPts = (mods: Mod[]): number => {
+  const mercuryPtMods = filterMod(mods, "MaxMercuryPtsPct");
+  const mult = calculateEffMultiplier(mercuryPtMods);
+  return 100 * mult;
+};
+
 const calculateEnemyRes = (config: Configuration): number => {
   // enemyRes is stored as decimal (0.5 for 50%)
   return config.enemyRes ?? 0.5;
@@ -1331,10 +1337,11 @@ const resolveBuffSkillEffMults = (
 const resolveModsForOffenseSkill = (
   prenormModsFromParam: Mod[],
   skill: BaseActiveSkill | BasePassiveSkill,
+  resourcePool: ResourcePool,
   loadout: Loadout,
   config: Configuration,
 ): Mod[] => {
-  // Create stat-based damage mod
+  const { stats, maxMana, mercuryPts } = resourcePool;
   const prenormMods = filterModsByCond(
     // core talent mod replacement should be done much sooner
     replaceCoreTalentMods([
@@ -1346,7 +1353,6 @@ const resolveModsForOffenseSkill = (
   );
   const mods = filterOutPerMods(prenormMods);
 
-  const stats = calculateStats(prenormMods);
   const totalMainStats = calculateTotalMainStats(skill, stats);
   mods.push(...normalizeStackables(prenormMods, "main_stat", totalMainStats));
 
@@ -1378,15 +1384,19 @@ const resolveModsForOffenseSkill = (
     }
   }
 
+  mods.push(...normalizeStackables(prenormMods, "max_mana", maxMana));
+  mods.push(...normalizeStackables(prenormMods, "mercury_pt", mercuryPts));
+
   return mods;
 };
 
 interface ResourcePool {
   stats: Stats;
   maxMana: number;
+  mercuryPts: number;
 }
 
-const _calculateResourcePool = (
+const calculateResourcePool = (
   paramMods: Mod[],
   loadout: Loadout,
   config: Configuration,
@@ -1394,7 +1404,9 @@ const _calculateResourcePool = (
   // potential perf issue: this is a duplicate filtering, since it also
   //   happens in calculateOffense with a slightly larger superset.
   //   maybe we should factor it out if performance becomes an issue
-  const mods = filterModsByCond(paramMods, loadout, config);
+  const prenormMods = filterModsByCond(paramMods, loadout, config);
+  const mods = filterOutPerMods(prenormMods);
+
   const stats = calculateStats(mods);
 
   const maxManaFromMods = sumByValue(filterMod(mods, "MaxMana"));
@@ -1402,13 +1414,20 @@ const _calculateResourcePool = (
   const maxMana =
     (40 + config.level * 5 + stats.int * 0.5 + maxManaFromMods) * maxManaMult;
 
-  return { stats, maxMana };
+  mods.push(...normalizeStackables(prenormMods, "max_mana", maxMana));
+
+  const mercuryPts = calculateMercuryPts(mods);
+  mods.push(...normalizeStackables(prenormMods, "mercury_pt", mercuryPts));
+
+  return { stats, maxMana, mercuryPts };
 };
 
 // Calculates offense for all enabled implemented skills
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const { loadout, configuration: config } = input;
   const loadoutMods = collectMods(loadout);
+
+  const resourcePool = calculateResourcePool(loadoutMods, loadout, config);
 
   const unresolvedLoadoutAndBuffMods = [
     ...loadoutMods,
@@ -1429,6 +1448,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     const mods = resolveModsForOffenseSkill(
       [...unresolvedLoadoutAndBuffMods, ...perSkillContext.mods],
       perSkillContext.skill,
+      resourcePool,
       loadout,
       config,
     );

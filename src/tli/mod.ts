@@ -35,7 +35,7 @@ export type Stackable =
   | "skill_charges_on_use"
   | "cruelty_buff"
   | "fervor"
-  | "mana"
+  | "max_mana"
   | "mercury_pt";
 
 export type StatType = "str" | "dex" | "int";
@@ -377,7 +377,7 @@ export type Mod =
       src?: string;
     }
   | {
-      type: "MaxMecuryPtsPct";
+      type: "MaxMercuryPtsPct";
       value: number;
       per?: PerStackable;
       src?: string;

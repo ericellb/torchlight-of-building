@@ -1,35 +1,35 @@
 ---
 name: implementing-game-skill-parsers
-description: Use when implementing skill data generation from HTML sources for game build planners - guides the parser-template-generation pattern for extracting level-scaling values
+description: Use when implementing skill data generation from HTML sources for game build planners - guides the parser-factory-generation pattern for extracting level-scaling values (project)
 ---
 
 # Implementing Game Skill Parsers
 
 ## Overview
 
-Skill data generation follows a **parser-template-generation** pattern:
-1. **Template** defines structure (mod types, properties)
-2. **Parser** extracts numeric values from HTML/data sources
-3. **Generation script** combines templates with parsed values
+Skill data generation follows a **parser-factory-generation** pattern:
+1. **Parser** extracts numeric values from HTML/data sources with **named keys**
+2. **Factory** defines how to build Mod objects using those named values
+3. **Generation script** combines parsed values into `levelValues` output
 
-**Critical:** Parser array order MUST match template array order.
-
-**Index calculation:** If template has 2 levelOffense + 1 levelMods + 1 levelBuffMods, parser returns `[offense0, offense1, mods0, buffMods0]` and buffMods value is at `parsedValues[2+1+0] = parsedValues[3]`.
+**Critical:** Parser keys MUST match factory key usage exactly.
 
 ## When to Use
 
 - Adding new skills with level-scaling properties
-- Adding new property types (levelOffense, levelMods, levelBuffMods, etc.)
 - Extracting values from game data HTML pages
 
 ## Project File Locations
 
 | Purpose | File Path |
 |---------|-----------|
-| Active templates | `src/tli/skills/active_templates.ts` |
-| Support templates | `src/tli/skills/support_templates.ts` |
+| Active factories | `src/tli/skills/active_factories.ts` |
+| Support factories | `src/tli/skills/support_factories.ts` |
+| Passive factories | `src/tli/skills/passive_factories.ts` |
+| Factory types & helpers | `src/tli/skills/types.ts` |
 | Active parsers | `src/scripts/skills/active_parsers.ts` |
 | Support parsers | `src/scripts/skills/support_parsers.ts` |
+| Passive parsers | `src/scripts/skills/passive_parsers.ts` |
 | Parser registry | `src/scripts/skills/index.ts` |
 | Generation script | `src/scripts/generate_skill_data.ts` |
 | HTML data sources | `.garbage/tlidb/skill/{category}/{Skill_Name}.html` |
@@ -44,94 +44,158 @@ Skill data generation follows a **parser-template-generation** pattern:
 - **Column indexing:** `values[0]` = first column after level, `values[2]` = Descript
 - Input is clean text (HTML already stripped by `buildProgressionTableInput`)
 
-### 2. Define Template (if new property type)
+### 2. Define Factory (structure + key names)
 ```typescript
-// In templates file (e.g., active_templates.ts)
-"Skill Name": {
-  levelBuffMods: [
-    { type: "DmgPct", addn: true, modType: "cold", cond: "enemy_frostbitten" },
+// In active_factories.ts, support_factories.ts, or passive_factories.ts
+import { v } from "./types";
+
+"Ice Bond": (l, vals) => ({
+  buffMods: [
+    {
+      type: "DmgPct",
+      value: v(vals.coldDmgPctVsFrostbitten, l),  // Define key name here
+      addn: true,
+      modType: "cold",
+      cond: "enemy_frostbitten",
+    },
   ],
-}
+}),
 ```
 
-### 3. Create Parser
+**Factory return types:**
+- **Active skills:** `{ offense?: SkillOffense[], mods?: Mod[], buffMods?: Mod[] }`
+- **Support skills:** `Mod[]`
+- **Passive skills:** `{ mods?: Mod[], buffMods?: Mod[] }`
+
+The `v(arr, level)` helper safely accesses `arr[level - 1]` with bounds checking.
+
+**Key naming conventions:**
+- Use descriptive camelCase names
+- Include context: `dmgPctPerProjectile` not just `dmgPct`
+
+### 3. Create Parser (extract values for those keys)
 ```typescript
-// In active_parsers.ts or support_parsers.ts
+// In active_parsers.ts, support_parsers.ts, or passive_parsers.ts
 import { parseNumericValue, validateAllLevels } from "./progression_table";
 import type { SupportLevelParser } from "./types";
+import { createConstantLevels } from "./utils";
 
-export const skillNameParser: SupportLevelParser = (input) => {
+export const iceBondParser: SupportLevelParser = (input) => {
   const { skillName, progressionTable } = input;
-  const levels: Record<number, number> = {};
+
+  const coldDmgPctVsFrostbitten: Record<number, number> = {};
 
   for (const [levelStr, values] of Object.entries(progressionTable.values)) {
     const level = Number(levelStr);
-    const text = values[2]; // Descript column (0-indexed after level)
+    const descript = values[2]; // Descript column
 
-    if (text) {
-      // Match pattern like "23.5% additional Cold Damage" or "+24% additional..."
-      const match = text.match(/[+]?([\d.]+)%\s+additional\s+Cold\s+Damage/i);
-      if (match) {
-        levels[level] = parseNumericValue(match[1], { asPercentage: true });
+    if (descript !== undefined && descript !== "") {
+      const match = descript.match(/[+]?([\d.]+)%\s+additional\s+Cold\s+Damage/i);
+      if (match !== null) {
+        coldDmgPctVsFrostbitten[level] = parseNumericValue(match[1], {
+          asPercentage: true,
+        });
       }
     }
   }
 
-  validateAllLevels(levels, skillName);
-  return [levels]; // Order MUST match template array order
+  validateAllLevels(coldDmgPctVsFrostbitten, skillName);
+
+  // Return named keys matching factory expectations
+  return { coldDmgPctVsFrostbitten };
 };
 ```
+
+For constant values (same across all levels): use `createConstantLevels(value)`
 
 ### 4. Register Parser
 ```typescript
 // In index.ts
-{ skillName: "Skill Name", categories: ["active"], parser: skillNameParser }
+{ skillName: "Ice Bond", categories: ["active"], parser: iceBondParser }
 ```
 
-### 5. Update Generation Script (if new property type)
-In `generate_skill_data.ts`, find the active skill processing section (~line 800) and:
+### 5. Regenerate & Verify
+```bash
+pnpm exec tsx src/scripts/generate_skill_data.ts
+pnpm test
+```
 
+Check generated output for levels 1, 20, 40 against source HTML.
+
+## Example: Complex Skill (Frost Spike)
+
+**Parser** extracts multiple named values:
 ```typescript
-// 1. Add variable declaration
-let levelNewProp: BaseActiveSkill["levelNewProp"];
+export const frostSpikeParser: SupportLevelParser = (input) => {
+  const weaponAtkDmgPct: Record<number, number> = {};
+  const addedDmgEffPct: Record<number, number> = {};
+  // ... extract from columns ...
 
-// 2. Update expected count calculation
-const newPropCount = template.levelNewProp?.length ?? 0;
-const expectedCount = offenseCount + modsCount + newPropCount;
-
-// 3. Build array from parsed values (after existing property handling)
-if (template.levelNewProp !== undefined && newPropCount > 0) {
-  levelNewProp = template.levelNewProp.map((modTemplate, i) => {
-    const levels = parsedValues[offenseCount + modsCount + i];
-    return { template: modTemplate, levels };
-  });
-}
-
-// 4. Include in skill entry
-const skillEntry: BaseActiveSkill = {
-  ...baseSkill,
-  ...(levelNewProp !== undefined && { levelNewProp }),
+  return {
+    weaponAtkDmgPct,
+    addedDmgEffPct,
+    convertPhysicalToColdPct: createConstantLevels(convertValue),
+    maxProjectile: createConstantLevels(maxProjValue),
+    projectilePerFrostbiteRating: createConstantLevels(projPerRating),
+    baseProjectile: createConstantLevels(baseProj),
+    dmgPctPerProjectile: createConstantLevels(dmgPerProj),
+  };
 };
 ```
 
-### 6. Verify Output
-Run generation, then check output for levels 1, 20, 40 against source HTML.
+**Factory** uses those keys:
+```typescript
+"Frost Spike": (l, vals) => ({
+  offense: [
+    { type: "WeaponAtkDmgPct", value: v(vals.weaponAtkDmgPct, l) },
+    { type: "AddedDmgEffPct", value: v(vals.addedDmgEffPct, l) },
+  ],
+  mods: [
+    { type: "ConvertDmgPct", value: v(vals.convertPhysicalToColdPct, l), from: "physical", to: "cold" },
+    { type: "MaxProjectile", value: v(vals.maxProjectile, l), override: true },
+    { type: "Projectile", value: v(vals.projectilePerFrostbiteRating, l), per: { stackable: "frostbite_rating", amt: 35 } },
+    { type: "Projectile", value: v(vals.baseProjectile, l) },
+    { type: "DmgPct", value: v(vals.dmgPctPerProjectile, l), modType: "global", addn: true, per: { stackable: "projectile" } },
+  ],
+}),
+```
+
+**Generated output:**
+```typescript
+levelValues: {
+  weaponAtkDmgPct: [1.49, 1.51, 1.54, ...],
+  addedDmgEffPct: [1.49, 1.51, 1.54, ...],
+  convertPhysicalToColdPct: [1, 1, 1, ...],
+  maxProjectile: [5, 5, 5, ...],
+  projectilePerFrostbiteRating: [1, 1, 1, ...],
+  baseProjectile: [2, 2, 2, ...],
+  dmgPctPerProjectile: [0.08, 0.08, 0.08, ...],
+}
+```
 
 ## Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
 | Using HTML regex on clean text | Input is already `.text().trim()` - no HTML tags |
-| Wrong array order | Parser returns must match template definition order |
-| Missing generation script update | New property types need handling in generation |
-| Forgetting parser registration | Add to SKILL_PARSERS array |
+| Parser key doesn't match factory key | Keys must match exactly: `vals.dmgPct` needs parser to return `{ dmgPct: ... }` |
+| Forgetting parser registration | Add to SKILL_PARSERS array in `index.ts` |
+| Missing factory | Must add factory in `*_factories.ts` for mods to be applied at runtime |
 
 ## Data Flow
 
 ```
 HTML Source → buildProgressionTableInput (strips HTML)
-           → Parser (extracts values per level)
-           → Template (defines mod structure)
-           → Generation Script (combines template + values)
+           → Parser (extracts values with named keys)
+           → Generation Script (converts to levelValues arrays)
            → Output TypeScript file
+           ↓
+Runtime: Factory + levelValues → Mod objects
 ```
+
+## Benefits of Named Keys
+
+1. **Self-documenting:** `vals.projectilePerFrostbiteRating` is clearer than `vals[4]`
+2. **Order-independent:** Parser and factory don't need to agree on array order
+3. **Extensible:** Adding new values doesn't shift existing indices
+4. **Type-safe:** TypeScript can catch typos in key names

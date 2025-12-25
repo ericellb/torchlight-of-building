@@ -13,13 +13,13 @@
         ↓
    extractSkillFromTlidbHtml() - parses HTML with cheerio
         ↓
-   RawSkill (intermediate format)
+   RawSkill (intermediate format with parsedLevelModValues)
         ↓
    Skill-type-specific processing:
-   - Active → classifyWithRegex() for kinds, activeSkillTemplates for levelOffense/levelMods
-   - Support → parseSupportTargets(), skillModTemplates for levelMods
+   - Active → classifyWithRegex() for kinds, factory for levelValues
+   - Support → parseSupportTargets(), factory for levelValues
    - Magnificent/Noble → parseSkillSupportTarget() for specific skill name
-   - Passive → mainStats extraction
+   - Passive → mainStats extraction, factory for levelValues
         ↓
    src/data/skill/{type}.ts (generated TypeScript)
 ```
@@ -91,30 +91,59 @@ Uses `classifyWithRegex()` from `skill_kind_patterns.ts` to infer what an active
 For skills with registered parsers in `src/scripts/skills/index.ts`:
 1. Looks up parser by skill name and category
 2. Extracts progression table from HTML (levels 1-40)
-3. Parser extracts numeric values per level
-4. Values are combined with templates from `active_templates.ts` or `support_templates.ts`
+3. Parser extracts numeric values per level, returning **named keys**
+4. Values are converted to arrays and stored in `levelValues`
 
-## Template System
+## Parser-Factory System
 
-Templates define the mod structure without values:
-- `src/tli/skills/support_templates.ts` - `skillModTemplates` for support skills
-- `src/tli/skills/active_templates.ts` - `activeSkillTemplates` for active skills
+The system uses **parsers** and **factories** (not templates):
 
-Templates specify `levelMods` (general mods) and `levelOffense` (offensive stats like weapon damage %).
+### Parsers (src/scripts/skills/)
+Parsers extract values from HTML and return **named key-value objects**:
+```typescript
+export const frostSpikeParser: SupportLevelParser = (input) => {
+  // Extract values...
+  return {
+    weaponAtkDmgPct,           // Record<number, number>
+    addedDmgEffPct,            // Record<number, number>
+    convertPhysicalToColdPct,  // from createConstantLevels()
+    maxProjectile,
+    // ...
+  };
+};
+```
 
-The generated output combines templates with parsed level values:
-```ts
-levelMods: [{
-  template: { type: "ModType" },
-  levels: { 1: 10, 2: 12, ... 40: 100 }
-}]
+### Factories (src/tli/skills/)
+Factories define how to build Mod objects from the parsed values:
+```typescript
+"Frost Spike": (l, vals) => ({
+  offense: [
+    { type: "WeaponAtkDmgPct", value: v(vals.weaponAtkDmgPct, l) },
+    { type: "AddedDmgEffPct", value: v(vals.addedDmgEffPct, l) },
+  ],
+  mods: [
+    { type: "ConvertDmgPct", value: v(vals.convertPhysicalToColdPct, l), from: "physical", to: "cold" },
+    // ...
+  ],
+})
+```
+
+### Generated Output
+The script generates `levelValues` as named objects:
+```typescript
+levelValues: {
+  weaponAtkDmgPct: [1.49, 1.51, 1.54, ...],  // 40 values
+  addedDmgEffPct: [1.49, 1.51, 1.54, ...],
+  convertPhysicalToColdPct: [1, 1, 1, ...],
+  // ...
+}
 ```
 
 ## Adding New Skills with Level Scaling
 
-1. **Add parser** in `src/scripts/skills/` that extracts values from progression table
+1. **Add parser** in `src/scripts/skills/` that extracts values with named keys
 2. **Register parser** in `src/scripts/skills/index.ts` with skill name and category
-3. **Add template** in appropriate templates file with mod structure
+3. **Add factory** in appropriate factory file (`active_factories.ts`, `support_factories.ts`, `passive_factories.ts`)
 4. **Re-run script** to regenerate data files
 
 ## Validation
@@ -122,7 +151,6 @@ levelMods: [{
 The script validates:
 - All tags are known (throws on unknown tags)
 - All support skills have parseable support targets
-- Parser output matches template expectations (array length)
 - All 40 levels present in parsed data
 
 ## Test Skill

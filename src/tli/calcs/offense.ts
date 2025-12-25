@@ -1310,45 +1310,41 @@ const resolveModsForSkill = (
 
   const stats = calculateStats(prenormMods);
   const totalMainStats = calculateTotalMainStats(skill, stats);
-  mods = mods.concat(
-    normalizeStackables(prenormMods, "main_stat", totalMainStats),
-  );
+  mods.push(...normalizeStackables(prenormMods, "main_stat", totalMainStats));
 
   const skillUse = 3;
-  mods = mods.concat(normalizeStackables(prenormMods, "skill_use", skillUse));
+  mods.push(...normalizeStackables(prenormMods, "skill_use", skillUse));
 
   const skillChargesOnUse = 2;
-  mods = mods.concat(
-    normalizeStackables(prenormMods, "skill_charges_on_use", skillChargesOnUse),
+  mods.push(
+    ...normalizeStackables(
+      prenormMods,
+      "skill_charges_on_use",
+      skillChargesOnUse,
+    ),
   );
 
   const willpowerStacks = calculateWillpower(prenormMods);
-  mods = mods.concat(
-    normalizeStackables(prenormMods, "willpower", willpowerStacks),
-  );
+  mods.push(...normalizeStackables(prenormMods, "willpower", willpowerStacks));
 
   const crueltyBuffStacks = config.crueltyBuffStacks ?? 40;
-  mods = mods.concat(
-    normalizeStackables(prenormMods, "cruelty_buff", crueltyBuffStacks),
+  mods.push(
+    ...normalizeStackables(prenormMods, "cruelty_buff", crueltyBuffStacks),
   );
 
   const frostbitten = calculateEnemyFrostbitten(config);
-  mods = mods.concat(
-    normalizeStackables(prenormMods, "frostbite_rating", frostbitten.points),
+  mods.push(
+    ...normalizeStackables(prenormMods, "frostbite_rating", frostbitten.points),
   );
 
   // todo: calculate projectile count
   const projectiles = 0;
-  mods = mods.concat(
-    normalizeStackables(prenormMods, "projectile", projectiles),
-  );
+  mods.push(...normalizeStackables(prenormMods, "projectile", projectiles));
 
   const fervor = calculateFervor(mods, config);
   if (fervor.enabled) {
     mods.push(calculateFervorCritRateMod(fervor));
-    mods = mods.concat(
-      normalizeStackables(prenormMods, "fervor", fervor.points),
-    );
+    mods.push(...normalizeStackables(prenormMods, "fervor", fervor.points));
   }
 
   if (skill.tags.includes("Shadow Strike")) {

@@ -526,7 +526,7 @@ const dmgModTypePerSkillTag: Partial<Record<SkillTag, DmgModType>> = {
   Area: "area",
 };
 
-const dmgModTypesForSkill = (skill: BaseActiveSkill) => {
+const dmgModTypesForSkill = (skill: BaseActiveSkill): DmgModType[] => {
   const dmgModTypes: DmgModType[] = ["global"];
   const tags = skill.tags;
   tags.forEach((t) => {
@@ -558,10 +558,8 @@ const calculateChunkDmg = (
   chunk: DmgChunk,
   currentType: DmgChunkType,
   allDmgPctMods: Extract<Mod, { type: "DmgPct" }>[],
-  skill: BaseActiveSkill,
+  baseDmgModTypes: DmgModType[],
 ): DmgRange => {
-  const baseDmgModTypes = dmgModTypesForSkill(skill);
-
   // Chunk benefits from bonuses for current type AND all types in its history
   const allApplicableTypes: DmgChunkType[] = [currentType, ...chunk.history];
   const dmgModTypes: DmgModType[] = [...baseDmgModTypes];
@@ -587,11 +585,16 @@ const calculatePoolTotal = (
   pool: DmgChunk[],
   poolType: DmgChunkType,
   allDmgPctMods: Extract<Mod, { type: "DmgPct" }>[],
-  skill: BaseActiveSkill,
+  baseDmgModTypes: DmgModType[],
 ): DmgRange => {
   let total: DmgRange = { min: 0, max: 0 };
   for (const chunk of pool) {
-    const chunkDmg = calculateChunkDmg(chunk, poolType, allDmgPctMods, skill);
+    const chunkDmg = calculateChunkDmg(
+      chunk,
+      poolType,
+      allDmgPctMods,
+      baseDmgModTypes,
+    );
     total = addDR(total, chunkDmg);
   }
   return total;
@@ -730,19 +733,19 @@ const calculatePenetration = (
 const calculateSkillHit = (
   gearDmg: GearDmg,
   flatDmg: DmgRanges,
-  allMods: Mod[],
-  mainSkill: BaseActiveSkill,
+  mods: Mod[],
+  skill: BaseActiveSkill,
   level: number,
   config: Configuration,
 ): SkillHitOverview => {
-  const skillWeaponDR = match(mainSkill.name)
+  const skillWeaponDR = match(skill.name)
     .with("Berserking Blade", () => {
       return multDRs(gearDmg.mainHand, 2.1);
     })
     .with("Frost Spike", () => {
       return multDRs(
         gearDmg.mainHand,
-        getLeveOffenseValue(mainSkill, "WeaponAtkDmgPct", level) as number,
+        getLeveOffenseValue(skill, "WeaponAtkDmgPct", level) as number,
       );
     })
     .with("[Test] Simple Attack", () => {
@@ -754,44 +757,51 @@ const calculateSkillHit = (
     });
   const skillFlatDR = multDRs(
     flatDmg,
-    getLeveOffenseValue(mainSkill, "AddedDmgEffPct", level) as number,
+    getLeveOffenseValue(skill, "AddedDmgEffPct", level) as number,
   );
   const skillBaseDmg = addDRs(skillWeaponDR, skillFlatDR);
 
   // Damage conversion happens after flat damage, before % bonuses
-  const dmgPools = convertDmg(skillBaseDmg, allMods);
+  const dmgPools = convertDmg(skillBaseDmg, mods);
 
   // Apply % bonuses to each pool, considering conversion history
-  const allDmgPcts = filterMod(allMods, "DmgPct");
+  const addSpellTag =
+    skill.tags.includes("Attack") &&
+    findMod(mods, "SpellDmgBonusAppliesToAtkDmg") !== undefined;
+
+  const baseDmgModTypes: DmgModType[] = addSpellTag
+    ? [...dmgModTypesForSkill(skill), "spell"]
+    : dmgModTypesForSkill(skill);
+  const allDmgPcts = filterMod(mods, "DmgPct");
   const physBeforePen = calculatePoolTotal(
     dmgPools.physical,
     "physical",
     allDmgPcts,
-    mainSkill,
+    baseDmgModTypes,
   );
   const coldBeforePen = calculatePoolTotal(
     dmgPools.cold,
     "cold",
     allDmgPcts,
-    mainSkill,
+    baseDmgModTypes,
   );
   const lightningBeforePen = calculatePoolTotal(
     dmgPools.lightning,
     "lightning",
     allDmgPcts,
-    mainSkill,
+    baseDmgModTypes,
   );
   const fireBeforePen = calculatePoolTotal(
     dmgPools.fire,
     "fire",
     allDmgPcts,
-    mainSkill,
+    baseDmgModTypes,
   );
   const erosionBeforePen = calculatePoolTotal(
     dmgPools.erosion,
     "erosion",
     allDmgPcts,
-    mainSkill,
+    baseDmgModTypes,
   );
 
   const { phys, cold, lightning, fire, erosion } = calculatePenetration(
@@ -802,7 +812,7 @@ const calculateSkillHit = (
       fire: fireBeforePen,
       erosion: erosionBeforePen,
     },
-    allMods,
+    mods,
     config,
   );
 

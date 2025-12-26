@@ -731,6 +731,42 @@ const parseFlatDmgToAtksAndSpellsPer = (
   ];
 };
 
+const parseDmgPctPerManaConsumedRecently = (
+  input: string,
+): ModOfType<"DmgPct"> | undefined => {
+  // Regex to parse: +7% Spell Damage for every 100 Mana consumed recently, up to 432%
+  const pattern =
+    /^([+-])?(\d+(?:\.\d+)?)% (\w+) damage for every (\d+) mana consumed recently, up to (\d+(?:\.\d+)?)%$/i;
+  const match = input.match(pattern);
+
+  if (!match) {
+    return undefined;
+  }
+
+  const value = parseFloat(match[2]) / 100;
+  const modTypeWord = match[3].toLowerCase();
+  const amt = parseInt(match[4], 10);
+  const valueLimit = parseFloat(match[5]) / 100;
+
+  if (!isValidDmgModType(modTypeWord)) {
+    return undefined;
+  }
+
+  const per: PerStackable = {
+    stackable: "mana_consumed_recently",
+    amt,
+    valueLimit,
+  };
+
+  return {
+    type: "DmgPct",
+    value,
+    modType: modTypeWord,
+    addn: false,
+    per,
+  };
+};
+
 /**
  * Parses an affix line string and returns extracted mods.
  *
@@ -759,6 +795,7 @@ export const parseMod = (input: string): Mod[] | undefined => {
   const parsers = [
     // Offense
     // basic offense
+    parseDmgPctPerManaConsumedRecently,
     parseDmgPct,
     parseCritRatingPct,
     parseCritDmgPct,

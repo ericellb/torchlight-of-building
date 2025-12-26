@@ -723,3 +723,18 @@ test("parse flat physical damage to attacks and spells per mana consumed recentl
     },
   ]);
 });
+
+test("parse spell damage per mana consumed recently with value limit", () => {
+  const result = parseMod(
+    "+7% Spell Damage for every 100 Mana consumed recently, up to 432%",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 0.07,
+      modType: "spell",
+      addn: false,
+      per: { stackable: "mana_consumed_recently", amt: 100, valueLimit: 4.32 },
+    },
+  ]);
+});

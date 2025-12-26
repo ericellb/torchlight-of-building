@@ -1,8 +1,23 @@
-import type { PerStackable, ResPenType } from "../mod";
+import { type CoreTalentName, CoreTalentNames } from "../../data/core_talent";
+import type { Mod, PerStackable, ResPenType } from "../mod";
 import { StatWordMapping } from "./enums";
 import { spec, t } from "./template";
 
+const coreTalentNameSet = new Set(
+  CoreTalentNames.map((name) => name.toLowerCase()),
+);
+
 export const allParsers = [
+  // Core talent names - matches exact talent name
+  {
+    parse(input: string): Mod[] | undefined {
+      if (!coreTalentNameSet.has(input)) return undefined;
+      const name = CoreTalentNames.find(
+        (n) => n.toLowerCase() === input,
+      ) as CoreTalentName;
+      return [{ type: "CoreTalent", name }];
+    },
+  },
   t(
     "{aspd:dec%} gear attack speed. {dmg:dec%} additional attack damage",
   ).outputMany([

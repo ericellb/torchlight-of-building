@@ -1,3 +1,4 @@
+import type { CoreTalentName } from "../../data/core_talent";
 import type {
   CritDmgModType,
   CritRatingModType,
@@ -22,6 +23,7 @@ export interface CaptureTypeRegistry {
   CritDmgModType: CritDmgModType;
   DmgChunkType: DmgChunkType;
   ResPenType: ResPenType;
+  CoreTalentName: CoreTalentName;
 
   // Special case: StatWord maps to StatType at runtime
   StatWord: StatType;

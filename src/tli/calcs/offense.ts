@@ -1,5 +1,6 @@
 import * as R from "remeda";
 import { match, P } from "ts-pattern";
+import { CoreTalentMods } from "@/src/data/core_talent";
 import {
   type ActiveSkillName,
   ActiveSkills,
@@ -179,12 +180,20 @@ export const collectMods = (loadout: Loadout): Mod[] => {
   ];
 };
 
-// TODO: implement this
-const _resolveCoreTalentMods = (mods: Mod[]): Mod[] => {
-  const _coreTalentNames = R.unique(
-    filterMod(mods, "CoreTalent").map((m) => m.name),
+const resolveCoreTalentMods = (mods: Mod[]): Mod[] => {
+  const coreTalentNamesAndSrc = R.unique(
+    filterMod(mods, "CoreTalent").map((m) => ({ name: m.name, src: m.src })),
   );
-  return [];
+  const newMods: Mod[] = coreTalentNamesAndSrc.flatMap(({ name, src }) => {
+    const affix = CoreTalentMods[name];
+    const mods = affix.affixLines.flatMap((affixLine) => affixLine.mods ?? []);
+    const modsWithSrc = mods.map((m) => ({
+      ...m,
+      src: `${src}#CoreTalent: ${name}`,
+    }));
+    return modsWithSrc;
+  });
+  return [...mods.filter((m) => m.type !== "CoreTalent"), ...newMods];
 };
 
 interface OffenseSummary {
@@ -1454,7 +1463,7 @@ const calculateResourcePool = (
 // Calculates offense for all enabled implemented skills
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const { loadout, configuration: config } = input;
-  const loadoutMods = collectMods(loadout);
+  const loadoutMods = resolveCoreTalentMods(collectMods(loadout));
 
   const resourcePool = calculateResourcePool(loadoutMods, loadout, config);
 

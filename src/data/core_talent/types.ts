@@ -1,5 +1,5 @@
 import type { Tree } from "../talent";
-import type { CoreTalents } from "./core_talents";
+import { CoreTalents } from "./core_talents";
 
 export interface BaseCoreTalent {
   name: string;
@@ -7,4 +7,5 @@ export interface BaseCoreTalent {
   affix: string;
 }
 
-export type CoreTalentName = (typeof CoreTalents)[number]["name"];
+export const CoreTalentNames = CoreTalents.map((t) => t.name);
+export type CoreTalentName = (typeof CoreTalentNames)[number];

@@ -778,3 +778,48 @@ test("parse critical strike rating and damage per mana consumed recently", () =>
     },
   ]);
 });
+
+test("parse core talent - single word name", () => {
+  const result = parseMod("Elimination");
+  expect(result).toEqual([
+    {
+      type: "CoreTalent",
+      name: "Elimination",
+    },
+  ]);
+});
+
+test("parse core talent - multi-word name", () => {
+  const result = parseMod("Three Birds with One Stone");
+  expect(result).toEqual([
+    {
+      type: "CoreTalent",
+      name: "Three Birds with One Stone",
+    },
+  ]);
+});
+
+test("parse core talent - name with apostrophe", () => {
+  const result = parseMod("Third time's a charm");
+  expect(result).toEqual([
+    {
+      type: "CoreTalent",
+      name: "Third time's a charm",
+    },
+  ]);
+});
+
+test("parse core talent - case insensitive", () => {
+  const result = parseMod("elimination");
+  expect(result).toEqual([
+    {
+      type: "CoreTalent",
+      name: "Elimination",
+    },
+  ]);
+});
+
+test("return undefined for non-existent core talent name", () => {
+  const result = parseMod("Not A Real Talent");
+  expect(result).toBeUndefined();
+});

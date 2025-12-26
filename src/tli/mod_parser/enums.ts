@@ -1,3 +1,4 @@
+import { CoreTalentNames } from "../../data/core_talent";
 import {
   CRIT_DMG_MOD_TYPES,
   CRIT_RATING_MOD_TYPES,
@@ -19,6 +20,7 @@ registerEnum("CritRatingModType", CRIT_RATING_MOD_TYPES);
 registerEnum("CritDmgModType", CRIT_DMG_MOD_TYPES);
 registerEnum("DmgChunkType", DmgChunkTypes);
 registerEnum("ResPenType", ResPenTypes);
+registerEnum("CoreTalentName", CoreTalentNames);
 
 // Custom word mappings for enums (input word -> output value)
 export const StatWordMapping: Record<string, string> = {

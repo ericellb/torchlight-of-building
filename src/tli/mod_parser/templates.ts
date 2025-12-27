@@ -57,6 +57,12 @@ export const allParsers = [
       return { value: c.value, modType: c.modType, addn: false, per };
     },
   ),
+  t("{value:dec%} additional damage for the next skill when mana reaches the max").output("DmgPct", (c) => ({
+    value: c.value,
+    modType: "global" as const,
+    addn: true,
+    cond: "has_full_mana" as const,
+  })),
   t("{value:dec%} [additional] [{modType:DmgModType}] damage").output("DmgPct", (c) => ({
     value: c.value,
     modType: c.modType ?? "global",

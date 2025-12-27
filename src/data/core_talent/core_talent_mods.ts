@@ -156,7 +156,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   Perception: {
     affixLines: [
       { text: "+100% chance to gain 1 stacks of Agility Blessing on hit" },
-      { text: "Max Agility Blessing Stacks +1" },
+      {
+        text: "Max Agility Blessing Stacks +1",
+        mods: [{ type: "MaxAgilityBlessing", value: 1 }],
+      },
     ],
   },
   "Third time's a charm": {
@@ -313,7 +316,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   Chilly: {
     affixLines: [
       { text: "+100% chance to gain 1 stack of Focus Blessing on hit" },
-      { text: "Max Focus Blessing Stacks +1" },
+      {
+        text: "Max Focus Blessing Stacks +1",
+        mods: [{ type: "MaxFocusBlessing", value: 1 }],
+      },
     ],
   },
   "Peculiar Vibe": {
@@ -350,7 +356,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   Bunch: {
     affixLines: [
-      { text: "Max Focus Blessing Stacks +1" },
+      {
+        text: "Max Focus Blessing Stacks +1",
+        mods: [{ type: "MaxFocusBlessing", value: 1 }],
+      },
       { text: "+3% additional Spell Damage per stack of Focus Blessing owned" },
     ],
   },
@@ -395,6 +404,15 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+40% additional damage for the next skill when Mana reaches the max",
+        mods: [
+          {
+            type: "DmgPct",
+            value: 40,
+            modType: "global",
+            addn: true,
+            cond: "has_full_mana",
+          },
+        ],
       },
     ],
   },

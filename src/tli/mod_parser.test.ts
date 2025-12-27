@@ -49,6 +49,21 @@ test("parse additional typed damage", () => {
   ]);
 });
 
+test("parse additional damage when mana reaches max", () => {
+  const result = parseMod(
+    "+40% additional damage for the next skill when Mana reaches the max",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 40,
+      modType: "global",
+      addn: true,
+      cond: "has_full_mana",
+    },
+  ]);
+});
+
 test("parse decimal damage", () => {
   const result = parseMod("+12.5% fire damage");
   expect(result).toEqual([

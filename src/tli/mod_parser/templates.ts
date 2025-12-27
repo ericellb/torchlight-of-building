@@ -75,6 +75,11 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
+  t("{value:dec%} [additional] attack and cast speed when at full mana").output("AspdAndCspdPct", (c) => ({
+    value: c.value,
+    addn: c.additional !== undefined,
+    cond: "has_full_mana" as const,
+  })),
   t("{value:dec%} [additional] attack and cast speed").output("AspdAndCspdPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,

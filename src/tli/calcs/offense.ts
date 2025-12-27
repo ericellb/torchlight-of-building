@@ -913,6 +913,9 @@ const filterModsByCond = (
       .with("enemy_paralyzed", () => config.enemyParalyzed)
       .with("has_full_mana", () => config.hasFullMana)
       .with("target_enemy_is_nearby", () => config.targetEnemyIsNearby)
+      .with("has_blocked_recently", () => config.hasBlockedRecently)
+      .with("has_elites_nearby", () => config.hasElitesNearby)
+      .with("enemy_has_ailment", () => config.enemyHasAilment)
       .exhaustive();
   });
 };

@@ -156,8 +156,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
                 onChange={handleOptionalNumberChange("fervorPoints")}
                 min={0}
                 max={100}
-                placeholder="max"
-                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
               />
             </>
           )}
@@ -184,8 +183,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
                 onChange={handleOptionalNumberChange("enemyFrostbittenPoints")}
                 min={0}
                 max={100}
-                placeholder="max"
-                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
               />
             </>
           )}
@@ -243,8 +241,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
                 onChange={handleOptionalNumberChange("focusBlessings")}
                 min={0}
                 max={100}
-                placeholder="max"
-                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
               />
             </>
           )}
@@ -271,8 +268,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
                 onChange={handleOptionalNumberChange("agilityBlessings")}
                 min={0}
                 max={100}
-                placeholder="max"
-                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+                className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
               />
             </>
           )}
@@ -286,8 +282,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             value={config.manaConsumedRecently ?? ""}
             onChange={handleManaConsumedRecentlyChange}
             min={0}
-            placeholder="0"
-            className="w-28 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+            className="w-28 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
           />
 
           <label className="text-right text-zinc-50">
@@ -300,8 +295,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             onChange={handleUnsealedManaChange}
             min={0}
             max={100}
-            placeholder="0"
-            className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+            className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
           />
 
           <label className="text-right text-zinc-50">
@@ -318,8 +312,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             onChange={handleEnemyResChange}
             min={0}
             max={100}
-            placeholder="50"
-            className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+            className="w-14 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
           />
 
           <label className="text-right text-zinc-50">
@@ -331,8 +324,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             value={config.enemyArmor ?? ""}
             onChange={handleEnemyArmorChange}
             min={0}
-            placeholder="27273"
-            className="w-20 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
+            className="w-20 rounded border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-center text-sm text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/30"
           />
 
           <label className="text-right text-zinc-50">Enemy Paralyzed</label>

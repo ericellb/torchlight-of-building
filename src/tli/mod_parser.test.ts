@@ -229,7 +229,12 @@ test("parse basic attack and cast speed", () => {
   const result = parseMod("+6% attack and cast speed");
   expect(result).toEqual([
     {
-      type: "AspdAndCspdPct",
+      type: "AspdPct",
+      value: 6,
+      addn: false,
+    },
+    {
+      type: "CspdPct",
       value: 6,
       addn: false,
     },
@@ -240,7 +245,13 @@ test("parse attack and cast speed when at full mana", () => {
   const result = parseMod("+20% Attack and Cast Speed when at Full Mana");
   expect(result).toEqual([
     {
-      type: "AspdAndCspdPct",
+      type: "AspdPct",
+      value: 20,
+      addn: false,
+      cond: "has_full_mana",
+    },
+    {
+      type: "CspdPct",
       value: 20,
       addn: false,
       cond: "has_full_mana",

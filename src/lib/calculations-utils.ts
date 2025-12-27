@@ -71,7 +71,6 @@ export const categorizeModType = (mod: Mod): StatCategory => {
       return "critDmg";
 
     case "AspdPct":
-    case "AspdAndCspdPct":
     case "GearAspdPct":
       return "aspd";
 
@@ -145,10 +144,6 @@ export const getModDisplayName = (mod: Mod): string => {
     case "AspdPct": {
       const prefix = mod.addn ? "More" : "Increased";
       return `${prefix} attack speed`;
-    }
-    case "AspdAndCspdPct": {
-      const prefix = mod.addn ? "More" : "Increased";
-      return `${prefix} attack and cast speed`;
     }
     case "GearAspdPct":
       return "Gear attack speed";

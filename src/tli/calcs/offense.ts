@@ -526,10 +526,7 @@ const calculateDoubleDmgMult = (mods: Mod[]): number => {
 
 const calculateAspd = (loadout: Loadout, allMods: Mod[]): number => {
   const gearAspd = calculateGearAspd(loadout, allMods);
-  const aspdPctMods = R.concat(
-    filterMod(allMods, "AspdPct"),
-    filterMod(allMods, "AspdAndCspdPct"),
-  );
+  const aspdPctMods = filterMod(allMods, "AspdPct");
   const inc = calculateInc(
     aspdPctMods.filter((m) => !m.addn).map((v) => v.value),
   );

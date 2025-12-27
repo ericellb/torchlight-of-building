@@ -44,7 +44,8 @@ export const supportSkillModFactories: Partial<
     },
   ],
   "Quick Decision": (l, vals) => [
-    { type: "AspdAndCspdPct", value: v(vals.aspdAndCspdPct, l), addn: true },
+    { type: "AspdPct", value: v(vals.aspdAndCspdPct, l), addn: true },
+    { type: "CspdPct", value: v(vals.aspdAndCspdPct, l), addn: true },
   ],
   "Critical Strike Damage Increase": (l, vals) => [
     {

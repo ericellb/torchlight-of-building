@@ -100,7 +100,6 @@ interface ModDefinitions {
   CritDmgPct: { value: number; addn: boolean; modType: CritDmgModType };
   AspdPct: { value: number; addn: boolean };
   CspdPct: { value: number; addn: boolean };
-  AspdAndCspdPct: { value: number; addn: boolean };
   MinionAspdAndCspdPct: { value: number; addn: boolean };
   DoubleDmgChancePct: { value: number };
   Stat: { value: number; statType: StatType };

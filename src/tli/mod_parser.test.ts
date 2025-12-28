@@ -1038,3 +1038,12 @@ test("parse additional attack damage dealt to nearby enemies", () => {
     },
   ]);
 });
+
+test("parse has hasten", () => {
+  const result = parseMod("Has Hasten");
+  expect(result).toEqual([
+    {
+      type: "HasHasten",
+    },
+  ]);
+});

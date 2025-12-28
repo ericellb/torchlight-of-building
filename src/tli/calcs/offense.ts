@@ -832,10 +832,20 @@ export interface OffenseResults {
   resourcePool: ResourcePool;
 }
 
+interface DerivedCtx {
+  hasHasten: boolean;
+}
+
+const resolveDerivedCtx = (mods: Mod[]): DerivedCtx => {
+  const hasHasten = findMod(mods, "HasHasten") !== undefined;
+  return { hasHasten };
+};
+
 const filterModsByCond = (
   mods: Mod[],
   loadout: Loadout,
   config: Configuration,
+  derivedCtx: DerivedCtx,
 ): Mod[] => {
   return mods.filter((m) => {
     if (m.cond === undefined) return true;
@@ -860,6 +870,7 @@ const filterModsByCond = (
       .with("has_blocked_recently", () => config.hasBlockedRecently)
       .with("has_elites_nearby", () => config.hasElitesNearby)
       .with("enemy_has_ailment", () => config.enemyHasAilment)
+      .with("has_hasten", () => derivedCtx.hasHasten)
       .exhaustive();
   });
 };
@@ -1042,6 +1053,34 @@ const calculateImplicitMods = (): Mod[] => {
       cond: "realm_of_mercury",
       src: "Realm of Mercury",
     },
+    {
+      type: "AspdPct",
+      value: 8,
+      addn: true,
+      cond: "has_hasten",
+      src: "Hasten",
+    },
+    {
+      type: "CspdPct",
+      value: 8,
+      addn: true,
+      cond: "has_hasten",
+      src: "Hasten",
+    },
+    {
+      type: "MovementSpeedPct",
+      value: 8,
+      addn: true,
+      cond: "has_hasten",
+      src: "Hasten",
+    },
+    {
+      type: "MobilitySkillCdrPct",
+      value: 8,
+      addn: true,
+      cond: "has_hasten",
+      src: "Hasten",
+    },
   ];
 };
 
@@ -1098,6 +1137,7 @@ const resolveBuffSkillMods = (
   loadout: Loadout,
   loadoutMods: Mod[],
   config: Configuration,
+  derivedCtx: DerivedCtx,
 ): Mod[] => {
   const activeSkillSlots = listActiveSkillSlots(loadout);
   const passiveSkillSlots = listPassiveSkillSlots(loadout);
@@ -1160,6 +1200,7 @@ const resolveBuffSkillMods = (
       prenormMods,
       loadout,
       config,
+      derivedCtx,
     );
 
     // === Apply multipliers to buff mods ===
@@ -1371,12 +1412,13 @@ const resolveBuffSkillEffMults = (
   unresolvedModsFromParam: Mod[],
   loadout: Loadout,
   config: Configuration,
+  derivedCtx: DerivedCtx,
 ): { skillEffMult: number; auraEffMult: number } => {
   const buffSkillEffMods = unresolvedModsFromParam.filter(
     (m) => m.type === "AuraEffPct" || m.type === "SkillEffPct",
   );
   const prenormMods = filterModsByCondThreshold(
-    filterModsByCond(buffSkillEffMods, loadout, config),
+    filterModsByCond(buffSkillEffMods, loadout, config, derivedCtx),
     config,
   );
 
@@ -1442,10 +1484,11 @@ const resolveModsForOffenseSkill = (
   resourcePool: ResourcePool,
   loadout: Loadout,
   config: Configuration,
+  derivedCtx: DerivedCtx,
 ): Mod[] => {
   const { stats, maxMana, mercuryPts } = resourcePool;
   const prenormMods = filterModsByCondThreshold(
-    filterModsByCond(prenormModsFromParam, loadout, config),
+    filterModsByCond(prenormModsFromParam, loadout, config, derivedCtx),
     config,
   );
   const mods = filterOutPerMods(prenormMods);
@@ -1533,11 +1576,12 @@ const calculateResourcePool = (
   paramMods: Mod[],
   loadout: Loadout,
   config: Configuration,
+  derivedCtx: DerivedCtx,
 ): ResourcePool => {
   // potential perf issue: this is a duplicate filtering, since it also
   //   happens in calculateOffense with a slightly larger superset.
   //   maybe we should factor it out if performance becomes an issue
-  const prenormMods = filterModsByCond(paramMods, loadout, config);
+  const prenormMods = filterModsByCond(paramMods, loadout, config, derivedCtx);
   const mods = filterOutPerMods(prenormMods);
 
   const stats = calculateStats(mods);
@@ -1562,12 +1606,18 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const { loadout, configuration: config } = input;
   const loadoutMods = resolveCoreTalentMods(collectMods(loadout));
 
-  const resourcePool = calculateResourcePool(loadoutMods, loadout, config);
+  const derivedCtx = resolveDerivedCtx(loadoutMods);
+  const resourcePool = calculateResourcePool(
+    loadoutMods,
+    loadout,
+    config,
+    derivedCtx,
+  );
 
   const unresolvedLoadoutAndBuffMods = [
     ...loadoutMods,
     ...calculateImplicitMods(),
-    ...resolveBuffSkillMods(loadout, loadoutMods, config),
+    ...resolveBuffSkillMods(loadout, loadoutMods, config, derivedCtx),
   ];
 
   const skillSlots = listActiveSkillSlots(loadout);
@@ -1587,6 +1637,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       resourcePool,
       loadout,
       config,
+      derivedCtx,
     );
 
     const gearDmg = calculateGearDmg(loadout, mods);

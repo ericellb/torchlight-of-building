@@ -70,7 +70,8 @@ export type Condition =
   | "target_enemy_is_in_proximity"
   | "has_blocked_recently"
   | "has_elites_nearby"
-  | "enemy_has_ailment";
+  | "enemy_has_ailment"
+  | "has_hasten";
 
 export type ConditionThresholdTarget =
   | "num_enemies_nearby"
@@ -147,6 +148,9 @@ interface ModDefinitions {
   ResPenPct: { value: number; penType: ResPenType };
   ArmorPenPct: { value: number };
   ManaBeforeLifePct: { value: number };
+  HasHasten: object;
+  MovementSpeedPct: { value: number; addn?: boolean };
+  MobilitySkillCdrPct: { value: number; addn?: boolean };
   SpellDmgBonusAppliesToAtkDmg: object;
   MaxMana: { value: number };
   MaxManaPct: { value: number; addn: boolean };

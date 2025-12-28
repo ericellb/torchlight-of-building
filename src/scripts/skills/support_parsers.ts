@@ -1,6 +1,7 @@
 import { template } from "../../lib/template-compiler";
 import {
   findColumn,
+  getDescriptionPart,
   parseNumericValue,
   validateAllLevels,
 } from "./progression_table";
@@ -10,10 +11,7 @@ import { createConstantLevels } from "./utils";
 export const hauntParser: SupportLevelParser = (input) => {
   const { skillName, description, progressionTable } = input;
 
-  const firstDescription = description[0];
-  if (firstDescription === undefined) {
-    throw new Error(`${skillName}: no description found`);
-  }
+  const firstDescription = getDescriptionPart(skillName, description, 0);
 
   // Extract Shadow Quantity from description text
   const shadowQuantMatch = template("{value:int} shadow quantity").match(
@@ -46,10 +44,7 @@ export const hauntParser: SupportLevelParser = (input) => {
 export const steamrollParser: SupportLevelParser = (input) => {
   const { skillName, description, progressionTable } = input;
 
-  const firstDescription = description[0];
-  if (firstDescription === undefined) {
-    throw new Error(`${skillName}: no description found`);
-  }
+  const firstDescription = getDescriptionPart(skillName, description, 0);
 
   // Extract Attack Speed from description text
   const aspdMatch = template("{value:dec%} attack speed").match(

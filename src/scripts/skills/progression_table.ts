@@ -106,3 +106,15 @@ export const findColumn = (
   }
   return col;
 };
+
+export const getDescriptionPart = (
+  skillName: string,
+  description: string[],
+  index: number,
+): string => {
+  const descriptionPart = description[index];
+  if (descriptionPart === undefined) {
+    throw new Error(`${skillName}: no description found`);
+  }
+  return descriptionPart;
+};

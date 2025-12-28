@@ -1,3 +1,4 @@
+import { template } from "../../lib/template-compiler";
 import { parseNumericValue, validateAllLevels } from "./progression_table";
 import type { SupportLevelParser } from "./types";
 import { createConstantLevels } from "./utils";
@@ -13,11 +14,11 @@ export const iceBondParser: SupportLevelParser = (input) => {
 
     if (descript !== undefined && descript !== "") {
       // Match "23.5% additional Cold Damage" or "+24% additional Cold Damage"
-      const match = descript.match(
-        /[+]?([\d.]+)%\s+additional\s+Cold\s+Damage/i,
+      const match = template("{value:dec%} additional cold damage").match(
+        descript,
       );
-      if (match !== null) {
-        coldDmgPctVsFrostbitten[level] = parseNumericValue(match[1]);
+      if (match !== undefined) {
+        coldDmgPctVsFrostbitten[level] = match.value;
       }
     }
   }
@@ -38,11 +39,11 @@ export const bullsRageParser: SupportLevelParser = (input) => {
 
     if (descript !== undefined && descript !== "") {
       // Match "17.5% additional Melee Skill Damage" or "+27% additional Melee Skill Damage"
-      const match = descript.match(
-        /[+]?([\d.]+)%\s+additional\s+Melee\s+Skill\s+Damage/i,
-      );
-      if (match !== null) {
-        meleeDmgPct[level] = parseNumericValue(match[1]);
+      const match = template(
+        "{value:dec%} additional melee skill damage",
+      ).match(descript);
+      if (match !== undefined) {
+        meleeDmgPct[level] = match.value;
       }
     }
   }
@@ -80,9 +81,9 @@ export const frostSpikeParser: SupportLevelParser = (input) => {
     }
 
     if (damageValue !== undefined && damageValue !== "") {
-      const dmgMatch = damageValue.match(/([\d.]+)%/);
-      if (dmgMatch !== null) {
-        weaponAtkDmgPct[level] = parseNumericValue(dmgMatch[1]);
+      const dmgMatch = template("{value:dec%}").match(damageValue);
+      if (dmgMatch !== undefined) {
+        weaponAtkDmgPct[level] = dmgMatch.value;
       }
     }
   }
@@ -112,44 +113,44 @@ export const frostSpikeParser: SupportLevelParser = (input) => {
 
   if (descript !== undefined) {
     // ConvertDmgPct: "Converts 100% of the skill's Physical Damage to Cold"
-    const convertMatch = descript.match(
-      /Converts\s+(\d+)%\s+of the skill's Physical Damage to Cold/i,
-    );
-    if (convertMatch !== null) {
-      convertPhysicalToColdPct = parseNumericValue(convertMatch[1]);
+    const convertMatch = template(
+      "converts {value:int%} of the skill's physical damage to cold",
+    ).match(descript);
+    if (convertMatch !== undefined) {
+      convertPhysicalToColdPct = convertMatch.value;
     }
 
     // MaxProjectile: "max amount of Projectiles that can be fired by this skill is 5"
-    const maxProjMatch = descript.match(
-      /max amount of Projectiles.*is\s+(\d+)/i,
-    );
-    if (maxProjMatch !== null) {
-      maxProjectile = Number.parseInt(maxProjMatch[1], 10);
+    const maxProjMatch = template(
+      "max amount of projectiles that can be fired by this skill is {value:int}",
+    ).match(descript);
+    if (maxProjMatch !== undefined) {
+      maxProjectile = maxProjMatch.value;
     }
 
     // Projectile per frostbite_rating: "+1 Projectile Quantity for every 35 Frostbite Rating"
     // The value stored is 1 (gains +1 projectile), the 35 is encoded in the template's per.amt
-    const projPerRatingMatch = descript.match(
-      /\+(\d+)\s+Projectile Quantity for every\s+\d+\s+.*Frostbite Rating/i,
-    );
-    if (projPerRatingMatch !== null) {
-      projectilePerFrostbiteRating = Number.parseInt(projPerRatingMatch[1], 10);
+    const projPerRatingMatch = template(
+      "{value:int} projectile quantity for every",
+    ).match(descript);
+    if (projPerRatingMatch !== undefined) {
+      projectilePerFrostbiteRating = projPerRatingMatch.value;
     }
 
     // Base Projectile: "fires 2 Projectiles in its base state"
-    const baseProjMatch = descript.match(
-      /fires\s+(\d+)\s+Projectiles? in its base state/i,
+    const baseProjMatch = template("fires {value:int} projectile").match(
+      descript,
     );
-    if (baseProjMatch !== null) {
-      baseProjectile = Number.parseInt(baseProjMatch[1], 10);
+    if (baseProjMatch !== undefined) {
+      baseProjectile = baseProjMatch.value;
     }
 
     // DmgPct per projectile: "+8% additional Damage for every +1 Projectile"
-    const dmgPctMatch = descript.match(
-      /\+(\d+)%\s+additional Damage for every\s+\+1\s+Projectile/i,
-    );
-    if (dmgPctMatch !== null) {
-      dmgPctPerProjectile = parseNumericValue(dmgPctMatch[1]);
+    const dmgPctMatch = template(
+      "{value:int%} additional damage for every +1 projectile",
+    ).match(descript);
+    if (dmgPctMatch !== undefined) {
+      dmgPctPerProjectile = dmgPctMatch.value;
     }
   }
 

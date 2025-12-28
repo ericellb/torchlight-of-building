@@ -1,3 +1,4 @@
+import { template } from "../../lib/template-compiler";
 import { parseNumericValue, validateAllLevels } from "./progression_table";
 import type { SupportLevelParser } from "./types";
 import { createConstantLevels } from "./utils";
@@ -11,13 +12,13 @@ export const hauntParser: SupportLevelParser = (input) => {
   }
 
   // Extract Shadow Quantity from description text
-  const shadowQuantMatch = firstDescription.match(
-    /\+?(\d+)\s+Shadow Quantity/i,
+  const shadowQuantMatch = template("{value:int} shadow quantity").match(
+    firstDescription,
   );
-  if (shadowQuantMatch === null) {
+  if (shadowQuantMatch === undefined) {
     throw new Error(`${skillName}: could not find Shadow Quantity value`);
   }
-  const shadowQuant = parseNumericValue(shadowQuantMatch[1]);
+  const shadowQuant = shadowQuantMatch.value;
 
   // Extract DmgPct from progression table values
   const dmgPct: Record<number, number> = {};
@@ -48,13 +49,13 @@ export const steamrollParser: SupportLevelParser = (input) => {
   }
 
   // Extract Attack Speed from description text
-  const aspdMatch = firstDescription.match(
-    /([+-]?\d+(?:\.\d+)?)%\s+Attack Speed/i,
+  const aspdMatch = template("{value:dec%} attack speed").match(
+    firstDescription,
   );
-  if (aspdMatch === null) {
+  if (aspdMatch === undefined) {
     throw new Error(`${skillName}: could not find Attack Speed value`);
   }
-  const aspdPctValue = parseNumericValue(aspdMatch[1]);
+  const aspdPctValue = aspdMatch.value;
 
   // Extract melee and ailment damage from progression table
   const meleeDmgPct: Record<number, number> = {};
@@ -119,25 +120,27 @@ export const willpowerParser: SupportLevelParser = (input) => {
     throw new Error(`${skillName}: no description found for level 1`);
   }
 
-  const stacksMatch = firstRowDesc.match(/Stacks up to (\d+) time/i);
-  if (stacksMatch === null) {
+  const stacksMatch = template("stacks up to {value:int} time").match(
+    firstRowDesc,
+  );
+  if (stacksMatch === undefined) {
     throw new Error(`${skillName}: could not find max stacks value`);
   }
-  const maxStacksValue = parseNumericValue(stacksMatch[1]);
+  const maxStacksValue = stacksMatch.value;
 
   // Extract damage percentage from each row's description
   const dmgPctPerWillpower: Record<number, number> = {};
   for (const [levelStr, desc] of Object.entries(progressionTable.description)) {
     const level = Number(levelStr);
 
-    const dmgMatch = desc.match(/\+?(\d+(?:\.\d+)?)%\s+additional damage/i);
-    if (dmgMatch === null) {
+    const dmgMatch = template("{value:dec%} additional damage").match(desc);
+    if (dmgMatch === undefined) {
       throw new Error(
         `${skillName} level ${level}: could not find damage percentage`,
       );
     }
 
-    dmgPctPerWillpower[level] = parseNumericValue(dmgMatch[1]);
+    dmgPctPerWillpower[level] = dmgMatch.value;
   }
 
   validateAllLevels(dmgPctPerWillpower, skillName);

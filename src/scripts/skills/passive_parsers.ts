@@ -1,4 +1,5 @@
-import { parseNumericValue, validateAllLevels } from "./progression_table";
+import { template } from "../../lib/template-compiler";
+import { validateAllLevels } from "./progression_table";
 import type { SupportLevelParser } from "./types";
 
 export const preciseCrueltyParser: SupportLevelParser = (input) => {
@@ -13,19 +14,19 @@ export const preciseCrueltyParser: SupportLevelParser = (input) => {
 
     if (descript !== undefined && descript !== "") {
       // Match "+12.5% additional Attack Damage" or "12.5% additional Attack Damage"
-      const dmgMatch = descript.match(
-        /[+]?([\d.]+)%\s+additional\s+Attack\s+Damage/i,
+      const dmgMatch = template("{value:dec%} additional attack damage").match(
+        descript,
       );
-      if (dmgMatch !== null) {
-        attackDmgPct[level] = parseNumericValue(dmgMatch[1]);
+      if (dmgMatch !== undefined) {
+        attackDmgPct[level] = dmgMatch.value;
       }
 
       // Match "2.5% additional Aura Effect per stack of the buff"
-      const auraEffMatch = descript.match(
-        /(\d+(?:\.\d+)?)%\s+additional\s+Aura\s+Effect\s+per\s+stack/i,
-      );
-      if (auraEffMatch !== null) {
-        auraEffPctPerCrueltyStack[level] = parseNumericValue(auraEffMatch[1]);
+      const auraEffMatch = template(
+        "{value:dec%} additional aura effect per stack",
+      ).match(descript);
+      if (auraEffMatch !== undefined) {
+        auraEffPctPerCrueltyStack[level] = auraEffMatch.value;
       }
     }
   }

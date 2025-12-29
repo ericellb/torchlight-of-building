@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/mt-demo/:match*",
+      "source": "/monitor/:match*",
       "destination": "https://tpob.vercel.app/_vercel/insights/:match*"
     }
   ]

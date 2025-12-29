@@ -67,6 +67,7 @@ const createMinimalSaveData = (
     unsealedManaPct: undefined,
     unsealedLifePct: undefined,
     realmOfMercuryEnabled: false,
+    baptismOfPurityEnabled: false,
     focusBlessings: undefined,
     hasFocusBlessing: false,
     agilityBlessings: undefined,

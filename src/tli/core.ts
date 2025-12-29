@@ -90,6 +90,8 @@ export interface Configuration {
   // --------------------
 
   realmOfMercuryEnabled: boolean;
+  // default to false
+  baptismOfPurityEnabled: boolean;
 
   // ------------
   // enemy config

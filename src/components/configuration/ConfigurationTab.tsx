@@ -239,6 +239,19 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
           />
 
           <label className="text-right text-zinc-50">
+            Baptism of Purity
+            <InfoTooltip text="Include Rosa 2's Baptism of Purity recorded damage" />
+          </label>
+          <input
+            type="checkbox"
+            checked={config.baptismOfPurityEnabled}
+            onChange={(e) =>
+              onUpdate({ baptismOfPurityEnabled: e.target.checked })
+            }
+            className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-amber-500"
+          />
+
+          <label className="text-right text-zinc-50">
             Shadow Hits
             <InfoTooltip text="Defaults to max" />
           </label>

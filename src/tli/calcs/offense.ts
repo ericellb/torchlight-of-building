@@ -507,6 +507,17 @@ const calculateAspd = (loadout: Loadout, allMods: Mod[]): number => {
   return gearAspd * (1 + inc) * addn;
 };
 
+const calculateExtraOffenseMults = (
+  mods: Mod[],
+  config: Configuration,
+): number => {
+  let inc = 0;
+  if (config.baptismOfPurityEnabled) {
+    inc += findMod(mods, "MercuryBaptismDmgPct")?.value ?? 0;
+  }
+  return (100 + inc) / 100;
+};
+
 const dmgModTypePerSkillTag: Partial<Record<SkillTag, DmgModType>> = {
   Attack: "attack",
   Spell: "spell",
@@ -1820,10 +1831,11 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     const critChance = calculateCritChance(mods);
     const critDmgMult = calculateCritDmg(mods);
     const doubleDmgMult = calculateDoubleDmgMult(mods);
+    const extraMult = calculateExtraOffenseMults(mods, config);
 
     const avgHitWithCrit =
       skillHit.avg * critChance * critDmgMult + skillHit.avg * (1 - critChance);
-    const avgDps = avgHitWithCrit * doubleDmgMult * aspd;
+    const avgDps = avgHitWithCrit * doubleDmgMult * aspd * extraMult;
 
     skills[slot.skillName as ImplementedActiveSkillName] = {
       critChance,

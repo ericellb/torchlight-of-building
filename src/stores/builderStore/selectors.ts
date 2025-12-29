@@ -80,6 +80,7 @@ export const useConfiguration = (): Configuration => {
     unsealedManaPct: configPage.unsealedManaPct,
     unsealedLifePct: configPage.unsealedLifePct,
     realmOfMercuryEnabled: configPage.realmOfMercuryEnabled,
+    baptismOfPurityEnabled: configPage.baptismOfPurityEnabled,
     focusBlessings: configPage.focusBlessings,
     hasFocusBlessing: configPage.hasFocusBlessing,
     agilityBlessings: configPage.agilityBlessings,

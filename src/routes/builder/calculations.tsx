@@ -4,7 +4,6 @@ import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
 import { calculateOffense, type OffenseInput } from "@/src/tli/calcs/offense";
 import { ModGroup } from "../../components/calculations/ModGroup";
 import { SkillSelector } from "../../components/calculations/SkillSelector";
-import { StatBreakdown } from "../../components/calculations/StatBreakdown";
 import {
   formatStatValue,
   getStatCategoryDescription,
@@ -144,54 +143,6 @@ function CalculationsPage(): React.ReactNode {
                   {formatStatValue.aps(offenseSummary.aspd)}
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-lg font-semibold text-zinc-50">
-              Stat Breakdowns
-            </h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              <StatBreakdown
-                title="Critical Chance"
-                finalValue={formatStatValue.percentage(
-                  offenseSummary.critChance,
-                )}
-                mods={groupedMods.critRating}
-                description="Base 5% + crit rating mods"
-                groupTitle="Critical Rating Mods"
-                groupDescription="Affects crit chance"
-                defaultExpanded
-              />
-              <StatBreakdown
-                title="Critical Damage"
-                finalValue={formatStatValue.multiplier(
-                  offenseSummary.critDmgMult,
-                )}
-                mods={groupedMods.critDmg}
-                description="Base 150% + crit damage mods"
-                groupTitle="Critical Damage Mods"
-                groupDescription="Affects crit multiplier"
-                defaultExpanded
-              />
-              <StatBreakdown
-                title="Attack Speed"
-                finalValue={formatStatValue.aps(offenseSummary.aspd)}
-                mods={groupedMods.aspd}
-                description="Base from weapon + attack speed mods"
-                groupTitle="Attack Speed Mods"
-                groupDescription="Affects APS"
-                defaultExpanded
-              />
-              <StatBreakdown
-                title="Damage"
-                finalValue={formatStatValue.damage(offenseSummary.avgHit)}
-                mods={groupedMods.damage}
-                description="Weapon + flat + % damage mods"
-                groupTitle="Damage Mods"
-                groupDescription="Affects hit damage"
-                defaultExpanded
-              />
             </div>
           </div>
 

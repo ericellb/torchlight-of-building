@@ -27,13 +27,13 @@ describe("offense golden tests", () => {
 
     // Resistance checks
     const { defenses } = results;
-    expect(defenses.coldRes).toEqual({ max: 60, potential: 46, actual: 46 });
+    expect(defenses.coldRes).toEqual({ max: 60, potential: 58, actual: 58 });
     expect(defenses.lightningRes).toEqual({
       max: 60,
       potential: 55,
       actual: 55,
     });
-    expect(defenses.fireRes).toEqual({ max: 60, potential: 45, actual: 45 });
+    expect(defenses.fireRes).toEqual({ max: 60, potential: 57, actual: 57 });
     expect(defenses.erosionRes).toEqual({ max: 63, potential: 61, actual: 61 });
   });
 });

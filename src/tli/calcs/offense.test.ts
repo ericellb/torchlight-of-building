@@ -60,7 +60,7 @@ const baseWeapon = {
     baseStatLines: [
       {
         text: "100 - 100 physical damage",
-        mod: { type: "FlatPhysDmg", value: 100 } as const,
+        mods: [{ type: "GearBasePhysDmg", value: 100 } as const],
       },
     ],
   },
@@ -1710,11 +1710,11 @@ describe("resolveSelectedSkillSupportMods via calculateOffense", () => {
       baseStatLines: [
         {
           text: "100 - 100 physical damage",
-          mod: { type: "FlatPhysDmg", value: 100 } as const,
+          mods: [{ type: "GearBasePhysDmg", value: 100 } as const],
         },
         {
           text: "1.0 attack speed",
-          mod: { type: "AttackSpeed", value: 1.0 } as const,
+          mods: [{ type: "GearBaseAttackSpeed", value: 1.0 } as const],
         },
       ],
     },
@@ -3513,11 +3513,11 @@ describe("double damage chance", () => {
       baseStatLines: [
         {
           text: "100 - 100 physical damage",
-          mod: { type: "FlatPhysDmg", value: 100 } as const,
+          mods: [{ type: "GearBasePhysDmg", value: 100 } as const],
         },
         {
           text: "1.0 attack speed",
-          mod: { type: "AttackSpeed", value: 1.0 } as const,
+          mods: [{ type: "GearBaseAttackSpeed", value: 1.0 } as const],
         },
       ],
     },
@@ -3596,7 +3596,7 @@ describe("resource pool: mana and mercury pts", () => {
       baseStatLines: [
         {
           text: "100 - 100 cold damage",
-          mod: { type: "FlatPhysDmg", value: 0 } as const,
+          mods: [{ type: "GearBasePhysDmg", value: 0 } as const],
         },
       ],
     },

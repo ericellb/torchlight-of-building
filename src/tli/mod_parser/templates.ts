@@ -274,4 +274,9 @@ export const allParsers = [
     cond: HAS_FULL_MANA,
   })),
   t("\\+{value:int} to hero trait level").output("HeroTraitLevel", (c) => ({ value: c.value })),
+  t("{min:int} - {max:int} physical damage").output("GearBasePhysDmg", (c) => ({
+    value: (c.min + c.max) / 2,
+  })),
+  t("{value:int} critical strike rating").output("GearBaseCritRating", (c) => ({ value: c.value })),
+  t("{value:dec} attack speed").output("GearBaseAttackSpeed", (c) => ({ value: c.value })),
 ];

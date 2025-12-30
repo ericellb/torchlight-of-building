@@ -1,5 +1,4 @@
 import type { HeroName, HeroTraitName } from "@/src/data/hero_trait/types";
-import type { BaseStatMod } from "./base_stat_mod";
 import type { EquipmentType } from "./gear_data_types";
 import type { Mod } from "./mod";
 
@@ -19,7 +18,7 @@ export interface Affix {
 
 export interface BaseStatLine {
   text: string;
-  mod?: BaseStatMod;
+  mods?: Mod[];
 }
 
 export interface BaseStats {

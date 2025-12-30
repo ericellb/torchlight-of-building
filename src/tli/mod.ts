@@ -195,6 +195,9 @@ interface ModDefinitions {
   SkillLevel: { value: number; skillLevelType: SkillLevelType };
   HeroTraitLevel: { value: number; heroTraitLevelType?: HeroTraitLevelType };
   CoreTalent: { name: CoreTalentName };
+  GearBasePhysDmg: { value: number };
+  GearBaseCritRating: { value: number };
+  GearBaseAttackSpeed: { value: number };
 }
 
 // Generate the Mod union type from ModDefinitions

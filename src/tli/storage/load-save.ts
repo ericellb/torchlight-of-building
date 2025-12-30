@@ -29,7 +29,6 @@ import type {
   TalentPage as SaveDataTalentPage,
   TalentTree as SaveDataTalentTree,
 } from "@/src/lib/save-data";
-import { parseBaseStatMod } from "../base_stat_mod";
 import type {
   Affix,
   AffixLine,
@@ -78,10 +77,10 @@ const convertBaseStats = (
 ): BaseStats => {
   const lines = baseStatText.split(/\n/);
   const baseStatLines = lines.map((lineText) => {
-    const mod = parseBaseStatMod(lineText);
+    const mods = parseMod(lineText);
     return {
       text: lineText,
-      mod: mod ? { ...mod, src } : undefined,
+      mods: mods?.map((mod) => ({ ...mod, src })),
     };
   });
   return {

@@ -25,6 +25,14 @@ const scaleAffixByInverseImage = (affix: Affix, multiplier: number): Affix => ({
 export const getAllAffixes = (gear: Gear): Affix[] => {
   const affixes: Affix[] = [];
 
+  // Include baseStats as an affix (baseStatLines have same structure as affixLines)
+  if (gear.baseStats?.baseStatLines) {
+    affixes.push({
+      affixLines: gear.baseStats.baseStatLines,
+      src: gear.baseStats.src,
+    });
+  }
+
   if (gear.legendary_affixes !== undefined) {
     // Legendary gear: blend first, then legendary affixes
     if (gear.blend_affix !== undefined) affixes.push(gear.blend_affix);

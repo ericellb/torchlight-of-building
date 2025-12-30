@@ -334,9 +334,13 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod[]): GearDmg => {
     return emptyGearDmg();
   }
   const mainhandMods = collectModsFromAffixes(getAllAffixes(mainhand));
-  const basePhysDmg = mainhand.baseStats?.baseStatLines.find(
-    (l) => l.mod?.type === "FlatPhysDmg",
-  )?.mod?.value;
+  const basePhysDmgMod = mainhand.baseStats?.baseStatLines
+    .flatMap((l) => l.mods ?? [])
+    .find((m) => m.type === "GearBasePhysDmg");
+  const basePhysDmg =
+    basePhysDmgMod?.type === "GearBasePhysDmg"
+      ? basePhysDmgMod.value
+      : undefined;
   if (basePhysDmg === undefined) {
     return emptyGearDmg();
   }
@@ -445,10 +449,12 @@ const calculateFlatDmg = (
 };
 
 const calculateGearAspd = (loadout: Loadout, allMods: Mod[]): number => {
+  const baseAspdMod =
+    loadout.gearPage.equippedGear.mainHand?.baseStats?.baseStatLines
+      .flatMap((l) => l.mods ?? [])
+      .find((m) => m.type === "GearBaseAttackSpeed");
   const baseAspd =
-    loadout.gearPage.equippedGear.mainHand?.baseStats?.baseStatLines.find(
-      (l) => l.mod?.type === "AttackSpeed",
-    )?.mod?.value || 0;
+    baseAspdMod?.type === "GearBaseAttackSpeed" ? baseAspdMod.value : 0;
   const gearAspdPctBonus = calculateInc(
     filterMod(allMods, "GearAspdPct").map((b) => b.value),
   );

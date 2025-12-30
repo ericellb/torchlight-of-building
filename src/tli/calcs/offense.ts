@@ -31,6 +31,7 @@ import type {
   DmgChunkType,
   Mod,
   ModOfType,
+  ResType,
   Stackable,
   StatType,
 } from "../mod";
@@ -847,6 +848,7 @@ export interface OffenseInput {
 export interface OffenseResults {
   skills: Partial<Record<ImplementedActiveSkillName, OffenseSummary>>;
   resourcePool: ResourcePool;
+  defenses: Defenses;
 }
 
 interface DerivedCtx {
@@ -1767,15 +1769,78 @@ const calculateResourcePool = (
 };
 
 export interface Defenses {
-  armor: number;
-  energyShield: number;
-  evasion: number;
-  attackBlockChancePct: number;
-  spellBlockChancePct: number;
-  blockRatioPct: number;
+  maxColdResPct: number;
+  maxLightningResPct: number;
+  maxFireResPct: number;
+  maxErosionResPct: number;
+  coldResPct: number;
+  lightningResPct: number;
+  fireResPct: number;
+  erosionResPct: number;
 }
 
-export const _calculateDefenses = () => {};
+export const calculateDefenses = (
+  paramMods: Mod[],
+  loadout: Loadout,
+  config: Configuration,
+  derivedCtx: DerivedCtx,
+): Defenses => {
+  const prenormMods = filterModsByCondThreshold(
+    filterModsByCond(paramMods, loadout, config, derivedCtx),
+    config,
+  );
+  const mods = filterOutPerMods(prenormMods);
+
+  const maxResMods = filterMod(mods, "MaxResistancePct");
+  const resMods = filterMod(mods, "ResistancePct");
+
+  type ResMod = ModOfType<"MaxResistancePct"> | ModOfType<"ResistancePct">;
+  const sumResMods = <T extends ResMod>(
+    mods: T[],
+    resTypes: ResType[],
+  ): number => {
+    return sumByValue(mods.filter((m) => resTypes.includes(m.resType)));
+  };
+
+  const calcMaxRes = (mods: ResMod[], resTypes: ResType[]): number => {
+    const addedMaxRes = sumResMods(mods, resTypes);
+    return Math.min(90, 60 + addedMaxRes);
+  };
+
+  const calcRes = (
+    mods: ResMod[],
+    resTypes: ResType[],
+    maxRes: number,
+  ): number => {
+    const res = sumResMods(mods, resTypes);
+    return Math.min(maxRes, res);
+  };
+
+  const maxColdResPct = calcMaxRes(maxResMods, ["cold", "elemental"]);
+  const maxLightningResPct = calcMaxRes(maxResMods, ["lightning", "elemental"]);
+  const maxFireResPct = calcMaxRes(maxResMods, ["fire", "elemental"]);
+  const maxErosionResPct = calcMaxRes(maxResMods, ["erosion"]);
+
+  const coldResPct = calcRes(resMods, ["cold", "elemental"], maxColdResPct);
+  const lightningResPct = calcRes(
+    resMods,
+    ["lightning", "elemental"],
+    maxLightningResPct,
+  );
+  const fireResPct = calcRes(resMods, ["fire", "elemental"], maxFireResPct);
+  const erosionResPct = calcRes(resMods, ["erosion"], maxErosionResPct);
+
+  return {
+    maxColdResPct,
+    maxLightningResPct,
+    maxFireResPct,
+    maxErosionResPct,
+    coldResPct,
+    lightningResPct,
+    fireResPct,
+    erosionResPct,
+  };
+};
 
 // Calculates offense for all enabled implemented skills
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
@@ -1798,6 +1863,13 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     ...calculateImplicitMods(),
     ...resolveBuffSkillMods(loadout, loadoutMods, config, derivedCtx),
   ];
+
+  const defenses = calculateDefenses(
+    unresolvedLoadoutAndBuffMods,
+    loadout,
+    config,
+    derivedCtx,
+  );
 
   const skillSlots = listActiveSkillSlots(loadout);
   const enabledSlots = skillSlots.filter((s) => s.enabled);
@@ -1867,5 +1939,5 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     };
   }
 
-  return { skills, resourcePool };
+  return { skills, resourcePool, defenses };
 };

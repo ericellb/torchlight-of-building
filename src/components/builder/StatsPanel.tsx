@@ -39,7 +39,7 @@ export const StatsPanel = () => {
   const offenseSummary = selectedSkill ? skills[selectedSkill] : undefined;
 
   return (
-    <div className="sticky top-6 rounded-lg border border-zinc-700 bg-zinc-900 p-4">
+    <div className="sticky top-6 max-h-[calc(100vh-6rem)] overflow-y-auto rounded-lg border border-zinc-700 bg-zinc-900 p-4">
       <h3 className="mb-4 text-lg font-semibold text-zinc-50">Stats Summary</h3>
 
       <div className="mb-4 space-y-2">

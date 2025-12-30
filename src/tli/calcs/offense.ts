@@ -1758,13 +1758,11 @@ const calculateResourcePool = (
 
   const maxLifeFromMods = sumByValue(filterMod(mods, "MaxLife"));
   const maxLifeMult = calculateEffMultiplier(filterMod(mods, "MaxLifePct"));
-  const maxLife =
-    (50 + config.level * 50 + stats.str * 0.2 + maxLifeFromMods) * maxLifeMult;
+  const maxLife = (50 + config.level * 13 + maxLifeFromMods) * maxLifeMult;
 
   const maxManaFromMods = sumByValue(filterMod(mods, "MaxMana"));
   const maxManaMult = calculateEffMultiplier(filterMod(mods, "MaxManaPct"));
-  const maxMana =
-    (40 + config.level * 5 + stats.int * 0.5 + maxManaFromMods) * maxManaMult;
+  const maxMana = (40 + config.level * 5 + maxManaFromMods) * maxManaMult;
 
   mods.push(...normalizeStackables(prenormMods, "max_mana", maxMana));
 

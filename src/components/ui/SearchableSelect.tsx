@@ -189,6 +189,9 @@ export const SearchableSelect = <T extends string | number>({
                 opt?.label ?? ""
               }
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === " ") e.stopPropagation();
+              }}
               placeholder={placeholder}
             />
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">

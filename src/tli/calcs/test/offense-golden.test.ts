@@ -6,7 +6,7 @@ import { calculateOffense } from "../offense";
 import rosaGolden from "./rosa-2-golden.json";
 
 describe("offense golden tests", () => {
-  it("rosa-2-golden: Frost Spike should calculate ~13.29 trillion DPS", () => {
+  it("rosa-2-golden: Frost Spike should calculate ~12.40 trillion DPS", () => {
     const saveData = rosaGolden as unknown as SaveData;
     const loadout = loadSave(saveData);
     const config = saveData.configurationPage as Configuration;
@@ -19,7 +19,7 @@ describe("offense golden tests", () => {
     }
 
     const avgDps = frostSpike.avgDps;
-    const expectedDps = 13.29e12; // ~13.29 trillion
+    const expectedDps = 12.40e12; // ~12.40 trillion
     const tolerance = 0.01; // 1% tolerance
 
     expect(avgDps).toBeGreaterThan(expectedDps * (1 - tolerance));

@@ -193,10 +193,11 @@ const formatLargeNumber = (val: number): string => {
 };
 
 export const formatStatValue = {
-  percentage: (val: number) => `${(val * 100).toFixed(1)}%`,
-  multiplier: (val: number) => `${(val * 100).toFixed(0)}%`,
-  aps: (val: number) => `${val.toFixed(2)} APS`,
+  percentage: (val: number): string => `${(val * 100).toFixed(1)}%`,
+  multiplier: (val: number): string => `${(val * 100).toFixed(0)}%`,
+  aps: (val: number): string => `${val.toFixed(2)} APS`,
   damage: formatLargeNumber,
   dps: formatLargeNumber,
-  integer: (val: number) => Math.round(val).toLocaleString("en-US"),
+  integer: (val: number): string => Math.round(val).toLocaleString("en-US"),
+  duration: (val: number): string => `${val.toFixed(1)}s`,
 };

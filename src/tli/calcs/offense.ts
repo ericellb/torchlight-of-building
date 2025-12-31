@@ -1935,7 +1935,7 @@ export const calculateDefenses = (
   };
 };
 
-interface PersistentDpsSummary {
+export interface PersistentDpsSummary {
   base: Record<DmgChunkType, number>;
   total: number;
   duration: number;

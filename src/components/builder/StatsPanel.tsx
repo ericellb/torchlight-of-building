@@ -3,6 +3,7 @@ import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
 import {
   calculateOffense,
   type OffenseInput,
+  type PersistentDpsSummary,
   type Resistance,
 } from "@/src/tli/calcs/offense";
 import { formatStatValue } from "../../lib/calculations-utils";
@@ -19,7 +20,61 @@ const formatRes = (res: Resistance): string => {
   return `${res.actual}%`;
 };
 
-export const StatsPanel = () => {
+const DMG_TYPE_COLORS: Record<string, string> = {
+  physical: "text-zinc-50",
+  cold: "text-cyan-400",
+  lightning: "text-yellow-400",
+  fire: "text-orange-400",
+  erosion: "text-fuchsia-400",
+};
+
+const PersistentDpsSection = ({
+  summary,
+}: {
+  summary: PersistentDpsSummary;
+}): React.ReactNode => {
+  const nonZeroDamageTypes = Object.entries(summary.base).filter(
+    ([, value]) => value > 0,
+  );
+
+  return (
+    <div className="mt-4 space-y-3">
+      <div className="text-xs font-medium text-zinc-400">Persistent Damage</div>
+
+      <div className="rounded bg-zinc-800 p-3">
+        <div className="text-xs text-zinc-400">Persistent DPS</div>
+        <div className="text-xl font-bold text-amber-400">
+          {formatStatValue.dps(summary.total)}
+        </div>
+      </div>
+
+      <div className="rounded bg-zinc-800 p-3">
+        <div className="text-xs text-zinc-400">Duration</div>
+        <div className="text-lg font-semibold text-zinc-50">
+          {formatStatValue.duration(summary.duration)}
+        </div>
+      </div>
+
+      {nonZeroDamageTypes.length > 0 && (
+        <div className="rounded bg-zinc-800 p-3">
+          <div className="mb-2 text-xs text-zinc-400">Damage Breakdown</div>
+          <div className="space-y-1">
+            {nonZeroDamageTypes.map(([type, value]) => (
+              <div key={type} className="flex justify-between text-sm">
+                <span className="capitalize text-zinc-400">{type}</span>
+                <span className={DMG_TYPE_COLORS[type]}>
+                  {formatStatValue.damage(value)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const StatsPanel = (): React.ReactNode => {
   const loadout = useLoadout();
   const configuration = useConfiguration();
   const savedSkillName = useCalculationsSelectedSkill();
@@ -116,62 +171,73 @@ export const StatsPanel = () => {
         </div>
       </div>
 
-      {offenseSummary?.attackHitSummary ? (
+      {offenseSummary?.attackHitSummary !== undefined ||
+      offenseSummary?.persistentDpsSummary !== undefined ? (
         <>
           <div className="mb-4 rounded bg-zinc-800 px-3 py-2">
             <div className="text-xs text-zinc-400">Selected Skill</div>
             <div className="font-medium text-zinc-50">{selectedSkill}</div>
           </div>
 
-          <div className="space-y-3">
-            <div className="rounded bg-zinc-800 p-3">
-              <div className="text-xs text-zinc-400">Average DPS</div>
-              <div className="text-xl font-bold text-amber-400">
-                {formatStatValue.dps(offenseSummary.attackHitSummary.avgDps)}
+          {offenseSummary.attackHitSummary !== undefined && (
+            <div className="space-y-3">
+              <div className="rounded bg-zinc-800 p-3">
+                <div className="text-xs text-zinc-400">Average DPS</div>
+                <div className="text-xl font-bold text-amber-400">
+                  {formatStatValue.dps(offenseSummary.attackHitSummary.avgDps)}
+                </div>
               </div>
-            </div>
 
-            <div className="rounded bg-zinc-800 p-3">
-              <div className="text-xs text-zinc-400">Avg Hit (no crit)</div>
-              <div className="text-lg font-semibold text-zinc-50">
-                {formatStatValue.damage(offenseSummary.attackHitSummary.avgHit)}
+              <div className="rounded bg-zinc-800 p-3">
+                <div className="text-xs text-zinc-400">Avg Hit (no crit)</div>
+                <div className="text-lg font-semibold text-zinc-50">
+                  {formatStatValue.damage(
+                    offenseSummary.attackHitSummary.avgHit,
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="rounded bg-zinc-800 p-3">
-              <div className="text-xs text-zinc-400">Avg Hit (with crit)</div>
-              <div className="text-lg font-semibold text-zinc-50">
-                {formatStatValue.damage(
-                  offenseSummary.attackHitSummary.avgHitWithCrit,
-                )}
+              <div className="rounded bg-zinc-800 p-3">
+                <div className="text-xs text-zinc-400">Avg Hit (with crit)</div>
+                <div className="text-lg font-semibold text-zinc-50">
+                  {formatStatValue.damage(
+                    offenseSummary.attackHitSummary.avgHitWithCrit,
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="rounded bg-zinc-800 p-3">
-              <div className="text-xs text-zinc-400">Crit Chance</div>
-              <div className="text-lg font-semibold text-zinc-50">
-                {formatStatValue.percentage(
-                  offenseSummary.attackHitSummary.critChance,
-                )}
+              <div className="rounded bg-zinc-800 p-3">
+                <div className="text-xs text-zinc-400">Crit Chance</div>
+                <div className="text-lg font-semibold text-zinc-50">
+                  {formatStatValue.percentage(
+                    offenseSummary.attackHitSummary.critChance,
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="rounded bg-zinc-800 p-3">
-              <div className="text-xs text-zinc-400">Crit Multiplier</div>
-              <div className="text-lg font-semibold text-zinc-50">
-                {formatStatValue.multiplier(
-                  offenseSummary.attackHitSummary.critDmgMult,
-                )}
+              <div className="rounded bg-zinc-800 p-3">
+                <div className="text-xs text-zinc-400">Crit Multiplier</div>
+                <div className="text-lg font-semibold text-zinc-50">
+                  {formatStatValue.multiplier(
+                    offenseSummary.attackHitSummary.critDmgMult,
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="rounded bg-zinc-800 p-3">
-              <div className="text-xs text-zinc-400">Attack Speed</div>
-              <div className="text-lg font-semibold text-zinc-50">
-                {formatStatValue.aps(offenseSummary.attackHitSummary.aspd)}
+              <div className="rounded bg-zinc-800 p-3">
+                <div className="text-xs text-zinc-400">Attack Speed</div>
+                <div className="text-lg font-semibold text-zinc-50">
+                  {formatStatValue.aps(offenseSummary.attackHitSummary.aspd)}
+                </div>
               </div>
             </div>
-          </div>
+          )}
+
+          {offenseSummary.persistentDpsSummary !== undefined && (
+            <PersistentDpsSection
+              summary={offenseSummary.persistentDpsSummary}
+            />
+          )}
         </>
       ) : (
         <div className="text-center">

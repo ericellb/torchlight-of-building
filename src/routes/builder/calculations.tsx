@@ -4,6 +4,7 @@ import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
 import {
   calculateOffense,
   type OffenseInput,
+  type PersistentDpsSummary,
   type Resistance,
 } from "@/src/tli/calcs/offense";
 import { ModGroup } from "../../components/calculations/ModGroup";
@@ -27,6 +28,54 @@ const formatRes = (res: Resistance): string => {
     return `${res.actual}% (${res.potential}%)`;
   }
   return `${res.actual}%`;
+};
+
+const DMG_TYPE_COLORS: Record<string, string> = {
+  physical: "text-zinc-50",
+  cold: "text-cyan-400",
+  lightning: "text-yellow-400",
+  fire: "text-orange-400",
+  erosion: "text-fuchsia-400",
+};
+
+const PersistentDpsSummarySection = ({
+  summary,
+}: {
+  summary: PersistentDpsSummary;
+}): React.ReactNode => {
+  const nonZeroDamageTypes = Object.entries(summary.base).filter(
+    ([, value]) => value > 0,
+  );
+
+  return (
+    <div className="rounded-lg border border-purple-500/30 bg-zinc-900 p-6">
+      <h3 className="mb-4 text-lg font-semibold text-purple-400">
+        Persistent Damage
+      </h3>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div className="rounded-lg bg-zinc-800 p-4">
+          <div className="text-sm text-zinc-400">Persistent DPS</div>
+          <div className="text-2xl font-bold text-amber-400">
+            {formatStatValue.dps(summary.total)}
+          </div>
+        </div>
+        <div className="rounded-lg bg-zinc-800 p-4">
+          <div className="text-sm text-zinc-400">Duration</div>
+          <div className="text-xl font-semibold text-zinc-50">
+            {formatStatValue.duration(summary.duration)}
+          </div>
+        </div>
+        {nonZeroDamageTypes.map(([type, value]) => (
+          <div key={type} className="rounded-lg bg-zinc-800 p-4">
+            <div className="text-sm capitalize text-zinc-400">{type}</div>
+            <div className={`text-xl font-semibold ${DMG_TYPE_COLORS[type]}`}>
+              {formatStatValue.damage(value)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export const Route = createFileRoute("/builder/calculations")({
@@ -147,93 +196,101 @@ function CalculationsPage(): React.ReactNode {
         </div>
       </div>
 
-      {offenseSummary?.attackHitSummary && groupedMods && (
-        <>
-          <div className="rounded-lg border border-amber-500/30 bg-zinc-900 p-6">
-            <h3 className="mb-4 text-lg font-semibold text-amber-400">
-              Summary
-            </h3>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-              <div className="rounded-lg bg-zinc-800 p-4">
-                <div className="text-sm text-zinc-400">Average DPS</div>
-                <div className="text-2xl font-bold text-amber-400">
-                  {formatStatValue.dps(offenseSummary.attackHitSummary.avgDps)}
-                </div>
+      {offenseSummary?.attackHitSummary !== undefined && (
+        <div className="rounded-lg border border-amber-500/30 bg-zinc-900 p-6">
+          <h3 className="mb-4 text-lg font-semibold text-amber-400">
+            Attack Hit Summary
+          </h3>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            <div className="rounded-lg bg-zinc-800 p-4">
+              <div className="text-sm text-zinc-400">Average DPS</div>
+              <div className="text-2xl font-bold text-amber-400">
+                {formatStatValue.dps(offenseSummary.attackHitSummary.avgDps)}
               </div>
-              <div className="rounded-lg bg-zinc-800 p-4">
-                <div className="text-sm text-zinc-400">Avg Hit (no crit)</div>
-                <div className="text-xl font-semibold text-zinc-50">
-                  {formatStatValue.damage(
-                    offenseSummary.attackHitSummary.avgHit,
-                  )}
-                </div>
+            </div>
+            <div className="rounded-lg bg-zinc-800 p-4">
+              <div className="text-sm text-zinc-400">Avg Hit (no crit)</div>
+              <div className="text-xl font-semibold text-zinc-50">
+                {formatStatValue.damage(offenseSummary.attackHitSummary.avgHit)}
               </div>
-              <div className="rounded-lg bg-zinc-800 p-4">
-                <div className="text-sm text-zinc-400">Avg Hit (with crit)</div>
-                <div className="text-xl font-semibold text-zinc-50">
-                  {formatStatValue.damage(
-                    offenseSummary.attackHitSummary.avgHitWithCrit,
-                  )}
-                </div>
+            </div>
+            <div className="rounded-lg bg-zinc-800 p-4">
+              <div className="text-sm text-zinc-400">Avg Hit (with crit)</div>
+              <div className="text-xl font-semibold text-zinc-50">
+                {formatStatValue.damage(
+                  offenseSummary.attackHitSummary.avgHitWithCrit,
+                )}
               </div>
-              <div className="rounded-lg bg-zinc-800 p-4">
-                <div className="text-sm text-zinc-400">Crit Chance</div>
-                <div className="text-xl font-semibold text-zinc-50">
-                  {formatStatValue.percentage(
-                    offenseSummary.attackHitSummary.critChance,
-                  )}
-                </div>
+            </div>
+            <div className="rounded-lg bg-zinc-800 p-4">
+              <div className="text-sm text-zinc-400">Crit Chance</div>
+              <div className="text-xl font-semibold text-zinc-50">
+                {formatStatValue.percentage(
+                  offenseSummary.attackHitSummary.critChance,
+                )}
               </div>
-              <div className="rounded-lg bg-zinc-800 p-4">
-                <div className="text-sm text-zinc-400">Crit Multiplier</div>
-                <div className="text-xl font-semibold text-zinc-50">
-                  {formatStatValue.multiplier(
-                    offenseSummary.attackHitSummary.critDmgMult,
-                  )}
-                </div>
+            </div>
+            <div className="rounded-lg bg-zinc-800 p-4">
+              <div className="text-sm text-zinc-400">Crit Multiplier</div>
+              <div className="text-xl font-semibold text-zinc-50">
+                {formatStatValue.multiplier(
+                  offenseSummary.attackHitSummary.critDmgMult,
+                )}
               </div>
-              <div className="rounded-lg bg-zinc-800 p-4">
-                <div className="text-sm text-zinc-400">Attack Speed</div>
-                <div className="text-xl font-semibold text-zinc-50">
-                  {formatStatValue.aps(offenseSummary.attackHitSummary.aspd)}
-                </div>
+            </div>
+            <div className="rounded-lg bg-zinc-800 p-4">
+              <div className="text-sm text-zinc-400">Attack Speed</div>
+              <div className="text-xl font-semibold text-zinc-50">
+                {formatStatValue.aps(offenseSummary.attackHitSummary.aspd)}
               </div>
             </div>
           </div>
-
-          <div>
-            <h3 className="mb-4 text-lg font-semibold text-zinc-50">
-              All Contributing Mods
-            </h3>
-            <div className="space-y-3">
-              {STAT_CATEGORIES.map((category) => {
-                const mods = groupedMods[category];
-                if (mods.length === 0) return null;
-                return (
-                  <ModGroup
-                    key={category}
-                    title={getStatCategoryLabel(category)}
-                    description={getStatCategoryDescription(category)}
-                    mods={mods}
-                    defaultExpanded={false}
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-4">
-            <h4 className="mb-2 text-sm font-medium text-zinc-400">
-              Total Mods: {offenseSummary.resolvedMods.length}
-            </h4>
-            <p className="text-xs text-zinc-500">
-              These are all mods that were considered during the damage
-              calculation. Each mod shows its source to help you understand
-              where your stats come from.
-            </p>
-          </div>
-        </>
+        </div>
       )}
+
+      {offenseSummary?.persistentDpsSummary !== undefined && (
+        <PersistentDpsSummarySection
+          summary={offenseSummary.persistentDpsSummary}
+        />
+      )}
+
+      {(offenseSummary?.attackHitSummary !== undefined ||
+        offenseSummary?.persistentDpsSummary !== undefined) &&
+        groupedMods !== undefined && (
+          <>
+            <div>
+              <h3 className="mb-4 text-lg font-semibold text-zinc-50">
+                All Contributing Mods
+              </h3>
+              <div className="space-y-3">
+                {STAT_CATEGORIES.map((category) => {
+                  const mods = groupedMods[category];
+                  if (mods.length === 0) return null;
+                  return (
+                    <ModGroup
+                      key={category}
+                      title={getStatCategoryLabel(category)}
+                      description={getStatCategoryDescription(category)}
+                      mods={mods}
+                      defaultExpanded={false}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-4">
+              <h4 className="mb-2 text-sm font-medium text-zinc-400">
+                Total Mods: {offenseSummary.resolvedMods.length}
+              </h4>
+              <p className="text-xs text-zinc-500">
+                These are all mods that were considered during the damage
+                calculation. Each mod shows its source to help you understand
+                where your stats come from.
+              </p>
+            </div>
+          </>
+        )}
 
       {!selectedSkill && (
         <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-8 text-center">

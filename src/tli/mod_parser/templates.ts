@@ -13,6 +13,7 @@ const ENEMY_HAS_AILMENT = "enemy_has_ailment" as const;
 const HAS_FOCUS_BLESSING = "has_focus_blessing" as const;
 const HAS_BLOCKED_RECENTLY = "has_blocked_recently" as const;
 const HAS_CRIT_RECENTLY = "has_crit_recently" as const;
+const HAS_BLUR = "has_blur" as const;
 const FROSTBITE_RATING = "frostbite_rating" as const;
 const MANA_CONSUMED_RECENTLY = "mana_consumed_recently" as const;
 const TARGET_ENEMY_IS_IN_PROXIMITY = "target_enemy_is_in_proximity" as const;
@@ -124,6 +125,12 @@ export const allParsers = [
     dmgModType: ATTACK,
     addn: true,
     cond: TARGET_ENEMY_IS_NEARBY,
+  })),
+  t("blur gains an additional effect: {value:dec%} additional damage over time").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "damage_over_time" as const,
+    addn: true,
+    cond: HAS_BLUR,
   })),
   t("{value:dec%} [additional] damage over time").output("DmgPct", (c) => ({
     value: c.value,

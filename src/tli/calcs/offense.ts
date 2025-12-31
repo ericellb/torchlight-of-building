@@ -1009,6 +1009,7 @@ const filterModsByCond = (
       .with("enemy_has_ailment", () => config.enemyHasAilment)
       .with("has_hasten", () => derivedCtx.hasHasten)
       .with("has_crit_recently", () => config.hasCritRecently)
+      .with("has_blur", () => config.hasBlur)
       .with("channeling", () => config.channeling)
       .with("sages_insight_fire", () => config.sagesInsightFireActivated)
       .with("sages_insight_cold", () => config.sagesInsightColdActivated)

@@ -193,6 +193,21 @@ test("parse additional damage over time", () => {
   ]);
 });
 
+test("parse blur additional damage over time effect", () => {
+  const result = parseMod(
+    "Blur gains an additional effect: +25% additional Damage Over Time",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 25,
+      dmgModType: "damage_over_time",
+      addn: true,
+      cond: "has_blur",
+    },
+  ]);
+});
+
 test("parse damage for channeled skills", () => {
   const result = parseMod("+27% damage for Channeled Skills");
   expect(result).toEqual([

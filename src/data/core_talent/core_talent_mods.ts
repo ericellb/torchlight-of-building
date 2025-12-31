@@ -716,6 +716,15 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "Blur gains an additional effect: +25% additional Damage Over Time",
+        mods: [
+          {
+            type: "DmgPct",
+            value: 25,
+            dmgModType: "damage_over_time",
+            addn: true,
+            cond: "has_blur",
+          },
+        ],
       },
     ],
   },

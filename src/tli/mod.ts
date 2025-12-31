@@ -110,6 +110,7 @@ export type Condition =
   | "enemy_has_ailment"
   | "has_hasten"
   | "has_crit_recently"
+  | "has_blur"
   | "channeling"
   | "sages_insight_fire"
   | "sages_insight_cold"

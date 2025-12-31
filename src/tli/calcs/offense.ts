@@ -1243,9 +1243,10 @@ const calculateStats = (mods: Mod[]): Stats => {
   const statMods = filterMod(mods, "Stat");
   const statPctMods = filterMod(mods, "StatPct");
   const calcFinalStat = (statType: StatType): number => {
-    const flat = sumByValue(statMods.filter((m) => m.statType === statType));
+    const flat = sumByValue(statMods.filter((m) => m.statModType === statType));
     const mult =
-      1 + sumByValue(statPctMods.filter((m) => m.statType === statType)) / 100;
+      1 +
+      sumByValue(statPctMods.filter((m) => m.statModType === statType)) / 100;
     return flat * mult;
   };
   return {

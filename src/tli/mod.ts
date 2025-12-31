@@ -75,6 +75,8 @@ export type Stackable =
 
 export type StatType = "str" | "dex" | "int";
 
+export type StatModType = "str" | "dex" | "int" | "all";
+
 // mod value is multiplied by number of stackable divided by amt
 // e.g. per 35 frostbite with 105 frostbite means x3
 export interface PerStackable {
@@ -136,8 +138,8 @@ interface ModDefinitions {
   CspdPct: { value: number; addn: boolean };
   MinionAspdAndCspdPct: { value: number; addn: boolean };
   DoubleDmgChancePct: { value: number };
-  Stat: { value: number; statType: StatType };
-  StatPct: { value: number; statType: StatType };
+  Stat: { value: number; statModType: StatModType };
+  StatPct: { value: number; statModType: StatModType };
   FervorEffPct: { value: number };
   SteepStrikeChancePct: { value: number };
   SteepStrikeDmg: { value: number; addn: boolean };

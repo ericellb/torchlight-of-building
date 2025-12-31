@@ -531,7 +531,7 @@ test("parse flat strength", () => {
   expect(result).toEqual([
     {
       type: "Stat",
-      statType: "str",
+      statModType: "str",
       value: 6,
     },
   ]);
@@ -542,7 +542,7 @@ test("parse flat dexterity", () => {
   expect(result).toEqual([
     {
       type: "Stat",
-      statType: "dex",
+      statModType: "dex",
       value: 6,
     },
   ]);
@@ -553,7 +553,7 @@ test("parse flat intelligence", () => {
   expect(result).toEqual([
     {
       type: "Stat",
-      statType: "int",
+      statModType: "int",
       value: 6,
     },
   ]);
@@ -564,7 +564,7 @@ test("parse percentage strength", () => {
   expect(result).toEqual([
     {
       type: "StatPct",
-      statType: "str",
+      statModType: "str",
       value: 4,
     },
   ]);
@@ -575,7 +575,7 @@ test("parse percentage dexterity", () => {
   expect(result).toEqual([
     {
       type: "StatPct",
-      statType: "dex",
+      statModType: "dex",
       value: 4,
     },
   ]);
@@ -586,7 +586,7 @@ test("parse percentage intelligence", () => {
   expect(result).toEqual([
     {
       type: "StatPct",
-      statType: "int",
+      statModType: "int",
       value: 4,
     },
   ]);

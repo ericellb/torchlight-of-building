@@ -259,12 +259,12 @@ export const allParsers = [
 
   t("{value:dec%} energy shield regain").output("EnergyShieldRegainPct", (c) => ({ value: c.value })),
   t("{value:dec%} life regain").output("LifeRegainPct", (c) => ({ value: c.value })),
-  t("{value:dec} {statType:StatWord}")
+  t("{value:dec} {statModType:StatWord}")
     .enum("StatWord", StatWordMapping)
-    .output("Stat", (c) => ({ value: c.value, statType: c.statType })),
-  t("{value:dec%} {statType:StatWord}")
+    .output("Stat", (c) => ({ value: c.value, statModType: c.statModType })),
+  t("{value:dec%} {statModType:StatWord}")
     .enum("StatWord", StatWordMapping)
-    .output("StatPct", (c) => ({ value: c.value, statType: c.statType })),
+    .output("StatPct", (c) => ({ value: c.value, statModType: c.statModType })),
   t("max focus blessing stacks \\+{value:int}").output("MaxFocusBlessing", (c) => ({ value: c.value })),
   t("max agility blessing stacks \\+{value:int}").output("MaxAgilityBlessing", (c) => ({ value: c.value })),
   t("has hasten").output("HasHasten", () => ({})),

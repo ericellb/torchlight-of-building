@@ -1647,8 +1647,8 @@ describe("automatic additional damage from main stats", () => {
     // Base: 100, with 100% more = 100 * 2 = 200
     const input = createModsInput(
       affixLines([
-        { type: "Stat", statType: "dex", value: 100 },
-        { type: "Stat", statType: "str", value: 100 },
+        { type: "Stat", statModType: "dex", value: 100 },
+        { type: "Stat", statModType: "str", value: 100 },
       ]),
     );
     const results = calculateOffense(input);
@@ -1661,7 +1661,7 @@ describe("automatic additional damage from main stats", () => {
     // Additional damage: 100 * 0.5% = 50% additional
     // Base: 100, with 50% more = 100 * 1.5 = 150
     const input = createModsInput(
-      affixLines([{ type: "Stat", statType: "dex", value: 100 }]),
+      affixLines([{ type: "Stat", statModType: "dex", value: 100 }]),
     );
     const results = calculateOffense(input);
     validate(results, skillName, { avgHit: 150 });
@@ -1682,7 +1682,7 @@ describe("automatic additional damage from main stats", () => {
     // Additional damage: 0 * 0.5% = 0%
     // Base: 100, with 0% more = 100
     const input = createModsInput(
-      affixLines([{ type: "Stat", statType: "int", value: 100 }]),
+      affixLines([{ type: "Stat", statModType: "int", value: 100 }]),
     );
     const results = calculateOffense(input);
     validate(results, skillName, { avgHit: 100 });
@@ -1696,8 +1696,8 @@ describe("automatic additional damage from main stats", () => {
     // With 100% more: 201 * 2 = 402
     const input = createFrostSpikeInput(
       affixLines([
-        { type: "Stat", statType: "dex", value: 100 },
-        { type: "Stat", statType: "int", value: 100 },
+        { type: "Stat", statModType: "dex", value: 100 },
+        { type: "Stat", statModType: "int", value: 100 },
       ]),
     );
     const results = calculateOffense(input);
@@ -1710,7 +1710,7 @@ describe("automatic additional damage from main stats", () => {
     // Base: 100, with 50% inc = 150, with 50% more = 150 * 1.5 = 225
     const input = createModsInput(
       affixLines([
-        { type: "Stat", statType: "dex", value: 100 },
+        { type: "Stat", statModType: "dex", value: 100 },
         { type: "DmgPct", value: 50, dmgModType: "global", addn: false },
       ]),
     );

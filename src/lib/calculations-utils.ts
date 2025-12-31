@@ -1,4 +1,4 @@
-import type { Mod, StatType } from "@/src/tli/mod";
+import type { Mod, StatModType } from "@/src/tli/mod";
 
 export const STAT_CATEGORIES = [
   "damage",
@@ -114,14 +114,16 @@ export const formatModValue = (mod: Mod): string => {
   return "";
 };
 
-const getStatDisplayName = (statType: StatType): string => {
-  switch (statType) {
+const getStatDisplayName = (statModType: StatModType): string => {
+  switch (statModType) {
     case "str":
       return "Strength";
     case "dex":
       return "Dexterity";
     case "int":
       return "Intelligence";
+    case "all":
+      return "All Attributes";
   }
 };
 
@@ -148,9 +150,9 @@ export const getModDisplayName = (mod: Mod): string => {
     case "GearAspdPct":
       return "Gear attack speed";
     case "Stat":
-      return getStatDisplayName(mod.statType);
+      return getStatDisplayName(mod.statModType);
     case "StatPct":
-      return `Increased ${getStatDisplayName(mod.statType)}`;
+      return `Increased ${getStatDisplayName(mod.statModType)}`;
     case "ConvertDmgPct":
       return `Convert ${mod.from} to ${mod.to}`;
     case "AddsDmgAsPct":

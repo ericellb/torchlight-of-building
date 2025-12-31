@@ -5,7 +5,9 @@ import {
   calculateOffense,
   type OffenseInput,
   type PersistentDpsSummary,
+  type ReapDpsSummary,
   type Resistance,
+  type TotalReapDpsSummary,
 } from "@/src/tli/calcs/offense";
 import { ModGroup } from "../../components/calculations/ModGroup";
 import { SkillSelector } from "../../components/calculations/SkillSelector";
@@ -73,6 +75,101 @@ const PersistentDpsSummarySection = ({
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+};
+
+const ReapDpsSummarySection = ({
+  summary,
+}: {
+  summary: TotalReapDpsSummary;
+}): React.ReactNode => {
+  return (
+    <div className="rounded-lg border border-emerald-500/30 bg-zinc-900 p-6">
+      <h3 className="mb-4 text-lg font-semibold text-emerald-400">
+        Reap Damage
+      </h3>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div className="rounded-lg bg-zinc-800 p-4">
+          <div className="text-sm text-zinc-400">Total Reap DPS</div>
+          <div className="text-2xl font-bold text-amber-400">
+            {formatStatValue.dps(summary.totalReapDps)}
+          </div>
+        </div>
+        <div className="rounded-lg bg-zinc-800 p-4">
+          <div className="text-sm text-zinc-400">Duration Mult</div>
+          <div className="text-xl font-semibold text-zinc-50">
+            {formatStatValue.multiplier(summary.reapDurationMult)}
+          </div>
+        </div>
+        <div className="rounded-lg bg-zinc-800 p-4">
+          <div className="text-sm text-zinc-400">CDR Mult</div>
+          <div className="text-xl font-semibold text-zinc-50">
+            {formatStatValue.multiplier(summary.reapCdrMult)}
+          </div>
+        </div>
+      </div>
+
+      {summary.reaps.length > 0 && (
+        <div className="mt-4">
+          <div className="mb-2 text-sm font-medium text-zinc-400">
+            Per-Reap Breakdown
+          </div>
+          <div className="space-y-2">
+            {summary.reaps.map((reap, index) => (
+              <ReapRow key={index} reap={reap} index={index} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ReapRow = ({
+  reap,
+  index,
+}: {
+  reap: ReapDpsSummary;
+  index: number;
+}): React.ReactNode => {
+  return (
+    <div className="rounded-lg bg-zinc-800 p-3">
+      <div className="mb-2 text-xs font-medium text-emerald-400">
+        Reap #{index + 1}
+      </div>
+      <div className="grid grid-cols-2 gap-2 text-sm md:grid-cols-5">
+        <div>
+          <div className="text-xs text-zinc-500">Cooldown</div>
+          <div className="font-medium text-zinc-50">
+            {formatStatValue.duration(reap.rawCooldown)}
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-zinc-500">Duration</div>
+          <div className="font-medium text-zinc-50">
+            {formatStatValue.duration(reap.duration)}
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-zinc-500">Reaps/sec</div>
+          <div className="font-medium text-zinc-50">
+            {reap.reapsPerSecond.toFixed(2)}
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-zinc-500">Dmg/Reap</div>
+          <div className="font-medium text-zinc-50">
+            {formatStatValue.damage(reap.dmgPerReap)}
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-zinc-500">Reap DPS</div>
+          <div className="font-medium text-amber-400">
+            {formatStatValue.dps(reap.reapDps)}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -254,8 +351,13 @@ function CalculationsPage(): React.ReactNode {
         />
       )}
 
+      {offenseSummary?.totalReapDpsSummary !== undefined && (
+        <ReapDpsSummarySection summary={offenseSummary.totalReapDpsSummary} />
+      )}
+
       {(offenseSummary?.attackHitSummary !== undefined ||
-        offenseSummary?.persistentDpsSummary !== undefined) &&
+        offenseSummary?.persistentDpsSummary !== undefined ||
+        offenseSummary?.totalReapDpsSummary !== undefined) &&
         groupedMods !== undefined && (
           <>
             <div>

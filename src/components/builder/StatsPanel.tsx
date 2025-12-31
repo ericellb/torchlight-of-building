@@ -5,6 +5,7 @@ import {
   type OffenseInput,
   type PersistentDpsSummary,
   type Resistance,
+  type TotalReapDpsSummary,
 } from "@/src/tli/calcs/offense";
 import { formatStatValue } from "../../lib/calculations-utils";
 import {
@@ -70,6 +71,39 @@ const PersistentDpsSection = ({
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+const ReapDpsSection = ({
+  summary,
+}: {
+  summary: TotalReapDpsSummary;
+}): React.ReactNode => {
+  return (
+    <div className="mt-4 space-y-3">
+      <div className="text-xs font-medium text-zinc-400">Reap Damage</div>
+
+      <div className="rounded bg-zinc-800 p-3">
+        <div className="text-xs text-zinc-400">Total Reap DPS</div>
+        <div className="text-xl font-bold text-amber-400">
+          {formatStatValue.dps(summary.totalReapDps)}
+        </div>
+      </div>
+
+      <div className="rounded bg-zinc-800 p-3">
+        <div className="text-xs text-zinc-400">Duration Mult</div>
+        <div className="text-lg font-semibold text-zinc-50">
+          {formatStatValue.multiplier(summary.reapDurationMult)}
+        </div>
+      </div>
+
+      <div className="rounded bg-zinc-800 p-3">
+        <div className="text-xs text-zinc-400">CDR Mult</div>
+        <div className="text-lg font-semibold text-zinc-50">
+          {formatStatValue.multiplier(summary.reapCdrMult)}
+        </div>
+      </div>
     </div>
   );
 };
@@ -172,7 +206,8 @@ export const StatsPanel = (): React.ReactNode => {
       </div>
 
       {offenseSummary?.attackHitSummary !== undefined ||
-      offenseSummary?.persistentDpsSummary !== undefined ? (
+      offenseSummary?.persistentDpsSummary !== undefined ||
+      offenseSummary?.totalReapDpsSummary !== undefined ? (
         <>
           <div className="mb-4 rounded bg-zinc-800 px-3 py-2">
             <div className="text-xs text-zinc-400">Selected Skill</div>
@@ -237,6 +272,10 @@ export const StatsPanel = (): React.ReactNode => {
             <PersistentDpsSection
               summary={offenseSummary.persistentDpsSummary}
             />
+          )}
+
+          {offenseSummary.totalReapDpsSummary !== undefined && (
+            <ReapDpsSection summary={offenseSummary.totalReapDpsSummary} />
           )}
         </>
       ) : (

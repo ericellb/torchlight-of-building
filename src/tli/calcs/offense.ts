@@ -2009,7 +2009,7 @@ const calcReapsPerSecond = (cooldown: number) => {
   return 1 / roundedCooldown;
 };
 
-interface ReapDpsSummary {
+export interface ReapDpsSummary {
   rawCooldown: number;
   duration: number;
   reapsPerSecond: number;
@@ -2017,7 +2017,7 @@ interface ReapDpsSummary {
   reapDps: number;
 }
 
-interface TotalReapDpsSummary {
+export interface TotalReapDpsSummary {
   reaps: ReapDpsSummary[];
   totalReapDps: number;
   reapDurationMult: number;

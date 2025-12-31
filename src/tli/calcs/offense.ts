@@ -1851,7 +1851,6 @@ const resolveModsForOffenseSkill = (
   mods.push(...normalizeStackables(prenormMods, "main_stat", totalMainStats));
 
   const additionalMaxChannel = sumByValue(filterMod(mods, "MaxChannel"));
-  // const additionalMaxChannel = 0
   mods.push(
     ...normalizeStackables(
       prenormMods,

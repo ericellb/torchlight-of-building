@@ -141,7 +141,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   Arcane: {
     affixLines: [
       { text: "Converts 100% of Mana Cost to Life Cost" },
-      { text: "+25% additional Max Life" },
+      {
+        text: "+25% additional Max Life",
+        mods: [{ type: "MaxLifePct", value: 25, addn: true }],
+      },
     ],
   },
   "No Lose Ends": {
@@ -399,7 +402,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   Shell: {
     affixLines: [
-      { text: "+35% additional Max Energy Shield" },
+      {
+        text: "+35% additional Max Energy Shield",
+        mods: [{ type: "MaxEnergyShieldPct", value: 35, addn: true }],
+      },
       { text: "Your Max Life is set to 100" },
     ],
   },
@@ -473,7 +479,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   Focus: {
     affixLines: [
-      { text: "Max Channeled Stacks +1" },
+      {
+        text: "Max Channeled Stacks +1",
+        mods: [{ type: "MaxChannel", value: 1 }],
+      },
       {
         text: "+6% additional damage for every +1 additional Max Channeled Stack(s)",
       },
@@ -693,8 +702,14 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   Mixture: { affixLines: [{ text: "+50% Deterioration Chance" }] },
   Affliction: {
     affixLines: [
-      { text: "+30 Affliction inflicted per second" },
-      { text: "+30% additional Affliction effect" },
+      {
+        text: "+30 Affliction inflicted per second",
+        mods: [{ type: "AfflictionInflictedPerSec", value: 30 }],
+      },
+      {
+        text: "+30% additional Affliction effect",
+        mods: [{ type: "AfflictionEffectPct", value: 30, addn: true }],
+      },
     ],
   },
   "Subtle Impact": {
@@ -712,7 +727,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
           { type: "DmgPct", value: 35, dmgModType: "erosion", addn: true },
         ],
       },
-      { text: "-10% Elemental Resistance" },
+      {
+        text: "-10% Elemental Resistance",
+        mods: [{ type: "ResistancePct", value: -10, resType: "elemental" }],
+      },
     ],
   },
   "Deceiver's Might": {
@@ -755,7 +773,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   "Twisted Belief": {
     affixLines: [
       { text: "+3 Erosion Skill Level" },
-      { text: "-5% Max Erosion Resistance" },
+      {
+        text: "-5% Max Erosion Resistance",
+        mods: [{ type: "MaxResistancePct", value: -5, resType: "erosion" }],
+      },
     ],
   },
   Windwalk: {
@@ -773,7 +794,17 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   "More With Less": {
     affixLines: [
-      { text: "+30% additional Damage Over Time" },
+      {
+        text: "+30% additional Damage Over Time",
+        mods: [
+          {
+            type: "DmgPct",
+            value: 30,
+            dmgModType: "damage_over_time",
+            addn: true,
+          },
+        ],
+      },
       { text: "-10% additional Damage Over Time Duration" },
     ],
   },
@@ -831,7 +862,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   "Off The Beaten Track": {
     affixLines: [
-      { text: "+4 Support Skill Level" },
+      {
+        text: "+4 Support Skill Level",
+        mods: [{ type: "SkillLevel", value: 4, skillLevelType: "support" }],
+      },
       { text: "Support Skill's Mana Multiplier is fixed at 95%." },
     ],
   },

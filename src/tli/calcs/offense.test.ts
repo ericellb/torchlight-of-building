@@ -850,21 +850,25 @@ const emptyDmgRanges = (): DmgRanges => ({
   erosion: { min: 0, max: 0 },
 });
 
-const sumPoolRanges = (pools: DmgPools, type: keyof DmgPools) => {
+const sumPoolRanges = (
+  pools: DmgPools<DmgRange>,
+  type: keyof DmgPools<DmgRange>,
+) => {
   return pools[type].reduce(
     (acc, p) => {
-      const v = p.value as DmgRange;
-      return { min: acc.min + v.min, max: acc.max + v.max };
+      return { min: acc.min + p.value.min, max: acc.max + p.value.max };
     },
     { min: 0, max: 0 },
   );
 };
 
-const findConvertedEntry = (pools: DmgPools, type: keyof DmgPools) => {
+const findConvertedEntry = (
+  pools: DmgPools<DmgRange>,
+  type: keyof DmgPools<DmgRange>,
+) => {
   // Find entry with non-zero damage (the converted one, not original zero)
   return pools[type].find((p) => {
-    const v = p.value as DmgRange;
-    return v.min > 0 || v.max > 0;
+    return p.value.min > 0 || p.value.max > 0;
   });
 };
 

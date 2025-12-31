@@ -207,6 +207,18 @@ export interface DmgRanges {
   erosion: DmgRange;
 }
 
+// Flat damage values (single number per type)
+export interface FlatDmgValues {
+  phys: number;
+  cold: number;
+  lightning: number;
+  fire: number;
+  erosion: number;
+}
+
+// Union type for convertDmg input
+export type DmgInput = DmgRanges | FlatDmgValues;
+
 const emptyDmgRanges = (): DmgRanges => {
   return {
     phys: { min: 0, max: 0 },
@@ -234,19 +246,19 @@ const filterMod = <T extends Mod["type"]>(
 };
 
 // A chunk of damage that tracks its conversion history
-export interface DmgChunk {
-  value: DmgRange | number;
+export interface DmgChunk<T extends DmgRange | number> {
+  value: T;
   // Types this damage has been converted from (not including current pool type)
   history: DmgChunkType[];
 }
 
 // All damage organized by current type
-export interface DmgPools {
-  physical: DmgChunk[];
-  cold: DmgChunk[];
-  lightning: DmgChunk[];
-  fire: DmgChunk[];
-  erosion: DmgChunk[];
+export interface DmgPools<T extends DmgRange | number> {
+  physical: DmgChunk<T>[];
+  cold: DmgChunk<T>[];
+  lightning: DmgChunk<T>[];
+  fire: DmgChunk<T>[];
+  erosion: DmgChunk<T>[];
 }
 
 // Damage conversion order: Physical → Lightning → Cold → Fire → Erosion
@@ -258,8 +270,19 @@ const CONVERSION_ORDER = ["physical", "lightning", "cold", "fire"] as const;
 // a brief summary would be that damage gets converted in a specific order, and converted damage
 // remembers all the damage types through which it was converted for the purposes of applying
 // damage bonuses
-export const convertDmg = (dmgRanges: DmgRanges, allMods: Mod[]): DmgPools => {
-  const pools: DmgPools = {
+export function convertDmg(
+  dmgInput: DmgRanges,
+  allMods: Mod[],
+): DmgPools<DmgRange>;
+export function convertDmg(
+  dmgInput: FlatDmgValues,
+  allMods: Mod[],
+): DmgPools<number>;
+export function convertDmg(
+  dmgInput: DmgInput,
+  allMods: Mod[],
+): DmgPools<DmgRange> | DmgPools<number> {
+  const pools: DmgPools<DmgRange | number> = {
     physical: [],
     cold: [],
     lightning: [],
@@ -268,16 +291,25 @@ export const convertDmg = (dmgRanges: DmgRanges, allMods: Mod[]): DmgPools => {
   };
 
   // Initialize with non-zero original damage (empty history - not converted from anything)
-  const addIfNonZero = (pool: DmgChunk[], range: DmgRange) => {
-    if (range.min > 0 || range.max > 0) {
-      pool.push({ value: range, history: [] });
+  const addIfNonZero = <T extends DmgRange | number>(
+    pool: DmgChunk<T>[],
+    value: T,
+  ) => {
+    if (typeof value === "number") {
+      if (value > 0) {
+        (pool as DmgChunk<number>[]).push({ value, history: [] });
+      }
+    } else {
+      if (value.min > 0 || value.max > 0) {
+        (pool as DmgChunk<DmgRange>[]).push({ value, history: [] });
+      }
     }
   };
-  addIfNonZero(pools.physical, dmgRanges.phys);
-  addIfNonZero(pools.lightning, dmgRanges.lightning);
-  addIfNonZero(pools.cold, dmgRanges.cold);
-  addIfNonZero(pools.fire, dmgRanges.fire);
-  addIfNonZero(pools.erosion, dmgRanges.erosion);
+  addIfNonZero(pools.physical, dmgInput.phys);
+  addIfNonZero(pools.lightning, dmgInput.lightning);
+  addIfNonZero(pools.cold, dmgInput.cold);
+  addIfNonZero(pools.fire, dmgInput.fire);
+  addIfNonZero(pools.erosion, dmgInput.erosion);
 
   // Process each source type in conversion order
   for (const sourceType of CONVERSION_ORDER) {
@@ -328,8 +360,8 @@ export const convertDmg = (dmgRanges: DmgRanges, allMods: Mod[]): DmgPools => {
     }
   }
 
-  return pools;
-};
+  return pools as DmgPools<DmgRange> | DmgPools<number>;
+}
 
 // currently only calculating mainhand
 const calculateGearDmg = (loadout: Loadout, allMods: Mod[]): GearDmg => {
@@ -569,7 +601,7 @@ const calculateDmgAddn = (mods: Extract<Mod, { type: "DmgPct" }>[]) => {
 
 // Apply damage % bonuses to a single chunk, considering its conversion history
 const calculateChunkDmg = (
-  chunk: DmgChunk,
+  chunk: DmgChunk<DmgRange>,
   currentType: DmgChunkType,
   allDmgPctMods: Extract<Mod, { type: "DmgPct" }>[],
   baseDmgModTypes: DmgModType[],
@@ -596,7 +628,7 @@ const calculateChunkDmg = (
 
 // Sum all chunks in a pool, applying bonuses to each based on its history
 const calculatePoolTotal = (
-  pool: DmgChunk[],
+  pool: DmgChunk<DmgRange>[],
   poolType: DmgChunkType,
   allDmgPctMods: Extract<Mod, { type: "DmgPct" }>[],
   baseDmgModTypes: DmgModType[],
@@ -1837,19 +1869,19 @@ const _calcAvgPersistentDps = (
   config: Configuration,
 ) => {
   const skill = perSkillContext.skill;
-  const skillOffenseInfo = match(skill.name)
+  const persistentDmg = match(skill.name)
     .with("Mind Control", () => {
       const persistentDmg = getLevelOffenseValue(
         skill,
         "PersistentDmg",
         skillLevel,
       ) as number;
-      return { persistentDmg };
+      return persistentDmg;
     })
     .otherwise(() => {
       return;
     });
-  if (skillOffenseInfo === undefined) return;
+  if (persistentDmg === undefined) return;
 };
 
 const calcAvgSkillHitDps = (

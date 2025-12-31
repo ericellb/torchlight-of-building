@@ -276,3 +276,32 @@ export const passivationParser: SupportLevelParser = (input) => {
 
   return { dmgPct };
 };
+
+export const controlSpellParser: SupportLevelParser = (input) => {
+  const { skillName, description, progressionTable } = input;
+
+  // Extract crit rating reduction from description (-100% is constant)
+  const firstDescription = getDescriptionPart(skillName, description, 0);
+  const critMatch = template(
+    "{value:int%} critical strike rating for the supported skill",
+  ).match(firstDescription, skillName);
+  const critRatingPctValue = critMatch.value;
+
+  // Extract damage percentage from progression table
+  const col = findColumn(
+    progressionTable,
+    "additional damage for the supported skill",
+    skillName,
+  );
+  const dmgPct: Record<number, number> = {};
+  for (const [levelStr, text] of Object.entries(col.rows)) {
+    dmgPct[Number(levelStr)] = parseNumericValue(text);
+  }
+
+  validateAllLevels(dmgPct, skillName);
+
+  return {
+    critRatingPct: createConstantLevels(critRatingPctValue),
+    dmgPct,
+  };
+};

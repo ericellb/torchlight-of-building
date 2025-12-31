@@ -107,4 +107,17 @@ export const supportSkillModFactories: Partial<
       dmgModType: "erosion",
     },
   ],
+  "Control Spell": (l, vals) => [
+    {
+      type: "CritRatingPct",
+      value: v(vals.critRatingPct, l),
+      modType: "global",
+    },
+    {
+      type: "DmgPct",
+      value: v(vals.dmgPct, l),
+      addn: true,
+      dmgModType: "global",
+    },
+  ],
 };

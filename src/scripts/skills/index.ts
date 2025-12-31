@@ -7,6 +7,7 @@ import {
 } from "./active_parsers";
 import { preciseCrueltyParser } from "./passive_parsers";
 import {
+  controlSpellParser,
   criticalStrikeDamageIncreaseParser,
   criticalStrikeRatingIncreaseParser,
   enhancedAilmentParser,
@@ -76,6 +77,11 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Passivation",
     categories: ["support"],
     parser: passivationParser,
+  },
+  {
+    skillName: "Control Spell",
+    categories: ["support"],
+    parser: controlSpellParser,
   },
   {
     skillName: "Frost Spike",

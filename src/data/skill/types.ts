@@ -162,6 +162,11 @@ export type SkillOffense =
 
 export type SkillOffenseType = SkillOffense["type"];
 
+export type SkillOffenseOfType<T extends SkillOffenseType> = Extract<
+  SkillOffense,
+  { type: T }
+>;
+
 export type SkillOffenseTemplate = SkillOffense extends infer M
   ? M extends SkillOffense
     ? Omit<M, "value">

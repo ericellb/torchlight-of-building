@@ -6,6 +6,14 @@ type ModFactory = (levelIndex: number) => Mod;
 const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory[]>> = {
   // Oracle Thea: Blasphemer (#3)
   Blasphemer: [() => ({ type: "Blasphemer" })],
+  "Unholy Baptism": [
+    (i) => ({
+      type: "DmgPct",
+      addn: true,
+      value: [5, 10, 15, 20, 25][i],
+      dmgModType: "erosion",
+    }),
+  ],
   // Rosa 2
   "Unsullied Blade": [() => ({ type: "SpellDmgBonusAppliesToAtkDmg" })],
   "Baptism of Purity": [

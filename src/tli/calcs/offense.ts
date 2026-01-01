@@ -1822,6 +1822,7 @@ const calculateAddedSkillLevels = (
       .with("active", () => skill.type === "Active")
       .with("persistent", () => skill.tags.includes("Persistent"))
       .with("erosion", () => skill.tags.includes("Erosion"))
+      .with("spell", () => skill.tags.includes("Spell"))
       .with("all", () => true)
       .exhaustive();
     if (matches) {

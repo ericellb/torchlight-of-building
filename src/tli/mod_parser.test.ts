@@ -1300,6 +1300,17 @@ test("parse erosion skill level", () => {
   ]);
 });
 
+test("parse spell skill level", () => {
+  const result = parseMod("+1 Spell Skill Level");
+  expect(result).toEqual([
+    {
+      type: "SkillLevel",
+      value: 1,
+      skillLevelType: "spell",
+    },
+  ]);
+});
+
 test("parse all skills level", () => {
   const result = parseMod("+1 all skills' level");
   expect(result).toEqual([

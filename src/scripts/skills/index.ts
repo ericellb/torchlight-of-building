@@ -21,8 +21,10 @@ import {
   criticalStrikeDamageIncreaseParser,
   criticalStrikeRatingIncreaseParser,
   enhancedAilmentParser,
+  extendedDurationParser,
   guardParser,
   hauntParser,
+  increasedAreaParser,
   massEffectParser,
   passivationParser,
   quickDecisionParser,
@@ -102,6 +104,16 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Cataclysm",
     categories: ["support"],
     parser: cataclysmParser,
+  },
+  {
+    skillName: "Increased Area",
+    categories: ["support"],
+    parser: increasedAreaParser,
+  },
+  {
+    skillName: "Extended Duration",
+    categories: ["support"],
+    parser: extendedDurationParser,
   },
   {
     skillName: "Frost Spike",

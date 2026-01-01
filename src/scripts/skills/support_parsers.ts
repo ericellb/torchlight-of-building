@@ -362,3 +362,50 @@ export const cataclysmParser: SupportLevelParser = (input) => {
     addnAfflictionEffPct,
   };
 };
+
+export const increasedAreaParser: SupportLevelParser = (input) => {
+  const { skillName, description, progressionTable } = input;
+
+  // Extract skill area from description (constant +20%)
+  const firstDescription = getDescriptionPart(skillName, description, 0);
+  const areaMatch = template(
+    "{value:int%} skill area for the supported skill",
+  ).match(firstDescription, skillName);
+
+  // Extract damage percentage from progression table
+  const dmgCol = findColumn(
+    progressionTable,
+    "additional damage for the supported skill",
+    skillName,
+  );
+  const dmgPct: Record<number, number> = {};
+  for (const [levelStr, text] of Object.entries(dmgCol.rows)) {
+    dmgPct[Number(levelStr)] = parseNumericValue(text);
+  }
+
+  validateAllLevels(dmgPct, skillName);
+
+  return {
+    skillAreaPct: createConstantLevels(areaMatch.value),
+    dmgPct,
+  };
+};
+
+export const extendedDurationParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  // Extract duration percentage from progression table
+  const durationCol = findColumn(
+    progressionTable,
+    "duration for the supported skill",
+    skillName,
+  );
+  const skillEffDurationPct: Record<number, number> = {};
+  for (const [levelStr, text] of Object.entries(durationCol.rows)) {
+    skillEffDurationPct[Number(levelStr)] = parseNumericValue(text);
+  }
+
+  validateAllLevels(skillEffDurationPct, skillName);
+
+  return { skillEffDurationPct };
+};

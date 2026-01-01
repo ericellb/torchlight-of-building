@@ -140,4 +140,20 @@ export const supportSkillModFactories: Partial<
       cond: "enemy_at_max_affliction",
     },
   ],
+  "Increased Area": (l, vals) => [
+    {
+      type: "SkillAreaPct",
+      value: v(vals.skillAreaPct, l),
+      skillAreaModType: "global",
+    },
+    {
+      type: "DmgPct",
+      value: v(vals.dmgPct, l),
+      dmgModType: "global",
+      addn: true,
+    },
+  ],
+  "Extended Duration": (l, vals) => [
+    { type: "SkillEffDurationPct", value: v(vals.skillEffDurationPct, l) },
+  ],
 };

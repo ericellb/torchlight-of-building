@@ -213,8 +213,8 @@ interface ModDefinitions {
   AttackBlockChancePct: { value: number };
   SpellBlockChancePct: { value: number };
   BlockRatioPct: { value: number };
-  GearMaxEnergyShield: { value: number };
-  GearMaxEnergyShieldPct: { value: number };
+  GearEnergyShield: { value: number };
+  GearEnergyShieldPct: { value: number };
   MaxEnergyShieldPct: { value: number; addn: boolean };
   MaxEnergyShield: { value: number };
   GearArmor: { value: number };
@@ -250,6 +250,7 @@ interface ModDefinitions {
   SkillEffPct: { value: number; addn?: boolean };
   AuraEffPct: { value: number; addn?: boolean; unscalable?: boolean };
   CurseEffPct: { value: number; addn?: boolean };
+  CurseDurationPct: { value: number };
   SealedManaCompPct: { value: number; addn?: boolean };
   ResPenPct: { value: number; penType: ResPenType };
   ArmorPenPct: { value: number };

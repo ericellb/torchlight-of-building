@@ -18,10 +18,13 @@ import {
   type DivinitySlate,
   ROTATIONS,
   type Rotation,
-  SLATE_SHAPES,
   type SlateShape,
 } from "@/src/tli/core";
+
 import { SlatePreview } from "./SlatePreview";
+
+// Regular shapes only - excludes legendary shapes (Single, CornerL, Vertical2, Pedigree)
+const CRAFTABLE_SHAPES: SlateShape[] = ["O", "L", "Z", "T"];
 
 const createMinimalAffix = (text: string): Affix => ({
   affixLines: text.split(/\n/).map((line) => ({ text: line })),
@@ -145,7 +148,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({ onSave }) => {
         </label>
         <div className="flex gap-4 items-start">
           <div className="flex flex-col gap-2">
-            {SLATE_SHAPES.map((s) => (
+            {CRAFTABLE_SHAPES.map((s) => (
               <button
                 type="button"
                 key={s}

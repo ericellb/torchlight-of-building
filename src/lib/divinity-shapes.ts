@@ -24,9 +24,6 @@ export const SHAPE_CELLS: Record<SlateShape, [number, number][]> = {
     [1, 1],
     [1, 2],
   ],
-  // T shape:
-  // OOO
-  //  O
   T: [
     [0, 0],
     [0, 1],

@@ -280,6 +280,14 @@ function CalculationsPage(): React.ReactNode {
               {resourcePool.maxTenacityBlessings}
             </div>
           </div>
+          {resourcePool.desecration !== undefined && (
+            <div className="rounded-lg bg-zinc-800 p-4">
+              <div className="text-sm text-zinc-400">Desecration</div>
+              <div className="text-xl font-semibold text-rose-400">
+                {resourcePool.desecration}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

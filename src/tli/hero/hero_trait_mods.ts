@@ -4,6 +4,8 @@ import type { Mod } from "../mod";
 type ModFactory = (levelIndex: number) => Mod;
 
 const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory[]>> = {
+  // Oracle Thea: Blasphemer (#3)
+  Blasphemer: [() => ({ type: "Blasphemer" })],
   // Rosa 2
   "Unsullied Blade": [() => ({ type: "SpellDmgBonusAppliesToAtkDmg" })],
   "Baptism of Purity": [

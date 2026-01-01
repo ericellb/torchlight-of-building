@@ -69,6 +69,7 @@ export type Stackable =
   | "focus_blessing"
   | "agility_blessing"
   | "tenacity_blessing"
+  | "desecration"
   | "torment"
   | "num_enemies_affected_by_warcry"
   | "str"
@@ -103,6 +104,7 @@ export type Condition =
   | "has_focus_blessing"
   | "has_agility_blessing"
   | "has_tenacity_blessing"
+  | "enemy_has_desecration"
   | "has_full_mana"
   | "enemy_paralyzed"
   | "target_enemy_is_nearby"
@@ -242,6 +244,8 @@ interface ModDefinitions {
   CannotInflictWilt: object;
   // enemy mods
   EnemyRes: { value: number; resType: ResType };
+  // hero-specific mods
+  Blasphemer: object;
 }
 
 // Generate the Mod union type from ModDefinitions

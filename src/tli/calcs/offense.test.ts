@@ -4629,3 +4629,64 @@ describe("affliction mechanics", () => {
     );
   });
 });
+
+describe("desecration mechanics", () => {
+  const skillName = "[Test] Simple Persistent Spell" as const;
+
+  const createDesecrationInput = (
+    mods: AffixLine[],
+    config: Partial<Configuration> = {},
+  ) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      customAffixLines: mods,
+      skillPage: simplePersistentSpellSkillPage(),
+    }),
+    configuration: { ...defaultConfiguration, ...config },
+  });
+
+  test("desecration stacks scale with max blessing additions (base 3, +1 per added max blessing up to 4 each)", () => {
+    // With Blasphemer: base 3 desecration
+    // +2 MaxFocusBlessing, +3 MaxAgilityBlessing, +5 MaxTenacityBlessing (capped at 4)
+    // Total: 3 + 2 + 3 + 4 = 12 stacks
+    // Each stack = 15% additional DOT damage = 180% additional = 2.8x multiplier
+    // Base DOT: 100 DPS * 2.8 = 280 DPS
+    const input = createDesecrationInput(
+      affixLines([
+        { type: "Blasphemer" },
+        { type: "MaxFocusBlessing", value: 2 },
+        { type: "MaxAgilityBlessing", value: 3 },
+        { type: "MaxTenacityBlessing", value: 5 },
+      ]),
+      { enemyHasDesecration: true },
+    );
+    const results = calculateOffense(input);
+
+    expect(results.resourcePool.desecration).toBe(12);
+    expect(results.skills[skillName]?.persistentDpsSummary?.total).toBeCloseTo(
+      280,
+    );
+  });
+
+  test("blasphemer trait reduces max blessings instead of increasing them", () => {
+    // Without Blasphemer: max focus = 4 + 2 = 6
+    // With Blasphemer: max focus = 4 - 2 = 2
+    const inputWithBlasphemer = createDesecrationInput(
+      affixLines([
+        { type: "Blasphemer" },
+        { type: "MaxFocusBlessing", value: 2 },
+      ]),
+    );
+    const inputWithoutBlasphemer = createDesecrationInput(
+      affixLines([{ type: "MaxFocusBlessing", value: 2 }]),
+    );
+
+    const resultsWithBlasphemer = calculateOffense(inputWithBlasphemer);
+    const resultsWithoutBlasphemer = calculateOffense(inputWithoutBlasphemer);
+
+    expect(resultsWithBlasphemer.resourcePool.maxFocusBlessings).toBe(2);
+    expect(resultsWithoutBlasphemer.resourcePool.maxFocusBlessings).toBe(6);
+    expect(resultsWithBlasphemer.resourcePool.desecration).toBe(5); // 3 base + 2 from focus
+    expect(resultsWithoutBlasphemer.resourcePool.desecration).toBeUndefined();
+  });
+});

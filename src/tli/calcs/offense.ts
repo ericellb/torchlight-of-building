@@ -971,11 +971,13 @@ export interface OffenseResults {
 
 interface DerivedCtx {
   hasHasten: boolean;
+  hasBlasphemer: boolean;
 }
 
 const resolveDerivedCtx = (mods: Mod[]): DerivedCtx => {
   const hasHasten = findMod(mods, "HasHasten") !== undefined;
-  return { hasHasten };
+  const hasBlasphemer = findMod(mods, "Blasphemer") !== undefined;
+  return { hasHasten, hasBlasphemer };
 };
 
 const filterModsByCond = (
@@ -998,6 +1000,7 @@ const filterModsByCond = (
       .with("has_focus_blessing", () => config.hasFocusBlessing)
       .with("has_agility_blessing", () => config.hasAgilityBlessing)
       .with("has_tenacity_blessing", () => config.hasTenacityBlessing)
+      .with("enemy_has_desecration", () => config.enemyHasDesecration)
       .with("enemy_paralyzed", () => config.enemyParalyzed)
       .with("has_full_mana", () => config.hasFullMana)
       .with("target_enemy_is_nearby", () => config.targetEnemyIsNearby)
@@ -1184,6 +1187,15 @@ const calculateImplicitMods = (): Mod[] => {
       per: { stackable: "agility_blessing" },
       cond: "has_agility_blessing",
       src: "Additional Damage from agility blessings (2% per blessing)",
+    },
+    {
+      type: "DmgPct",
+      value: 15,
+      dmgModType: "damage_over_time",
+      addn: true,
+      per: { stackable: "desecration" },
+      cond: "enemy_has_desecration",
+      src: "Additional Damage over TIme from desecration (15% per stack)",
     },
     {
       type: "AspdPct",
@@ -1713,12 +1725,34 @@ const calcNumAgility = (maxAgility: number, config: Configuration): number => {
   return maxAgility;
 };
 
-const calcMaxTenacity = (mods: Mod[]): number => {
-  const baseMaxTenacityBlessings = 4;
+const calcMaxTenacity = (mods: Mod[], derivedCtx: DerivedCtx): number => {
   const additionalMaxTenacityBlessings = sumByValue(
     filterMod(mods, "MaxTenacityBlessing"),
   );
-  return baseMaxTenacityBlessings + additionalMaxTenacityBlessings;
+  if (derivedCtx.hasBlasphemer) {
+    return 4 - additionalMaxTenacityBlessings;
+  } else {
+    return 4 + additionalMaxTenacityBlessings;
+  }
+};
+
+const calcMaxBlessings = (
+  mods: Mod[],
+  blessingType: "focus" | "agility" | "tenacity",
+  derivedCtx: DerivedCtx,
+): number => {
+  const blessingToModType = {
+    focus: "MaxFocusBlessing",
+    agility: "MaxAgilityBlessing",
+    tenacity: "MaxTenacityBlessing",
+  } as const;
+  const modType = blessingToModType[blessingType];
+  const additionalMaxBlessings = sumByValue(filterMod(mods, modType));
+  if (derivedCtx.hasBlasphemer) {
+    return Math.max(4 - additionalMaxBlessings, 0);
+  } else {
+    return 4 + additionalMaxBlessings;
+  }
 };
 
 const calcNumTenacity = (
@@ -1729,6 +1763,24 @@ const calcNumTenacity = (
     return config.tenacityBlessings;
   }
   return maxTenacity;
+};
+
+const calcDesecration = (
+  mods: Mod[],
+  derivedCtx: DerivedCtx,
+): number | undefined => {
+  if (!derivedCtx.hasBlasphemer) {
+    return undefined;
+  }
+  const addedFocus = sumByValue(filterMod(mods, "MaxFocusBlessing"));
+  const addedAgility = sumByValue(filterMod(mods, "MaxAgilityBlessing"));
+  const addedTenacity = sumByValue(filterMod(mods, "MaxTenacityBlessing"));
+  return (
+    3 +
+    Math.min(addedFocus, 4) +
+    Math.min(addedAgility, 4) +
+    Math.min(addedTenacity, 4)
+  );
 };
 
 const calcAfflictionPts = (config: Configuration): number => {
@@ -1908,6 +1960,14 @@ const resolveModsForOffenseSkill = (
     ),
   );
 
+  mods.push(
+    ...normalizeStackables(
+      prenormMods,
+      "desecration",
+      resourcePool.desecration ?? 0,
+    ),
+  );
+
   const willpowerStacks = calculateWillpower(prenormMods);
   mods.push(...normalizeStackables(prenormMods, "willpower", willpowerStacks));
 
@@ -1984,6 +2044,7 @@ export interface ResourcePool {
   maxAgilityBlessings: number;
   tenacityBlessings: number;
   maxTenacityBlessings: number;
+  desecration?: number;
 }
 
 const calculateResourcePool = (
@@ -2019,12 +2080,13 @@ const calculateResourcePool = (
   const mercuryPts = calculateMercuryPts(mods);
   mods.push(...normalizeStackables(prenormMods, "mercury_pt", mercuryPts));
 
-  const maxFocusBlessings = calcMaxFocus(mods);
+  const maxFocusBlessings = calcMaxBlessings(mods, "focus", derivedCtx);
   const focusBlessings = calcNumFocus(maxFocusBlessings, config);
-  const maxAgilityBlessings = calcMaxAgility(mods);
+  const maxAgilityBlessings = calcMaxBlessings(mods, "agility", derivedCtx);
   const agilityBlessings = calcNumAgility(maxAgilityBlessings, config);
-  const maxTenacityBlessings = calcMaxTenacity(mods);
+  const maxTenacityBlessings = calcMaxBlessings(mods, "tenacity", derivedCtx);
   const tenacityBlessings = calcNumTenacity(maxTenacityBlessings, config);
+  const desecration = calcDesecration(mods, derivedCtx);
 
   return {
     stats,
@@ -2037,6 +2099,7 @@ const calculateResourcePool = (
     agilityBlessings,
     maxTenacityBlessings,
     tenacityBlessings,
+    desecration,
   };
 };
 

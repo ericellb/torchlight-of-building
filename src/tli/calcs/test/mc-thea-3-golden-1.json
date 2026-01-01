@@ -1,0 +1,1091 @@
+{
+  "equipmentPage": {
+    "equippedGear": {
+      "helmet": {
+        "id": "56287108-4f41-40a1-99e4-e65a21820b36",
+        "equipmentType": "Helmet (INT)",
+        "legendary_affixes": [
+          "+20% Erosion Resistance",
+          "You can only cast 2 Curses",
+          "+20% additional damage dealt to Cursed enemies. -20% additional damage taken from Cursed enemies",
+          "+100% Curse Duration",
+          "+100% Curse Skill Area"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+103 gear Energy Shield",
+        "legendaryName": "Hekate's Vision"
+      },
+      "chest": {
+        "id": "a67d82e0-df92-469d-9e86-4d2eceaf50bf",
+        "equipmentType": "Chest Armor (INT)",
+        "legendary_affixes": [
+          "+239 gear Energy Shield",
+          "+2 Active Skill Level",
+          "When Reaping, Energy Shield starts charging immediately",
+          "-10% Energy Shield Charge Speed",
+          "+8% Reaping Duration",
+          "+5% Elemental Resistance"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+140 gear Energy Shield",
+        "legendaryName": "Twilight Vestment"
+      },
+      "neck": {
+        "id": "7d5d4a8e-d7fd-47c4-98cb-ffc75a3e4f41",
+        "equipmentType": "Necklace",
+        "legendary_affixes": [
+          "+10% all stats",
+          "+1% Skill Area per 17 of the lowest stat",
+          "+3 Intelligence per 4 level(s)",
+          "+3 Intelligence per 4 level(s)",
+          "+3 Intelligence per 4 level(s)"
+        ],
+        "rarity": "legendary",
+        "baseStats": "",
+        "legendaryName": "False God's Skin"
+      },
+      "gloves": {
+        "id": "514147c7-cd31-4efb-97f8-a70f9a286242",
+        "equipmentType": "Gloves (INT)",
+        "legendary_affixes": [
+          "+240 gear Energy Shield",
+          "+1 Spell Skill Level",
+          "When a Spell hit inflicts Fire Damage, -15% Cold, Lightning, and Erosion Resistance for the target for 3 s",
+          "When a Spell hit inflicts Cold Damage, -15% Fire, Lightning, and Erosion Resistance for the target for 3 s",
+          "When a Spell hit inflicts Lightning Damage, -15% Fire, Cold, and Erosion Resistance for the target for 3 s",
+          "When a Spell hit inflicts Erosion Damage, -15% Fire, Cold, and Lightning Resistance for the target for 3 s"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+146 gear Energy Shield",
+        "legendaryName": "Sage's Insight"
+      },
+      "belt": {
+        "id": "6df8aad3-f5f3-4cde-b468-27cdbc7b9246",
+        "equipmentType": "Belt",
+        "legendary_affixes": [
+          "+685 Armor and Evasion",
+          "+74 Intelligence",
+          "Have Fervor",
+          "Has 67 point(s) of fixed Fervor Rating",
+          "+1% additional damage per 2 Fervor Rating"
+        ],
+        "blend_affix": "Max Channeled Stacks +1",
+        "rarity": "legendary",
+        "baseStats": "",
+        "legendaryName": "Dawn Break"
+      },
+      "boots": {
+        "id": "03896694-8b85-485d-809b-4b6f916ba9b2",
+        "equipmentType": "Boots (DEX)",
+        "legendary_affixes": [
+          "+113% Damage Over Time",
+          "+3040 gear Evasion",
+          "Loses 20 Blur Rating when landing a Critical Strike. Interval: 1 s",
+          "Refreshes Blur upon gaining Blur, Interval: 1s. +6% Blur Effect",
+          "[Stealth Stab] -25% additional damage taken while Blur is active\n+25% additional damage for 3 s after Blur ends",
+          "+38% Movement Speed"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+1920 gear Evasion",
+        "legendaryName": "Valerie's Night Stroll"
+      },
+      "leftRing": {
+        "id": "f840b997-2dd6-4209-b359-f01b0c907ea2",
+        "equipmentType": "Ring",
+        "legendary_affixes": [
+          "+40% Defense",
+          "+12% Elemental Resistance",
+          "-19% Movement Speed",
+          "+4 Max Channeled Stacks when equipped in the left Ring slot",
+          "+12% chance to avoid damage while channeling skills when equipped in the right Ring slot"
+        ],
+        "rarity": "legendary",
+        "baseStats": "",
+        "legendaryName": "Windbreath Convergence"
+      },
+      "rightRing": {
+        "id": "616131a5-55fc-4dc2-8d29-76738ab23247",
+        "equipmentType": "Ring",
+        "baseStats": "+11% Lightning Resistance",
+        "prefixes": [
+          "+44 Intelligence",
+          "+63% damage",
+          "+264 Max Energy Shield"
+        ],
+        "suffixes": [
+          "+43% Affliction Effect",
+          "+19% Cold Resistance",
+          "+19% Fire Resistance"
+        ]
+      },
+      "mainHand": {
+        "id": "507ff663-273a-4164-942a-7c0b3c65485b",
+        "equipmentType": "Scepter",
+        "baseStats": "500 Critical Strike Rating\n1.2 Attack Speed\n+39% Damage Over Time",
+        "prefixes": [
+          "Reaps 0.17 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target",
+          "+94% Damage Over Time",
+          "+2 Erosion Skill Level"
+        ],
+        "suffixes": [
+          "+56% Reaping Duration",
+          "+97% Erosion Damage",
+          "+70% Affliction Effect"
+        ],
+        "sweet_dream_affix": "+7% Elemental and Erosion Resistance Penetration",
+        "tower_sequence_affix": "-10% All Resistance when the enemy has max Affliction"
+      },
+      "offHand": {
+        "id": "06e17c73-23fb-4c1e-a6eb-e48d83be4b6d",
+        "equipmentType": "Scepter",
+        "baseStats": "500 Critical Strike Rating\n1.2 Attack Speed\n+39% Damage Over Time",
+        "prefixes": [
+          "+101% Damage Over Time",
+          "+2 Erosion Skill Level",
+          "Reaps 0.16 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target"
+        ],
+        "suffixes": [
+          "+93% Erosion Damage",
+          "+64% Reaping Duration",
+          "+67% Affliction Effect"
+        ],
+        "sweet_dream_affix": "+6% Elemental and Erosion Resistance Penetration",
+        "tower_sequence_affix": "+16 Affliction inflicted per second\n+24% Affliction Effect"
+      }
+    },
+    "inventory": [
+      {
+        "id": "56287108-4f41-40a1-99e4-e65a21820b36",
+        "equipmentType": "Helmet (INT)",
+        "legendary_affixes": [
+          "+20% Erosion Resistance",
+          "You can only cast 2 Curses",
+          "+20% additional damage dealt to Cursed enemies. -20% additional damage taken from Cursed enemies",
+          "+100% Curse Duration",
+          "+100% Curse Skill Area"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+103 gear Energy Shield",
+        "legendaryName": "Hekate's Vision"
+      },
+      {
+        "id": "a67d82e0-df92-469d-9e86-4d2eceaf50bf",
+        "equipmentType": "Chest Armor (INT)",
+        "legendary_affixes": [
+          "+239 gear Energy Shield",
+          "+2 Active Skill Level",
+          "When Reaping, Energy Shield starts charging immediately",
+          "-10% Energy Shield Charge Speed",
+          "+8% Reaping Duration",
+          "+5% Elemental Resistance"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+140 gear Energy Shield",
+        "legendaryName": "Twilight Vestment"
+      },
+      {
+        "id": "7d5d4a8e-d7fd-47c4-98cb-ffc75a3e4f41",
+        "equipmentType": "Necklace",
+        "legendary_affixes": [
+          "+10% all stats",
+          "+1% Skill Area per 17 of the lowest stat",
+          "+3 Intelligence per 4 level(s)",
+          "+3 Intelligence per 4 level(s)",
+          "+3 Intelligence per 4 level(s)"
+        ],
+        "rarity": "legendary",
+        "baseStats": "",
+        "legendaryName": "False God's Skin"
+      },
+      {
+        "id": "6df8aad3-f5f3-4cde-b468-27cdbc7b9246",
+        "equipmentType": "Belt",
+        "legendary_affixes": [
+          "+685 Armor and Evasion",
+          "+74 Intelligence",
+          "Have Fervor",
+          "Has 67 point(s) of fixed Fervor Rating",
+          "+1% additional damage per 2 Fervor Rating"
+        ],
+        "blend_affix": "Max Channeled Stacks +1",
+        "rarity": "legendary",
+        "baseStats": "",
+        "legendaryName": "Dawn Break"
+      },
+      {
+        "id": "03896694-8b85-485d-809b-4b6f916ba9b2",
+        "equipmentType": "Boots (DEX)",
+        "legendary_affixes": [
+          "+113% Damage Over Time",
+          "+3040 gear Evasion",
+          "Loses 20 Blur Rating when landing a Critical Strike. Interval: 1 s",
+          "Refreshes Blur upon gaining Blur, Interval: 1s. +6% Blur Effect",
+          "[Stealth Stab] -25% additional damage taken while Blur is active\n+25% additional damage for 3 s after Blur ends",
+          "+38% Movement Speed"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+1920 gear Evasion",
+        "legendaryName": "Valerie's Night Stroll"
+      },
+      {
+        "id": "f840b997-2dd6-4209-b359-f01b0c907ea2",
+        "equipmentType": "Ring",
+        "legendary_affixes": [
+          "+40% Defense",
+          "+12% Elemental Resistance",
+          "-19% Movement Speed",
+          "+4 Max Channeled Stacks when equipped in the left Ring slot",
+          "+12% chance to avoid damage while channeling skills when equipped in the right Ring slot"
+        ],
+        "rarity": "legendary",
+        "baseStats": "",
+        "legendaryName": "Windbreath Convergence"
+      },
+      {
+        "id": "616131a5-55fc-4dc2-8d29-76738ab23247",
+        "equipmentType": "Ring",
+        "baseStats": "+11% Lightning Resistance",
+        "prefixes": [
+          "+44 Intelligence",
+          "+63% damage",
+          "+264 Max Energy Shield"
+        ],
+        "suffixes": [
+          "+43% Affliction Effect",
+          "+19% Cold Resistance",
+          "+19% Fire Resistance"
+        ]
+      },
+      {
+        "id": "06e17c73-23fb-4c1e-a6eb-e48d83be4b6d",
+        "equipmentType": "Scepter",
+        "baseStats": "500 Critical Strike Rating\n1.2 Attack Speed\n+39% Damage Over Time",
+        "prefixes": [
+          "+101% Damage Over Time",
+          "+2 Erosion Skill Level",
+          "Reaps 0.16 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target"
+        ],
+        "suffixes": [
+          "+93% Erosion Damage",
+          "+64% Reaping Duration",
+          "+67% Affliction Effect"
+        ],
+        "sweet_dream_affix": "+6% Elemental and Erosion Resistance Penetration",
+        "tower_sequence_affix": "+16 Affliction inflicted per second\n+24% Affliction Effect"
+      },
+      {
+        "id": "507ff663-273a-4164-942a-7c0b3c65485b",
+        "equipmentType": "Scepter",
+        "baseStats": "500 Critical Strike Rating\n1.2 Attack Speed\n+39% Damage Over Time",
+        "prefixes": [
+          "Reaps 0.17 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target",
+          "+94% Damage Over Time",
+          "+2 Erosion Skill Level"
+        ],
+        "suffixes": [
+          "+56% Reaping Duration",
+          "+97% Erosion Damage",
+          "+70% Affliction Effect"
+        ],
+        "sweet_dream_affix": "+7% Elemental and Erosion Resistance Penetration",
+        "tower_sequence_affix": "-10% All Resistance when the enemy has max Affliction"
+      },
+      {
+        "id": "514147c7-cd31-4efb-97f8-a70f9a286242",
+        "equipmentType": "Gloves (INT)",
+        "legendary_affixes": [
+          "+240 gear Energy Shield",
+          "+1 Spell Skill Level",
+          "When a Spell hit inflicts Fire Damage, -15% Cold, Lightning, and Erosion Resistance for the target for 3 s",
+          "When a Spell hit inflicts Cold Damage, -15% Fire, Lightning, and Erosion Resistance for the target for 3 s",
+          "When a Spell hit inflicts Lightning Damage, -15% Fire, Cold, and Erosion Resistance for the target for 3 s",
+          "When a Spell hit inflicts Erosion Damage, -15% Fire, Cold, and Lightning Resistance for the target for 3 s"
+        ],
+        "rarity": "legendary",
+        "baseStats": "+146 gear Energy Shield",
+        "legendaryName": "Sage's Insight"
+      }
+    ]
+  },
+  "talentPage": {
+    "talentTrees": {
+      "tree1": {
+        "name": "Goddess_of_Deception",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "points": 1
+          },
+          {
+            "x": 5,
+            "y": 4,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 4,
+            "points": 1
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "points": 1
+          }
+        ],
+        "selectedCoreTalents": ["Affliction", "Subtle Impact"]
+      },
+      "tree2": {
+        "name": "Psychic",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 4,
+            "points": 3
+          },
+          {
+            "x": 3,
+            "y": 4,
+            "points": 3
+          },
+          {
+            "x": 3,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 3,
+            "points": 1
+          },
+          {
+            "x": 4,
+            "y": 4,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 4,
+            "points": 1
+          },
+          {
+            "x": 6,
+            "y": 2,
+            "points": 1
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "points": 1
+          },
+          {
+            "x": 5,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 1,
+            "points": 1
+          }
+        ],
+        "selectedCoreTalents": ["Reap Purification"]
+      },
+      "placedPrism": {
+        "prism": {
+          "id": "5aef1f8c-dda1-4db5-a542-c570466dad74",
+          "rarity": "rare",
+          "baseAffix": "Adds an additional effect to the Core Talent on the God of Might/Goddess of Hunting/Goddess of Knowledge/God of War/Goddess of Deception/God of Machines Advanced Talent Panel:\n+8% Movement Speed and +4% additional damage for 8 s on defeat. Stacks up to 4 time(s)",
+          "gaugeAffixes": [
+            "All Medium Talent within the area also gain: +4% Affliction Effect",
+            "All Legendary Medium Talent within the area also gain: +8% Movement Speed"
+          ]
+        },
+        "treeSlot": "tree2",
+        "position": {
+          "x": 5,
+          "y": 2
+        }
+      },
+      "tree3": {
+        "name": "Elementalist",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "points": 2
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "points": 1
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 3,
+            "points": 1
+          }
+        ],
+        "selectedCoreTalents": ["Focus"]
+      },
+      "placedInverseImage": {
+        "inverseImage": {
+          "id": "730cf0ca-064b-45dd-8e11-0486f61ae8b5",
+          "microTalentEffect": -83,
+          "mediumTalentEffect": 59,
+          "legendaryTalentEffect": -38
+        },
+        "treeSlot": "tree3",
+        "position": {
+          "x": 5,
+          "y": 1
+        },
+        "reflectedAllocatedNodes": [
+          {
+            "x": 1,
+            "y": 2,
+            "sourceX": 5,
+            "sourceY": 2,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 4,
+            "sourceX": 5,
+            "sourceY": 0,
+            "points": 3
+          },
+          {
+            "x": 0,
+            "y": 4,
+            "sourceX": 6,
+            "sourceY": 0,
+            "points": 1
+          }
+        ]
+      },
+      "tree4": {
+        "name": "Lich",
+        "allocatedNodes": [
+          {
+            "x": 0,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 1,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 1,
+            "points": 3
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 4,
+            "y": 2,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 2,
+            "points": 1
+          },
+          {
+            "x": 4,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 5,
+            "y": 0,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 0,
+            "points": 1
+          },
+          {
+            "x": 5,
+            "y": 3,
+            "points": 3
+          },
+          {
+            "x": 6,
+            "y": 3,
+            "points": 1
+          }
+        ],
+        "selectedCoreTalents": ["Off The Beaten Track"]
+      }
+    },
+    "inventory": {
+      "prismList": [
+        {
+          "id": "5aef1f8c-dda1-4db5-a542-c570466dad74",
+          "rarity": "rare",
+          "baseAffix": "Adds an additional effect to the Core Talent on the God of Might/Goddess of Hunting/Goddess of Knowledge/God of War/Goddess of Deception/God of Machines Advanced Talent Panel:\n+8% Movement Speed and +4% additional damage for 8 s on defeat. Stacks up to 4 time(s)",
+          "gaugeAffixes": [
+            "All Medium Talent within the area also gain: +4% Affliction Effect",
+            "All Legendary Medium Talent within the area also gain: +8% Movement Speed"
+          ]
+        }
+      ],
+      "inverseImageList": []
+    }
+  },
+  "skillPage": {
+    "activeSkills": {
+      "1": {
+        "skillName": "Mind Control",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Guard"
+          },
+          "2": {
+            "name": "Cataclysm"
+          },
+          "3": {
+            "name": "Mind Control: Concentrate (Magnificent)"
+          },
+          "4": {
+            "name": "Passivation"
+          },
+          "5": {
+            "name": "Control Spell"
+          }
+        }
+      },
+      "2": {
+        "skillName": "Blurry Steps",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Extended Duration"
+          },
+          "2": {
+            "name": "Well-Fought Battle"
+          },
+          "3": {
+            "name": "Mass Effect"
+          }
+        }
+      },
+      "3": {
+        "skillName": "Entangled Pain",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Preparation"
+          },
+          "2": {
+            "name": "Terrain of Malice"
+          }
+        }
+      },
+      "4": {
+        "skillName": "Corruption",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Preparation"
+          },
+          "2": {
+            "name": "Terrain of Malice"
+          }
+        }
+      },
+      "5": {
+        "skillName": "Shackles of Malice",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Activation Medium: Instruction"
+          },
+          "2": {
+            "name": "Reaping Agony"
+          },
+          "3": {
+            "name": "Shackles of Malice: Defile (Magnificent)"
+          },
+          "4": {
+            "name": "Grudge"
+          }
+        }
+      }
+    },
+    "passiveSkills": {
+      "1": {
+        "skillName": "Corrosion Focus",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Restrain"
+          },
+          "2": {
+            "name": "Reaping Agony"
+          },
+          "3": {
+            "name": "Focus Acceleration"
+          }
+        }
+      },
+      "2": {
+        "skillName": "Spell Amplification",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Restrain"
+          },
+          "2": {
+            "name": "Aura Amplification"
+          }
+        }
+      },
+      "3": {
+        "skillName": "Precise: Deep Pain",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Restrain"
+          },
+          "2": {
+            "name": "Seal Conversion"
+          },
+          "3": {
+            "name": "Aura Amplification"
+          },
+          "4": {
+            "name": "Increased Area"
+          }
+        }
+      },
+      "4": {
+        "skillName": "Precise: Erosion Amplification",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "name": "Restrain"
+          },
+          "2": {
+            "name": "Aura Amplification"
+          }
+        }
+      }
+    }
+  },
+  "heroPage": {
+    "selectedHero": "Oracle Thea: Blasphemer (#3)",
+    "traits": {
+      "level1": {
+        "name": "Blasphemer"
+      },
+      "level45": {
+        "name": "Unholy Baptism"
+      },
+      "level60": {
+        "name": "Tarnished Sage"
+      },
+      "level75": {
+        "name": "Onset of Depravity"
+      }
+    },
+    "memorySlots": {
+      "slot45": {
+        "id": "f27ba3a4-7235-4e2f-903b-c82aa410c493",
+        "memoryType": "Memory of Origin",
+        "baseStat": "+90 Intelligence",
+        "fixedAffixes": ["+24% damage", "+24% Reaping Cooldown Recovery Speed"],
+        "randomAffixes": [
+          "+28% Damage Over Time",
+          "+12% Reaping Cooldown Recovery Speed"
+        ]
+      },
+      "slot60": {
+        "id": "e0da4847-b628-45f6-8314-c65b6a1236ee",
+        "memoryType": "Memory of Discipline",
+        "baseStat": "+525 Max Energy Shield",
+        "fixedAffixes": ["+6% Max Energy Shield", "+37% Armor"],
+        "randomAffixes": [
+          "+12% Reaping Cooldown Recovery Speed",
+          "+41% Damage Over Time"
+        ]
+      },
+      "slot75": {
+        "id": "a63c657c-61b1-4e5c-a70f-d4251f899c53",
+        "memoryType": "Memory of Progress",
+        "baseStat": "+30% Movement Speed",
+        "fixedAffixes": [
+          "+10% Reaping Cooldown Recovery Speed",
+          "+40% Minion Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+17% Reaping Cooldown Recovery Speed",
+          "+15% Skill Area"
+        ]
+      }
+    },
+    "memoryInventory": [
+      {
+        "id": "f27ba3a4-7235-4e2f-903b-c82aa410c493",
+        "memoryType": "Memory of Origin",
+        "baseStat": "+90 Intelligence",
+        "fixedAffixes": ["+24% damage", "+24% Reaping Cooldown Recovery Speed"],
+        "randomAffixes": [
+          "+28% Damage Over Time",
+          "+12% Reaping Cooldown Recovery Speed"
+        ]
+      },
+      {
+        "id": "e0da4847-b628-45f6-8314-c65b6a1236ee",
+        "memoryType": "Memory of Discipline",
+        "baseStat": "+525 Max Energy Shield",
+        "fixedAffixes": ["+6% Max Energy Shield", "+37% Armor"],
+        "randomAffixes": [
+          "+12% Reaping Cooldown Recovery Speed",
+          "+41% Damage Over Time"
+        ]
+      },
+      {
+        "id": "a63c657c-61b1-4e5c-a70f-d4251f899c53",
+        "memoryType": "Memory of Progress",
+        "baseStat": "+30% Movement Speed",
+        "fixedAffixes": [
+          "+10% Reaping Cooldown Recovery Speed",
+          "+40% Minion Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+17% Reaping Cooldown Recovery Speed",
+          "+15% Skill Area"
+        ]
+      }
+    ]
+  },
+  "pactspiritPage": {
+    "slot1": {
+      "pactspiritName": "Swaying Bonnie",
+      "level": 3,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    },
+    "slot2": {
+      "pactspiritName": "Abyssal King Soul",
+      "level": 6,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    },
+    "slot3": {
+      "pactspiritName": "Portrait of a Fallen Saintess",
+      "level": 6,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    }
+  },
+  "divinityPage": {
+    "placedSlates": [
+      {
+        "slateId": "843e13ad-7727-4322-a180-21698006651d",
+        "position": {
+          "row": 3,
+          "col": 2
+        }
+      },
+      {
+        "slateId": "c5db2c38-9efe-48f8-b94c-87eab6f872e7",
+        "position": {
+          "row": 3,
+          "col": 1
+        }
+      },
+      {
+        "slateId": "8dc39eb8-4f5e-4c3a-955b-f3c1f09d9818",
+        "position": {
+          "row": 0,
+          "col": 3
+        }
+      },
+      {
+        "slateId": "46ad0fa2-80f6-48ec-a415-2efa77de0932",
+        "position": {
+          "row": 1,
+          "col": 0
+        }
+      },
+      {
+        "slateId": "cb6540c7-af41-48f5-b9df-cd1eb5d5050e",
+        "position": {
+          "row": 0,
+          "col": 2
+        }
+      },
+      {
+        "slateId": "d8f0f368-29ae-48c5-996c-f951efa7c0b0",
+        "position": {
+          "row": 1,
+          "col": 4
+        }
+      }
+    ],
+    "inventory": [
+      {
+        "id": "843e13ad-7727-4322-a180-21698006651d",
+        "shape": "Pedigree",
+        "rotation": 90,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+6 Affliction inflicted per second\n+9% Damage Over Time",
+          "+9% Minion Damage",
+          "Full Load",
+          "Perception"
+        ],
+        "metaAffixes": [],
+        "isLegendary": true,
+        "legendaryName": "Pedigree of Gods"
+      },
+      {
+        "id": "c5db2c38-9efe-48f8-b94c-87eab6f872e7",
+        "shape": "Vertical2",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+8% damage against Cursed enemies\n+8% Curse Skill Area",
+          "+3% Max Life",
+          "+9% Minion Damage",
+          "Max Tenacity Blessing Stacks +1 (Max Divinity Effect: 1)"
+        ],
+        "metaAffixes": [],
+        "isLegendary": true,
+        "legendaryName": "Fallen Starlight"
+      },
+      {
+        "id": "8dc39eb8-4f5e-4c3a-955b-f3c1f09d9818",
+        "shape": "Vertical2",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+7% Barrier Shield",
+          "+7% Skill Area\n+5% Projectile Speed\n+2% Movement Speed",
+          "+9% Attack Damage",
+          "+1 Persistent Skill Level"
+        ],
+        "metaAffixes": [],
+        "isLegendary": true,
+        "legendaryName": "Fallen Starlight"
+      },
+      {
+        "id": "46ad0fa2-80f6-48ec-a415-2efa77de0932",
+        "god": "Deception",
+        "shape": "Z",
+        "rotation": 90,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "0.2% Blur effect for every 1% of Life lost (Max Divinity Effect: 1)",
+          "+10% additional damage when having both Sealed Mana and Life",
+          "+9% Damage Over Time\n+2% Skill Effect Duration",
+          "+18 Affliction inflicted per second\n-8% All Resistance when the enemy has max Affliction",
+          "+8% additional damage against Cursed enemies"
+        ],
+        "metaAffixes": []
+      },
+      {
+        "id": "cb6540c7-af41-48f5-b9df-cd1eb5d5050e",
+        "god": "Deception",
+        "shape": "L",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+10% additional damage when having both Sealed Mana and Life",
+          "+1 all skills' level (Max Divinity Effect: 1)",
+          "+9% Damage Over Time\n+2% Skill Effect Duration",
+          "+10% Max Energy Shield\nGains Blur when Energy Shield starts to Charge (Max Divinity Effect: 1)",
+          "8% additional damage applied to Life"
+        ],
+        "metaAffixes": []
+      },
+      {
+        "id": "d8f0f368-29ae-48c5-996c-f951efa7c0b0",
+        "god": "Knowledge",
+        "shape": "Z",
+        "rotation": 90,
+        "flippedH": true,
+        "flippedV": false,
+        "affixes": [
+          "+2 Max Energy Shield per 5 Intelligence (Max Divinity Effect: 1)",
+          "Max Channeled Stacks +1",
+          "+6% damage for every +1 additional Max Channeled Stack(s)",
+          "Max Focus Blessing Stacks +1 (Max Divinity Effect: 1)",
+          "+1 Spell Skill Level"
+        ],
+        "metaAffixes": []
+      }
+    ]
+  },
+  "configurationPage": {
+    "level": 97,
+    "fervorEnabled": false,
+    "fervorPoints": 70,
+    "enemyFrostbittenEnabled": false,
+    "crueltyBuffStacks": 40,
+    "sealedManaPct": 1,
+    "sealedLifePct": 1,
+    "realmOfMercuryEnabled": false,
+    "baptismOfPurityEnabled": false,
+    "hasFocusBlessing": true,
+    "hasAgilityBlessing": true,
+    "hasTenacityBlessing": true,
+    "enemyParalyzed": true,
+    "hasFullMana": true,
+    "targetEnemyIsNearby": false,
+    "targetEnemyIsInProximity": false,
+    "numEnemiesNearby": 0,
+    "numEnemiesAffectedByWarcry": 0,
+    "hasBlockedRecently": false,
+    "hasElitesNearby": false,
+    "enemyHasAilment": false,
+    "hasCritRecently": false,
+    "channeling": true,
+    "sagesInsightFireActivated": true,
+    "sagesInsightColdActivated": true,
+    "sagesInsightLightningActivated": true,
+    "sagesInsightErosionActivated": false,
+    "enemyHasAffliction": true,
+    "enemyHasDesecration": true,
+    "tormentStacks": 3,
+    "hasBlur": true,
+    "blurEndedRecently": true,
+    "hasAffliction": false,
+    "customAffixLines": [
+      "// Shackles of malice: defile",
+      "+40% additional curse effect",
+      "// Shackled of Malice / Reaping Agony",
+      "Reaps 0.9 s of Damage Over Time when dealing Damage Over Time. The effect has a 4 s cooldown against the same target",
+      "// Corrosion Focus / Reaping Agony",
+      "Reaps 0.9 s of Damage Over Time when dealing Damage Over Time. The effect has a 4 s cooldown against the same target",
+      "// Mind Control: Concentrate, 16 links - 1",
+      "+91.5% additional damage"
+    ]
+  },
+  "calculationsPage": {
+    "selectedSkillName": "Mind Control"
+  }
+}

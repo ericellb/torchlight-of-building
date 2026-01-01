@@ -130,7 +130,7 @@ const CustomAffixesSection: React.FC<{
         <label className="text-zinc-50">Custom Affixes</label>
         <InfoTooltip text="Add custom affix lines (one per line) to include in damage calculations" />
       </div>
-      <div className="relative h-32">
+      <div className="relative h-64">
         <div
           ref={overlayRef}
           aria-hidden="true"

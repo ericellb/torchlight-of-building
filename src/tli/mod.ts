@@ -130,7 +130,9 @@ export type Condition =
   | "at_max_channeled_stacks"
   | "enemy_at_max_affliction"
   | "enemy_is_cursed"
-  | "have_both_sealed_mana_and_life";
+  | "have_both_sealed_mana_and_life"
+  | "equipped_in_left_ring_slot"
+  | "equipped_in_right_ring_slot";
 
 export type ConditionThresholdTarget =
   | "num_enemies_nearby"

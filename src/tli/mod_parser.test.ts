@@ -1277,6 +1277,19 @@ test("parse max channeled stacks", () => {
   ]);
 });
 
+test("parse max channeled stacks when equipped in left ring slot", () => {
+  const result = parseMod(
+    "+4 Max Channeled Stacks when equipped in the left Ring slot",
+  );
+  expect(result).toEqual([
+    {
+      type: "MaxChannel",
+      value: 4,
+      cond: "equipped_in_left_ring_slot",
+    },
+  ]);
+});
+
 test("parse additional attack damage dealt to nearby enemies", () => {
   const result = parseMod(
     "+10% additional Attack Damage dealt to Nearby enemies",

@@ -994,6 +994,15 @@ const filterModsByCond = (
         () =>
           (config.sealedManaPct ?? 0) > 0 && (config.sealedLifePct ?? 0) > 0,
       )
+      .with(
+        // todo: there's gotta be a better way to handle this, right?
+        "equipped_in_left_ring_slot",
+        () => m.src?.startsWith("Gear#leftRing") ?? false,
+      )
+      .with(
+        "equipped_in_right_ring_slot",
+        () => m.src?.startsWith("Gear#rightRing") ?? false,
+      )
       .exhaustive();
   });
 };

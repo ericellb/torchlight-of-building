@@ -11,19 +11,26 @@ import {
   NobleSupportSkills,
   SupportSkills,
 } from "@/src/data/skill";
-import type { BaseActiveSkill, BaseSkill } from "@/src/data/skill/types";
+import type {
+  ActivationMediumSkillNmae,
+  BaseActiveSkill,
+  BaseMagnificentSupportSkill,
+  BaseSkill,
+  MagnificentSupportSkillName,
+  NobleSupportSkillName,
+  SupportSkillName,
+} from "@/src/data/skill/types";
+import type { BaseSupportSkillSlot } from "@/src/lib/save-data";
 import { listAvailableSupports } from "@/src/lib/skill-utils";
 import { OptionWithSkillTooltip } from "./OptionWithSkillTooltip";
 import { SkillTooltipContent } from "./SkillTooltipContent";
 
 interface SupportSkillSelectorProps {
   mainSkill: BaseActiveSkill | BaseSkill | undefined;
-  selectedSkill?: string;
+  selectedSlot: BaseSupportSkillSlot | undefined;
   excludedSkills: string[];
-  onChange: (skillName: string | undefined) => void;
+  onChange: (slot: BaseSupportSkillSlot | undefined) => void;
   slotIndex: number; // 1-indexed
-  level?: number;
-  onLevelChange?: (level: number) => void;
 }
 
 const SKILL_LEVEL_OPTIONS = Array.from({ length: 20 }, (_, i) => ({
@@ -31,15 +38,72 @@ const SKILL_LEVEL_OPTIONS = Array.from({ length: 20 }, (_, i) => ({
   label: `Lv. ${i + 1}`,
 }));
 
+const TIER_OPTIONS = [
+  { value: 0 as const, label: "Tier 0" },
+  { value: 1 as const, label: "Tier 1" },
+  { value: 2 as const, label: "Tier 2" },
+];
+
+const RANK_OPTIONS = [
+  { value: 1 as const, label: "Rank 1" },
+  { value: 2 as const, label: "Rank 2" },
+  { value: 3 as const, label: "Rank 3" },
+  { value: 4 as const, label: "Rank 4" },
+  { value: 5 as const, label: "Rank 5" },
+];
+
+type SupportSkillType =
+  | "regular"
+  | "magnificent"
+  | "noble"
+  | "activationMedium"
+  | undefined;
+
+const getSkillType = (skillName: string | undefined): SupportSkillType => {
+  if (skillName === undefined) return undefined;
+  if (SupportSkills.some((s) => s.name === skillName)) return "regular";
+  if (MagnificentSupportSkills.some((s) => s.name === skillName))
+    return "magnificent";
+  if (NobleSupportSkills.some((s) => s.name === skillName)) return "noble";
+  if (ActivationMediumSkills.some((s) => s.name === skillName))
+    return "activationMedium";
+  return undefined;
+};
+
+const getMagnificentSkill = (
+  skillName: string,
+): BaseMagnificentSupportSkill | undefined => {
+  return MagnificentSupportSkills.find((s) => s.name === skillName);
+};
+
+const getValueOptions = (
+  skill: BaseMagnificentSupportSkill,
+  tier: 0 | 1 | 2,
+): { value: number; label: string }[] => {
+  if (skill.tierValues === undefined) return [];
+  const firstKey = Object.keys(skill.tierValues)[0];
+  if (firstKey === undefined) return [];
+  const range = skill.tierValues[firstKey][tier];
+  const options: { value: number; label: string }[] = [];
+  for (let v = range.min; v <= range.max; v++) {
+    options.push({ value: v, label: String(v) });
+  }
+  return options;
+};
+
 export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
   mainSkill,
-  selectedSkill,
+  selectedSlot,
   excludedSkills,
   onChange,
   slotIndex,
-  level,
-  onLevelChange,
 }) => {
+  const selectedSkillName = selectedSlot?.name;
+  const skillType = useMemo(
+    () => getSkillType(selectedSkillName),
+    [selectedSkillName],
+  );
+
   const { options, groups } = useMemo(() => {
     // Combine all skill types for the flat options list
     const allSkills = [
@@ -52,7 +116,8 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     // Filter out excluded skills (but keep currently selected)
     const filteredSkills = allSkills.filter(
       (skill) =>
-        skill.name === selectedSkill || !excludedSkills.includes(skill.name),
+        skill.name === selectedSkillName ||
+        !excludedSkills.includes(skill.name),
     );
 
     const opts: SearchableSelectOption<string>[] = filteredSkills.map(
@@ -62,7 +127,7 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
       }),
     );
 
-    if (!mainSkill) {
+    if (mainSkill === undefined) {
       return { options: opts, groups: undefined };
     }
 
@@ -76,7 +141,8 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     const filterAndMap = (names: string[]): SearchableSelectOption<string>[] =>
       names
         .filter(
-          (name) => name === selectedSkill || !excludedSkills.includes(name),
+          (name) =>
+            name === selectedSkillName || !excludedSkills.includes(name),
         )
         .map((name) => ({ value: name, label: name }));
 
@@ -117,13 +183,7 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     }
 
     return { options: opts, groups: grps };
-  }, [mainSkill, slotIndex, selectedSkill, excludedSkills]);
-
-  // Check if selected skill is a regular Support type (not Activation Medium, Magnificent, or Noble)
-  const isRegularSupport = useMemo(
-    () => SupportSkills.some((s) => s.name === selectedSkill),
-    [selectedSkill],
-  );
+  }, [mainSkill, slotIndex, selectedSkillName, excludedSkills]);
 
   const skillsByName = useMemo(() => {
     const allSkills = [
@@ -139,12 +199,116 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     return map;
   }, []);
 
+  const handleSkillChange = (skillName: string | undefined): void => {
+    if (skillName === undefined) {
+      onChange(undefined);
+      return;
+    }
+
+    const type = getSkillType(skillName);
+    switch (type) {
+      case "regular":
+        onChange({ name: skillName as SupportSkillName, level: 20 });
+        break;
+      case "magnificent": {
+        const magSkill = getMagnificentSkill(skillName);
+        const valueOptions =
+          magSkill !== undefined ? getValueOptions(magSkill, 0) : [];
+        const defaultValue =
+          valueOptions.length > 0
+            ? valueOptions[valueOptions.length - 1].value
+            : 0;
+        onChange({
+          name: skillName as MagnificentSupportSkillName,
+          tier: 0,
+          rank: 5,
+          value: defaultValue,
+        });
+        break;
+      }
+      case "noble":
+        onChange({ name: skillName as NobleSupportSkillName });
+        break;
+      case "activationMedium":
+        onChange({ name: skillName as ActivationMediumSkillNmae });
+        break;
+      default:
+        onChange(undefined);
+    }
+  };
+
+  const handleLevelChange = (level: number): void => {
+    if (
+      selectedSlot === undefined ||
+      skillType !== "regular" ||
+      !("name" in selectedSlot)
+    )
+      return;
+    // selectedSlot is SupportSkillSlot since skillType === "regular"
+    onChange({
+      name: selectedSlot.name as SupportSkillName,
+      level,
+    });
+  };
+
+  const handleTierChange = (tier: 0 | 1 | 2): void => {
+    if (
+      selectedSlot === undefined ||
+      skillType !== "magnificent" ||
+      !("tier" in selectedSlot)
+    )
+      return;
+    const magSkill = getMagnificentSkill(selectedSlot.name);
+    const valueOptions =
+      magSkill !== undefined ? getValueOptions(magSkill, tier) : [];
+    const newValue =
+      valueOptions.length > 0
+        ? valueOptions[valueOptions.length - 1].value
+        : selectedSlot.value;
+    onChange({
+      name: selectedSlot.name as MagnificentSupportSkillName,
+      tier,
+      rank: selectedSlot.rank,
+      value: newValue,
+    });
+  };
+
+  const handleRankChange = (rank: 1 | 2 | 3 | 4 | 5): void => {
+    if (
+      selectedSlot === undefined ||
+      skillType !== "magnificent" ||
+      !("rank" in selectedSlot)
+    )
+      return;
+    onChange({
+      name: selectedSlot.name as MagnificentSupportSkillName,
+      tier: selectedSlot.tier,
+      rank,
+      value: selectedSlot.value,
+    });
+  };
+
+  const handleValueChange = (value: number): void => {
+    if (
+      selectedSlot === undefined ||
+      skillType !== "magnificent" ||
+      !("value" in selectedSlot)
+    )
+      return;
+    onChange({
+      name: selectedSlot.name as MagnificentSupportSkillName,
+      tier: selectedSlot.tier,
+      rank: selectedSlot.rank,
+      value,
+    });
+  };
+
   const renderOption = (
     option: SearchableSelectOption<string>,
     { selected }: { active: boolean; selected: boolean },
-  ) => {
+  ): React.ReactNode => {
     const skillData = skillsByName.get(option.value);
-    if (!skillData) return <span>{option.label}</span>;
+    if (skillData === undefined) return <span>{option.label}</span>;
     return <OptionWithSkillTooltip skill={skillData} selected={selected} />;
   };
 
@@ -152,9 +316,9 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     option: SearchableSelectOption<string>,
     triggerRect: DOMRect,
     tooltipHandlers: { onMouseEnter: () => void; onMouseLeave: () => void },
-  ) => {
+  ): React.ReactNode => {
     const skillData = skillsByName.get(option.value);
-    if (!skillData) return null;
+    if (skillData === undefined) return null;
     return (
       <Tooltip isVisible={true} triggerRect={triggerRect} {...tooltipHandlers}>
         <SkillTooltipContent skill={skillData} />
@@ -162,11 +326,24 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     );
   };
 
+  // Get magnificent skill data for value options
+  const magnificentValueOptions = useMemo(() => {
+    if (
+      skillType !== "magnificent" ||
+      selectedSlot === undefined ||
+      !("tier" in selectedSlot)
+    )
+      return [];
+    const magSkill = getMagnificentSkill(selectedSlot.name);
+    if (magSkill === undefined) return [];
+    return getValueOptions(magSkill, selectedSlot.tier);
+  }, [skillType, selectedSlot]);
+
   return (
     <div className="flex items-center gap-2 flex-1">
       <SearchableSelect
-        value={selectedSkill}
-        onChange={onChange}
+        value={selectedSkillName}
+        onChange={handleSkillChange}
         options={options}
         groups={groups}
         placeholder="<Empty slot>"
@@ -175,16 +352,48 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
         renderOption={renderOption}
         renderSelectedTooltip={renderSelectedTooltip}
       />
-      {isRegularSupport && onLevelChange && (
+      {skillType === "regular" && selectedSlot !== undefined && (
         <SearchableSelect
-          value={level ?? 20}
-          onChange={(val) => val !== undefined && onLevelChange(val)}
+          value={"level" in selectedSlot ? (selectedSlot.level ?? 20) : 20}
+          onChange={(val) => val !== undefined && handleLevelChange(val)}
           options={SKILL_LEVEL_OPTIONS}
           placeholder="Lv."
           size="sm"
           className="w-20"
         />
       )}
+      {skillType === "magnificent" &&
+        selectedSlot !== undefined &&
+        "tier" in selectedSlot && (
+          <>
+            <SearchableSelect
+              value={selectedSlot.tier}
+              onChange={(val) => val !== undefined && handleTierChange(val)}
+              options={TIER_OPTIONS}
+              placeholder="Tier"
+              size="sm"
+              className="w-20"
+            />
+            <SearchableSelect
+              value={selectedSlot.rank}
+              onChange={(val) => val !== undefined && handleRankChange(val)}
+              options={RANK_OPTIONS}
+              placeholder="Rank"
+              size="sm"
+              className="w-20"
+            />
+            {magnificentValueOptions.length > 0 && (
+              <SearchableSelect
+                value={selectedSlot.value}
+                onChange={(val) => val !== undefined && handleValueChange(val)}
+                options={magnificentValueOptions}
+                placeholder="Value"
+                size="sm"
+                className="w-16"
+              />
+            )}
+          </>
+        )}
     </div>
   );
 };

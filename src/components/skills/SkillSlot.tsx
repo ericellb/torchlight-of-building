@@ -5,7 +5,10 @@ import {
 } from "@/src/components/ui/SearchableSelect";
 import { Tooltip } from "@/src/components/ui/Tooltip";
 import type { BaseActiveSkill, BaseSkill } from "@/src/data/skill/types";
-import type { SkillSlot as SkillSlotType } from "@/src/lib/save-data";
+import type {
+  BaseSupportSkillSlot,
+  SkillSlot as SkillSlotType,
+} from "@/src/lib/save-data";
 import { OptionWithSkillTooltip } from "./OptionWithSkillTooltip";
 import { SkillTooltipContent } from "./SkillTooltipContent";
 import { SupportSkillSelector } from "./SupportSkillSelector";
@@ -29,9 +32,8 @@ interface SkillSlotProps {
   onLevelChange: (level: number) => void;
   onUpdateSupport: (
     supportKey: SupportSlotKey,
-    supportName: string | undefined,
+    slot: BaseSupportSkillSlot | undefined,
   ) => void;
-  onUpdateSupportLevel: (supportKey: SupportSlotKey, level: number) => void;
 }
 
 export const SkillSlot: React.FC<SkillSlotProps> = ({
@@ -43,16 +45,15 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
   onToggle,
   onLevelChange,
   onUpdateSupport,
-  onUpdateSupportLevel,
 }) => {
   const mainSkill = useMemo(
     () => availableSkills.find((s) => s.name === skill?.skillName),
     [availableSkills, skill?.skillName],
   );
 
-  const selectedSupports = skill
+  const selectedSupports: string[] = skill
     ? SUPPORT_SLOT_KEYS.map((key) => skill.supportSkills[key]?.name).filter(
-        (name): name is string => name !== undefined,
+        (name): name is NonNullable<typeof name> => name !== undefined,
       )
     : [];
 
@@ -74,9 +75,9 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
   const renderOption = (
     option: SearchableSelectOption<string>,
     { selected }: { active: boolean; selected: boolean },
-  ) => {
+  ): React.ReactNode => {
     const skillData = skillsByName.get(option.value);
-    if (!skillData) return <span>{option.label}</span>;
+    if (skillData === undefined) return <span>{option.label}</span>;
     return <OptionWithSkillTooltip skill={skillData} selected={selected} />;
   };
 
@@ -84,9 +85,9 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
     option: SearchableSelectOption<string>,
     triggerRect: DOMRect,
     tooltipHandlers: { onMouseEnter: () => void; onMouseLeave: () => void },
-  ) => {
+  ): React.ReactNode => {
     const skillData = skillsByName.get(option.value);
-    if (!skillData) return null;
+    if (skillData === undefined) return null;
     return (
       <Tooltip isVisible={true} triggerRect={triggerRect} {...tooltipHandlers}>
         <SkillTooltipContent skill={skillData} />
@@ -148,20 +149,14 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
               <span className="text-xs text-zinc-600 w-4">{supportKey}.</span>
               <SupportSkillSelector
                 mainSkill={mainSkill}
-                selectedSkill={
-                  hasSkill ? skill?.supportSkills[supportKey]?.name : undefined
+                selectedSlot={
+                  hasSkill ? skill?.supportSkills[supportKey] : undefined
                 }
                 excludedSkills={selectedSupports.filter(
                   (s) => s !== skill?.supportSkills[supportKey]?.name,
                 )}
-                onChange={(supportName) =>
-                  onUpdateSupport(supportKey, supportName)
-                }
+                onChange={(slot) => onUpdateSupport(supportKey, slot)}
                 slotIndex={supportKey}
-                level={skill?.supportSkills[supportKey]?.level}
-                onLevelChange={(level) =>
-                  onUpdateSupportLevel(supportKey, level)
-                }
               />
             </div>
           ))}

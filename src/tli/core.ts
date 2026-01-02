@@ -1,7 +1,12 @@
 import type { HeroName, HeroTraitName } from "@/src/data/hero_trait/types";
+import type {
+  ActivationMediumSkillNmae,
+  MagnificentSupportSkillName,
+  NobleSupportSkillName,
+  SupportSkillName,
+} from "../data/skill";
 import type { EquipmentType } from "./gear_data_types";
 import type { Mod } from "./mod";
-import { MagnificentSupportSkillName } from "../data/skill";
 
 export const PRISM_RARITIES = ["rare", "legendary"] as const;
 export type PrismRarity = (typeof PRISM_RARITIES)[number];
@@ -312,7 +317,7 @@ export interface GearPage {
 }
 
 export interface SupportSkillSlot {
-  name: string;
+  name: SupportSkillName;
   level?: number; // default 20
 }
 
@@ -323,12 +328,26 @@ export interface MagnificentSupportSkillSlot {
   value: number; // specific value within the tier's range
 }
 
+export interface NobleSupportSkillSlot {
+  name: NobleSupportSkillName;
+}
+
+export interface ActivationMediumSkillSlot {
+  name: ActivationMediumSkillNmae;
+}
+
+export type BaseSupportSkillSlot =
+  | SupportSkillSlot
+  | MagnificentSupportSkillSlot
+  | NobleSupportSkillSlot
+  | ActivationMediumSkillSlot;
+
 export interface SupportSkills {
-  1?: SupportSkillSlot;
-  2?: SupportSkillSlot;
-  3?: SupportSkillSlot;
-  4?: SupportSkillSlot;
-  5?: SupportSkillSlot;
+  1?: BaseSupportSkillSlot;
+  2?: BaseSupportSkillSlot;
+  3?: BaseSupportSkillSlot;
+  4?: BaseSupportSkillSlot;
+  5?: BaseSupportSkillSlot;
 }
 
 export interface SkillSlot {

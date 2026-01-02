@@ -11,6 +11,7 @@ import {
   type BaseSkill,
   type BaseSupportSkill,
   type ImplementedActiveSkillName,
+  type MagnificentSupportSkillName,
   type PassiveSkillName,
   PassiveSkills,
   type SkillOffense,
@@ -23,9 +24,11 @@ import {
 import type { DmgModType } from "../constants";
 import type {
   Affix,
+  BaseSupportSkillSlot,
   Configuration,
   DmgRange,
   Loadout,
+  MagnificentSupportSkillSlot,
   SkillSlot,
   SupportSkillSlot,
 } from "../core";
@@ -40,6 +43,7 @@ import type {
   StatType,
 } from "../mod";
 import { getActiveSkillMods } from "../skills/active_mods";
+import { getMagnificentSupportSkillMods } from "../skills/magnificent_support_mods";
 import { getPassiveSkillMods } from "../skills/passive_mods";
 import { getSupportSkillMods } from "../skills/support_mods";
 import { getAllAffixes, getGearAffixes } from "./affix-collectors";
@@ -1473,6 +1477,19 @@ const resolveSelectedSkillMods = (
   }));
 };
 
+// Type guards for support skill slot types
+const isRegularSupportSlot = (
+  slot: BaseSupportSkillSlot,
+): slot is SupportSkillSlot => {
+  return !("tier" in slot) && SupportSkills.some((s) => s.name === slot.name);
+};
+
+const isMagnificentSupportSlot = (
+  slot: BaseSupportSkillSlot,
+): slot is MagnificentSupportSkillSlot => {
+  return "tier" in slot && "rank" in slot && "value" in slot;
+};
+
 const resolveSelectedSkillSupportMods = (
   slot: SkillSlot,
   loadoutMods: Mod[],
@@ -1481,37 +1498,57 @@ const resolveSelectedSkillSupportMods = (
   derivedCtx: DerivedCtx,
 ): Mod[] => {
   const supportSlots = Object.values(slot.supportSkills) as (
-    | SupportSkillSlot
+    | BaseSupportSkillSlot
     | undefined
   )[];
 
   const supportMods: Mod[] = [];
   for (const ss of supportSlots) {
     if (ss === undefined) continue;
-    const supportSkill = SupportSkills.find((s) => s.name === ss.name) as
-      | BaseSupportSkill
-      | undefined;
-    if (supportSkill === undefined) continue;
 
-    const level =
-      (ss.level || 20) +
-      calculateAddedSkillLevels(
-        loadoutMods,
-        supportSkill,
-        loadout,
-        config,
-        derivedCtx,
+    // Handle regular support skills
+    if (isRegularSupportSlot(ss)) {
+      const supportSkill = SupportSkills.find((s) => s.name === ss.name) as
+        | BaseSupportSkill
+        | undefined;
+      if (supportSkill === undefined) continue;
+
+      const level =
+        (ss.level ?? 20) +
+        calculateAddedSkillLevels(
+          loadoutMods,
+          supportSkill,
+          loadout,
+          config,
+          derivedCtx,
+        );
+      const mods = getSupportSkillMods(
+        supportSkill.name as SupportSkillName,
+        level,
       );
-    const mods = getSupportSkillMods(
-      supportSkill.name as SupportSkillName,
-      level,
-    );
-    for (const mod of mods) {
-      supportMods.push({
-        ...mod,
-        src: `Support: ${supportSkill.name} Lv.${level}`,
-      });
+      for (const mod of mods) {
+        supportMods.push({
+          ...mod,
+          src: `Support: ${supportSkill.name} Lv.${level}`,
+        });
+      }
     }
+    // Handle magnificent support skills
+    else if (isMagnificentSupportSlot(ss)) {
+      const mods = getMagnificentSupportSkillMods(
+        ss.name as MagnificentSupportSkillName,
+        ss.tier,
+        ss.rank,
+        ss.value,
+      );
+      for (const mod of mods) {
+        supportMods.push({
+          ...mod,
+          src: `Magnificent: ${ss.name} T${ss.tier} R${ss.rank}`,
+        });
+      }
+    }
+    // Noble and Activation Medium skills don't have mods implemented yet
   }
   return supportMods;
 };

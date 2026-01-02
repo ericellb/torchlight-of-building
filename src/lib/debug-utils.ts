@@ -7,9 +7,9 @@ import {
 } from "@/src/data/skill";
 import type {
   Affix,
+  BaseSupportSkillSlot,
   Loadout,
   SkillSlot,
-  SupportSkillSlot,
 } from "@/src/tli/core";
 import { isHeroTraitImplemented } from "@/src/tli/hero/hero_trait_mods";
 import { isSkillImplemented } from "@/src/tli/skills/is-implemented";
@@ -75,7 +75,7 @@ export const collectUnimplementedItems = (
     }
   };
 
-  const processSupportSlot = (slot: SupportSkillSlot | undefined): void => {
+  const processSupportSlot = (slot: BaseSupportSkillSlot | undefined): void => {
     if (slot === undefined) return;
     const skill = findSkillByName(slot.name);
     if (skill !== undefined && !isSkillImplemented(skill)) {

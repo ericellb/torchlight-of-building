@@ -35,7 +35,6 @@ function SkillsPage(): React.ReactNode {
     toggleSkillEnabled,
     setSkillLevel,
     setSupportSkill,
-    setSupportSkillLevel,
   } = useBuilderActions();
 
   const selectedActiveNames = useMemo(
@@ -65,11 +64,8 @@ function SkillsPage(): React.ReactNode {
               onSkillChange={(skillName) => setActiveSkill(slotKey, skillName)}
               onToggle={() => toggleSkillEnabled("active", slotKey)}
               onLevelChange={(level) => setSkillLevel("active", slotKey, level)}
-              onUpdateSupport={(supportKey, supportName) =>
-                setSupportSkill("active", slotKey, supportKey, supportName)
-              }
-              onUpdateSupportLevel={(supportKey, level) =>
-                setSupportSkillLevel("active", slotKey, supportKey, level)
+              onUpdateSupport={(supportKey, slot) =>
+                setSupportSkill("active", slotKey, supportKey, slot)
               }
             />
           ))}
@@ -92,11 +88,8 @@ function SkillsPage(): React.ReactNode {
               onLevelChange={(level) =>
                 setSkillLevel("passive", slotKey, level)
               }
-              onUpdateSupport={(supportKey, supportName) =>
-                setSupportSkill("passive", slotKey, supportKey, supportName)
-              }
-              onUpdateSupportLevel={(supportKey, level) =>
-                setSupportSkillLevel("passive", slotKey, supportKey, level)
+              onUpdateSupport={(supportKey, slot) =>
+                setSupportSkill("passive", slotKey, supportKey, slot)
               }
             />
           ))}

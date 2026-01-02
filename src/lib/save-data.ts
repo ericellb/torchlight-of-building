@@ -9,11 +9,15 @@ import type {
 import type { EquipmentType } from "@/src/tli/gear_data_types";
 
 export type {
+  ActivationMediumSkillSlot,
   ActiveSkillSlots,
+  BaseSupportSkillSlot,
+  MagnificentSupportSkillSlot,
+  NobleSupportSkillSlot,
   PassiveSkillSlots,
   SkillPage,
   SkillSlot,
-  SupportSkillSlot as SupportSkill,
+  SupportSkillSlot,
   SupportSkills,
 } from "@/src/tli/core";
 

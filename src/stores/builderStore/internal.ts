@@ -6,6 +6,7 @@ import { immer } from "zustand/middleware/immer";
 import { getBaseTraitForHero } from "../../lib/hero-utils";
 import type {
   AllocatedTalentNode,
+  BaseSupportSkillSlot,
   ConfigurationPage,
   CraftedInverseImage,
   CraftedPrism,
@@ -17,6 +18,7 @@ import type {
   ReflectedAllocatedNode,
   RingSlotState,
   SaveData,
+  SupportSkillSlot,
 } from "../../lib/save-data";
 import type { SavesIndex } from "../../lib/saves";
 import {
@@ -611,7 +613,7 @@ export const internalStore = create(
         skillType: "active" | "passive",
         skillSlot: 1 | 2 | 3 | 4 | 5,
         supportSlot: 1 | 2 | 3 | 4 | 5,
-        supportName: string | undefined,
+        supportSkill: BaseSupportSkillSlot | undefined,
       ) => {
         set((state) => {
           const skillSlots =
@@ -621,8 +623,7 @@ export const internalStore = create(
                   .passiveSkills as typeof state.saveData.skillPage.activeSkills);
           const skill = skillSlots[skillSlot];
           if (skill === undefined) return;
-          skill.supportSkills[supportSlot] =
-            supportName !== undefined ? { name: supportName } : undefined;
+          skill.supportSkills[supportSlot] = supportSkill;
         });
       },
 
@@ -674,8 +675,9 @@ export const internalStore = create(
           const skill = skillSlots[skillSlot];
           if (skill === undefined) return;
           const support = skill.supportSkills[supportSlot];
-          if (support === undefined) return;
-          support.level = level;
+          // Only regular support skills have level property (not magnificent with tier/rank/value)
+          if (support === undefined || "tier" in support) return;
+          (support as SupportSkillSlot).level = level;
         });
       },
 

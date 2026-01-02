@@ -70,8 +70,8 @@ describe("getMagnificentSupportSkillMods", () => {
     }).toThrow("out of range");
   });
 
-  it("should return empty array for skill without factory", () => {
-    // Use a magnificent support skill that doesn't have a factory
+  it("should return empty array for skill without factory or rankValues", () => {
+    // Use a magnificent support skill that doesn't have a factory or rankValues
     const mods = getMagnificentSupportSkillMods(
       "Burning Shot: Fiery Blast (Magnificent)",
       0,

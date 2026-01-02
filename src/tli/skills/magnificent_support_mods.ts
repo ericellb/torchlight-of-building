@@ -5,6 +5,7 @@ import type {
 } from "@/src/data/skill/types";
 import type { Mod } from "../mod";
 import { magnificentSupportSkillModFactories } from "./magnificent_support_factories";
+import { v } from "./types";
 
 /**
  * Get mods for a magnificent support skill at the specified tier, rank, and value.
@@ -21,12 +22,6 @@ export const getMagnificentSupportSkillMods = (
   rank: 1 | 2 | 3 | 4 | 5,
   value: number,
 ): Mod[] => {
-  const factory = magnificentSupportSkillModFactories[skillName];
-  if (factory === undefined) {
-    // Skill has no tier/rank/value-scaling mods
-    return [];
-  }
-
   // Get skill data from generated magnificent support skills
   const skill = MagnificentSupportSkills.find((s) => s.name === skillName) as
     | BaseMagnificentSupportSkill
@@ -50,21 +45,29 @@ export const getMagnificentSupportSkillMods = (
     }
   }
 
-  // Flatten rankValues and constantValues into a single Record<string, number[]>
-  // Constants are expanded to 5-element arrays so v(vals.x, rank) works uniformly
-  const vals: Record<string, readonly number[]> = {};
-
-  if (skill.rankValues !== undefined) {
-    for (const [key, arr] of Object.entries(skill.rankValues)) {
-      vals[key] = arr;
-    }
-  }
-
+  // Build constant values for factory (direct numbers, not arrays)
+  const vals: Record<string, number> = {};
   if (skill.constantValues !== undefined) {
     for (const [key, num] of Object.entries(skill.constantValues)) {
-      vals[key] = [num, num, num, num, num];
+      vals[key] = num;
     }
   }
 
-  return factory(tier, rank, value, vals);
+  // Get factory mods (if factory exists)
+  const factory = magnificentSupportSkillModFactories[skillName];
+  const factoryMods = factory !== undefined ? factory(tier, value, vals) : [];
+
+  // Always include rank-based damage mod (present in all magnificent supports)
+  const rankDmgPct = skill.rankValues?.rankDmgPct;
+  if (rankDmgPct !== undefined) {
+    const rankDmgMod: Mod = {
+      type: "DmgPct",
+      value: v(rankDmgPct, rank),
+      dmgModType: "global",
+      addn: true,
+    };
+    return [rankDmgMod, ...factoryMods];
+  }
+
+  return factoryMods;
 };

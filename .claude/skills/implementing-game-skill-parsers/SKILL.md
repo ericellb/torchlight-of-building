@@ -265,9 +265,9 @@ Magnificent support skills use **tier/rank/value** scaling instead of level scal
 
 ### Affix Types
 
-- **Tier-scaled**: Value ranges per tier from progression table (e.g., tier 0: 19-23%, tier 1: 16-18%)
-- **Rank-scaled**: 5-element arrays indexed by rank (e.g., `[0, 5, 10, 15, 20]` for ranks 1-5)
-- **Constant**: Same value across all tiers/ranks (e.g., +25% Projectile Size)
+- **Tier-scaled**: Value ranges per tier from progression table (e.g., tier 0: 19-23%, tier 1: 16-18%). Passed as `value` parameter to factory.
+- **Rank-scaled**: 5-element arrays indexed by rank (e.g., `[0, 5, 10, 15, 20]` for ranks 1-5). The `rankDmgPct` mod is auto-included by `getMagnificentSupportSkillMods`.
+- **Constant**: Same value across all tiers/ranks (e.g., +25% Projectile Size). Passed as direct numbers in factory `vals`.
 
 ### File Locations
 
@@ -310,18 +310,18 @@ export const burningCombustionParser: MagnificentLevelParser = (input) => {
 
 ### Factory Structure
 
-Factory receives flat `Record<string, readonly number[]>` - constants are expanded to 5-element arrays at runtime:
+Factory receives `(tier, value, vals)` where `vals` contains constants as direct numbers.
+The rank-based damage mod (`rankDmgPct`) is **auto-included** by `getMagnificentSupportSkillMods`.
 
 ```typescript
-"Burning Shot: Combustion (Magnificent)": (_tier, rank, value, vals): Mod[] => [
+"Burning Shot: Combustion (Magnificent)": (_tier, value, vals): Mod[] => [
   // Tier-scaled: use value parameter directly
   { type: "DmgPct", value, dmgModType: "global", addn: true },
-  // Rank-scaled: use v(vals.key, rank)
-  { type: "DmgPct", value: v(vals.rankDmgPct, rank), dmgModType: "global", addn: true },
-  // Constants: also use v(vals.key, rank) - array is [x, x, x, x, x]
-  { type: "ProjectileSizePct", value: v(vals.projectileSizePct, rank) },
-  { type: "IgniteDurationPct", value: v(vals.igniteDurationPct, rank) },
-  { type: "SkillEffDurationPct", value: v(vals.durationPct, rank) },
+  // rankDmgPct mod is auto-included by getMagnificentSupportSkillMods
+  // Constants: access directly from vals
+  { type: "ProjectileSizePct", value: vals.projectileSizePct },
+  { type: "IgniteDurationPct", value: vals.igniteDurationPct },
+  { type: "SkillEffDurationPct", value: vals.durationPct },
 ],
 ```
 
@@ -334,7 +334,7 @@ getMagnificentSupportSkillMods(
   5,    // rank (5 = max)
   23,   // value within tier 0's range (19-23)
 )
-// Returns: DmgPct 23%, DmgPct 20%, ProjectileSizePct 25%, etc.
+// Returns: DmgPct 20% (rank), DmgPct 23% (tier), ProjectileSizePct 25%, etc.
 ```
 
 ### Registration
@@ -352,6 +352,8 @@ export const MAGNIFICENT_SUPPORT_PARSERS: MagnificentSkillParserEntry[] = [
 |--------|---------------|-------------------|
 | Scaling | Level 1-40 | Tier 0-2, Rank 1-5, Value |
 | Progression table | 40 rows | 3 rows (tiers) |
-| Values array | 40 elements | 5 elements (ranks) |
-| Constants | `createConstantLevels(x)` → 40 elements | Expanded to 5 elements at runtime |
-| Factory vals | `Record<string, readonly number[]>` | Same type, but 5-element arrays |
+| Values array | 40 elements | 5 elements (ranks) for `rankValues` |
+| Constants | `createConstantLevels(x)` → 40 elements | Direct numbers in factory `vals` |
+| Factory signature | `(level, vals)` | `(tier, value, vals)` |
+| Factory vals type | `Record<string, readonly number[]>` | `Record<string, number>` (constants only) |
+| Rank damage mod | N/A | Auto-included by `getMagnificentSupportSkillMods` |

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   SearchableSelect,
   type SearchableSelectOption,
@@ -20,8 +20,13 @@ import type {
   NobleSupportSkillName,
   SupportSkillName,
 } from "@/src/data/skill/types";
-import type { BaseSupportSkillSlot } from "@/src/lib/save-data";
+import { getWorstMagnificentDefaults } from "@/src/lib/magnificent-utils";
+import type {
+  BaseSupportSkillSlot,
+  MagnificentSupportSkillSlot,
+} from "@/src/lib/save-data";
 import { listAvailableSupports } from "@/src/lib/skill-utils";
+import { MagnificentEditModal } from "./MagnificentEditModal";
 import { OptionWithSkillTooltip } from "./OptionWithSkillTooltip";
 import { SkillTooltipContent } from "./SkillTooltipContent";
 
@@ -37,20 +42,6 @@ const SKILL_LEVEL_OPTIONS = Array.from({ length: 20 }, (_, i) => ({
   value: i + 1,
   label: `Lv. ${i + 1}`,
 }));
-
-const TIER_OPTIONS = [
-  { value: 0 as const, label: "Tier 0" },
-  { value: 1 as const, label: "Tier 1" },
-  { value: 2 as const, label: "Tier 2" },
-];
-
-const RANK_OPTIONS = [
-  { value: 1 as const, label: "Rank 1" },
-  { value: 2 as const, label: "Rank 2" },
-  { value: 3 as const, label: "Rank 3" },
-  { value: 4 as const, label: "Rank 4" },
-  { value: 5 as const, label: "Rank 5" },
-];
 
 type SupportSkillType =
   | "regular"
@@ -76,21 +67,6 @@ const getMagnificentSkill = (
   return MagnificentSupportSkills.find((s) => s.name === skillName);
 };
 
-const getValueOptions = (
-  skill: BaseMagnificentSupportSkill,
-  tier: 0 | 1 | 2,
-): { value: number; label: string }[] => {
-  if (skill.tierValues === undefined) return [];
-  const firstKey = Object.keys(skill.tierValues)[0];
-  if (firstKey === undefined) return [];
-  const range = skill.tierValues[firstKey][tier];
-  const options: { value: number; label: string }[] = [];
-  for (let v = range.min; v <= range.max; v++) {
-    options.push({ value: v, label: String(v) });
-  }
-  return options;
-};
-
 export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
   mainSkill,
   selectedSlot,
@@ -98,11 +74,20 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
   onChange,
   slotIndex,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const selectedSkillName = selectedSlot?.name;
   const skillType = useMemo(
     () => getSkillType(selectedSkillName),
     [selectedSkillName],
   );
+
+  // Get magnificent skill data for modal
+  const magnificentSkill = useMemo(() => {
+    if (skillType !== "magnificent" || selectedSkillName === undefined)
+      return undefined;
+    return getMagnificentSkill(selectedSkillName);
+  }, [skillType, selectedSkillName]);
 
   const { options, groups } = useMemo(() => {
     // Combine all skill types for the flat options list
@@ -212,18 +197,15 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
         break;
       case "magnificent": {
         const magSkill = getMagnificentSkill(skillName);
-        const valueOptions =
-          magSkill !== undefined ? getValueOptions(magSkill, 0) : [];
-        const defaultValue =
-          valueOptions.length > 0
-            ? valueOptions[valueOptions.length - 1].value
-            : 0;
-        onChange({
-          name: skillName as MagnificentSupportSkillName,
-          tier: 0,
-          rank: 5,
-          value: defaultValue,
-        });
+        if (magSkill !== undefined) {
+          const defaults = getWorstMagnificentDefaults(magSkill);
+          onChange({
+            name: skillName as MagnificentSupportSkillName,
+            tier: defaults.tier,
+            rank: defaults.rank,
+            value: defaults.value,
+          });
+        }
         break;
       }
       case "noble":
@@ -251,56 +233,10 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     });
   };
 
-  const handleTierChange = (tier: 0 | 1 | 2): void => {
-    if (
-      selectedSlot === undefined ||
-      skillType !== "magnificent" ||
-      !("tier" in selectedSlot)
-    )
-      return;
-    const magSkill = getMagnificentSkill(selectedSlot.name);
-    const valueOptions =
-      magSkill !== undefined ? getValueOptions(magSkill, tier) : [];
-    const newValue =
-      valueOptions.length > 0
-        ? valueOptions[valueOptions.length - 1].value
-        : selectedSlot.value;
-    onChange({
-      name: selectedSlot.name as MagnificentSupportSkillName,
-      tier,
-      rank: selectedSlot.rank,
-      value: newValue,
-    });
-  };
-
-  const handleRankChange = (rank: 1 | 2 | 3 | 4 | 5): void => {
-    if (
-      selectedSlot === undefined ||
-      skillType !== "magnificent" ||
-      !("rank" in selectedSlot)
-    )
-      return;
-    onChange({
-      name: selectedSlot.name as MagnificentSupportSkillName,
-      tier: selectedSlot.tier,
-      rank,
-      value: selectedSlot.value,
-    });
-  };
-
-  const handleValueChange = (value: number): void => {
-    if (
-      selectedSlot === undefined ||
-      skillType !== "magnificent" ||
-      !("value" in selectedSlot)
-    )
-      return;
-    onChange({
-      name: selectedSlot.name as MagnificentSupportSkillName,
-      tier: selectedSlot.tier,
-      rank: selectedSlot.rank,
-      value,
-    });
+  const handleMagnificentConfirm = (
+    slot: MagnificentSupportSkillSlot,
+  ): void => {
+    onChange(slot);
   };
 
   const renderOption = (
@@ -326,74 +262,74 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
     );
   };
 
-  // Get magnificent skill data for value options
-  const magnificentValueOptions = useMemo(() => {
-    if (
-      skillType !== "magnificent" ||
-      selectedSlot === undefined ||
-      !("tier" in selectedSlot)
-    )
-      return [];
-    const magSkill = getMagnificentSkill(selectedSlot.name);
-    if (magSkill === undefined) return [];
-    return getValueOptions(magSkill, selectedSlot.tier);
-  }, [skillType, selectedSlot]);
-
   return (
-    <div className="flex items-center gap-2 flex-1">
-      <SearchableSelect
-        value={selectedSkillName}
-        onChange={handleSkillChange}
-        options={options}
-        groups={groups}
-        placeholder="<Empty slot>"
-        size="sm"
-        className="flex-1"
-        renderOption={renderOption}
-        renderSelectedTooltip={renderSelectedTooltip}
-      />
-      {skillType === "regular" && selectedSlot !== undefined && (
+    <>
+      <div className="flex items-center gap-2 flex-1">
         <SearchableSelect
-          value={"level" in selectedSlot ? (selectedSlot.level ?? 20) : 20}
-          onChange={(val) => val !== undefined && handleLevelChange(val)}
-          options={SKILL_LEVEL_OPTIONS}
-          placeholder="Lv."
+          value={selectedSkillName}
+          onChange={handleSkillChange}
+          options={options}
+          groups={groups}
+          placeholder="<Empty slot>"
           size="sm"
-          className="w-20"
+          className="flex-1"
+          renderOption={renderOption}
+          renderSelectedTooltip={renderSelectedTooltip}
         />
-      )}
-      {skillType === "magnificent" &&
+        {skillType === "regular" && selectedSlot !== undefined && (
+          <SearchableSelect
+            value={"level" in selectedSlot ? (selectedSlot.level ?? 20) : 20}
+            onChange={(val) => val !== undefined && handleLevelChange(val)}
+            options={SKILL_LEVEL_OPTIONS}
+            placeholder="Lv."
+            size="sm"
+            className="w-20"
+          />
+        )}
+        {skillType === "magnificent" &&
+          selectedSlot !== undefined &&
+          "tier" in selectedSlot && (
+            <>
+              <span className="text-xs text-zinc-500 font-medium">
+                T{selectedSlot.tier} R{selectedSlot.rank}
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="p-1 text-zinc-400 hover:text-zinc-200 transition-colors"
+                title="Edit magnificent support"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                  <path d="m15 5 4 4" />
+                </svg>
+              </button>
+            </>
+          )}
+      </div>
+
+      {/* Magnificent Edit Modal */}
+      {magnificentSkill !== undefined &&
         selectedSlot !== undefined &&
         "tier" in selectedSlot && (
-          <>
-            <SearchableSelect
-              value={selectedSlot.tier}
-              onChange={(val) => val !== undefined && handleTierChange(val)}
-              options={TIER_OPTIONS}
-              placeholder="Tier"
-              size="sm"
-              className="w-20"
-            />
-            <SearchableSelect
-              value={selectedSlot.rank}
-              onChange={(val) => val !== undefined && handleRankChange(val)}
-              options={RANK_OPTIONS}
-              placeholder="Rank"
-              size="sm"
-              className="w-20"
-            />
-            {magnificentValueOptions.length > 0 && (
-              <SearchableSelect
-                value={selectedSlot.value}
-                onChange={(val) => val !== undefined && handleValueChange(val)}
-                options={magnificentValueOptions}
-                placeholder="Value"
-                size="sm"
-                className="w-16"
-              />
-            )}
-          </>
+          <MagnificentEditModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            skill={magnificentSkill}
+            currentSlot={selectedSlot}
+            onConfirm={handleMagnificentConfirm}
+          />
         )}
-    </div>
+    </>
   );
 };

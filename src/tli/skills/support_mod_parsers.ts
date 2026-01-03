@@ -38,7 +38,7 @@ const parseWillpowerBlob = (input: string): Mod[] | undefined => {
       type: "DmgPct",
       value: parseFloat(dmgMatch[1]),
       dmgModType: GLOBAL,
-      addn: false, // "increased" damage, not "additional/more"
+      addn: true,
       per: { stackable: "willpower" as const },
     });
   }

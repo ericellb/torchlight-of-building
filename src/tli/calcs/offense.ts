@@ -17,7 +17,6 @@ import {
   type SkillOffenseOfType,
   type SkillOffenseType,
   type SkillTag,
-  type SupportSkillName,
   SupportSkills,
 } from "../../data/skill";
 import type { DmgModType } from "../constants";
@@ -41,7 +40,7 @@ import type {
 } from "../mod";
 import { getActiveSkillMods } from "../skills/active_mods";
 import { getPassiveSkillMods } from "../skills/passive_mods";
-import { getSupportSkillMods } from "../skills/support_mods";
+import { buildSupportSkillAffixes } from "../storage/load-save";
 import { getAllAffixes, getGearAffixes } from "./affix-collectors";
 import type { OffenseSkillName } from "./skill_confs";
 import { type ModWithValue, multModValue, multValue } from "./util";
@@ -1505,15 +1504,19 @@ const resolveSelectedSkillSupportMods = (
           config,
           derivedCtx,
         );
-      const mods = getSupportSkillMods(
-        supportSkill.name as SupportSkillName,
-        level,
-      );
-      for (const mod of mods) {
-        supportMods.push({
-          ...mod,
-          src: `Support: ${supportSkill.name} Lv.${level}`,
-        });
+
+      // Build affixes with the calculated level (includes added skill levels)
+      // This ensures level bonuses are properly applied to templated mods
+      const affixes = buildSupportSkillAffixes(ss.name, level);
+      for (const affix of affixes) {
+        if (affix.mods !== undefined) {
+          for (const { mod } of affix.mods) {
+            supportMods.push({
+              ...mod,
+              src: `Support: ${ss.name} Lv.${level}`,
+            });
+          }
+        }
       }
     }
     // Handle magnificent support skills

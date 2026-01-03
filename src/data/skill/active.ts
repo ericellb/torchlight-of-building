@@ -2047,4 +2047,4 @@ export const ActiveSkills = [
       ],
     },
   },
-] as const satisfies readonly (BaseActiveSkill & Record<string, unknown>)[];
+] as const satisfies readonly BaseActiveSkill[];

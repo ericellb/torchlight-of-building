@@ -13,9 +13,9 @@ import {
   type BaseSupportSkill,
   SKILL_TAGS,
   type SkillTag,
+  type SupportSkillTemplate,
   type SupportTarget,
 } from "../data/skill/types";
-import { supportSkillModFactories } from "../tli/skills/support_factories";
 import { readAllTlidbSkills, type TlidbSkillFile } from "./lib/tlidb";
 import { classifyWithRegex } from "./skill_kind_patterns";
 import { getParserForSkill } from "./skills";
@@ -23,8 +23,13 @@ import { buildActivationMediumAffixDefs } from "./skills/activation_medium_parse
 import {
   extractActivationMediumProgressionTable,
   extractProgressionTable,
+  parseNumericValue,
 } from "./skills/progression_table";
-import type { SkillCategory, SupportParserInput } from "./skills/types";
+import type {
+  ProgressionColumn,
+  SkillCategory,
+  SupportParserInput,
+} from "./skills/types";
 
 interface RawSkill {
   type: string;
@@ -34,6 +39,7 @@ interface RawSkill {
   mainStats?: ("str" | "dex" | "int")[];
   parsedLevelModValues?: Record<string, Record<number, number>>;
   parsedAffixDefs?: Record<0 | 1 | 2 | 3, ActivationMediumAffixDef[]>;
+  progressionTable?: ProgressionColumn[];
 }
 
 // Set for fast tag validation
@@ -529,18 +535,25 @@ const extractSkillFromTlidbHtml = (
     }
   });
 
-  // Check for registered parser and extract level mod values if available
+  // Extract progression table for support skills (used for building fixedAffixes and templates)
+  let progressionTable: ProgressionColumn[] | undefined;
+  if (skillType === "Support") {
+    progressionTable = extractProgressionTable($);
+  }
+
+  // Check for registered parser and extract level mod values for active/passive skills
   const parser = getParserForSkill(name, file.category as SkillCategory);
   let parsedLevelModValues: Record<string, Record<number, number>> | undefined;
 
   // Skills that extract values from description only (no progression table in HTML)
   const SKILLS_WITHOUT_PROGRESSION_TABLE = new Set(["Charging Warcry"]);
 
-  if (parser !== undefined) {
-    const progressionTable = extractProgressionTable($);
+  // Only run parser for non-support skills (support skills use the new approach)
+  if (parser !== undefined && skillType !== "Support") {
+    const parserProgressionTable = extractProgressionTable($);
 
     if (
-      progressionTable === undefined &&
+      parserProgressionTable === undefined &&
       !SKILLS_WITHOUT_PROGRESSION_TABLE.has(name)
     ) {
       throw new Error(`No progression table found for "${name}"`);
@@ -549,7 +562,7 @@ const extractSkillFromTlidbHtml = (
     const parserInput: SupportParserInput = {
       skillName: name,
       description,
-      progressionTable: progressionTable ?? [],
+      progressionTable: parserProgressionTable ?? [],
     };
     parsedLevelModValues = parser.parser(parserInput);
   }
@@ -574,6 +587,7 @@ const extractSkillFromTlidbHtml = (
     mainStats,
     parsedLevelModValues,
     parsedAffixDefs,
+    progressionTable,
   };
 };
 
@@ -621,6 +635,102 @@ const convertParsedValuesToLevelValues = (
   return result;
 };
 
+/**
+ * Build support skill affix data from description and progression table.
+ * Determines which affixes are fixed (constant) vs templated (level-scaling).
+ *
+ * Algorithm:
+ * 1. Get affix lines from description[1] (second description block)
+ * 2. For each affix line, check if it matches any progression table column header
+ * 3. If header match found: create template by replacing the numeric value with {value}
+ * 4. If no match: add to fixed affixes
+ */
+const buildSupportSkillAffixData = (
+  description: string[],
+  progressionTable: ProgressionColumn[],
+  _skillName: string,
+): { fixedAffixes: string[]; templates: SupportSkillTemplate[] } => {
+  const fixedAffixes: string[] = [];
+  const templates: SupportSkillTemplate[] = [];
+
+  // Get the affix lines from description[1] (the second description block)
+  const affixDescription = description[1];
+  if (affixDescription === undefined) {
+    return { fixedAffixes, templates };
+  }
+
+  const affixLines = affixDescription
+    .split("\n")
+    .filter((line) => line.trim().length > 0);
+
+  for (const affixLine of affixLines) {
+    // Normalize for comparison (lowercase, trim)
+    const normalizedLine = affixLine.toLowerCase().trim();
+
+    // Try to find a matching progression table column header
+    let matchedColumn: ProgressionColumn | undefined;
+
+    for (const column of progressionTable) {
+      // Normalize the header for comparison
+      const normalizedHeader = column.header.toLowerCase().trim();
+
+      // Check if the affix line matches the header
+      // The header should contain the same text pattern, with the first row value embedded
+      if (normalizedLine === normalizedHeader) {
+        matchedColumn = column;
+        break;
+      }
+    }
+
+    if (matchedColumn !== undefined) {
+      // This is a templated affix - extract the value and create a template
+      const firstRowValue = matchedColumn.rows[1];
+      if (firstRowValue === undefined) {
+        // No first row value, treat as fixed affix
+        fixedAffixes.push(affixLine);
+        continue;
+      }
+
+      // Parse all level values from the column
+      const levelValues: number[] = [];
+      for (let level = 1; level <= 40; level++) {
+        const valueStr = matchedColumn.rows[level];
+        if (valueStr === undefined) {
+          // Missing level, skip this column
+          fixedAffixes.push(affixLine);
+          break;
+        }
+        levelValues.push(parseNumericValue(valueStr));
+      }
+
+      if (levelValues.length !== 40) {
+        continue; // Already added to fixedAffixes
+      }
+
+      // Create the template by replacing the numeric value in the affix line with {value}
+      // The value in the affix line should match the first row value
+      const firstValue = parseNumericValue(firstRowValue);
+
+      // Build regex pattern to match the numeric value (handles +/- prefix and % suffix)
+      // The value could be "16", "+16", "-15", "5.25", etc.
+      const valueStr = String(firstValue);
+      // Escape regex special chars and build pattern to match the value with optional +/- and %
+      const escapedValue = valueStr.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      // Pattern: optional +/-, the value, optional %
+      const valuePattern = new RegExp(`([+-]?)${escapedValue}(%?)`, "i");
+
+      const template = affixLine.replace(valuePattern, "$1{value}$2");
+
+      templates.push({ template, levelValues });
+    } else {
+      // No matching header - this is a fixed affix
+      fixedAffixes.push(affixLine);
+    }
+  }
+
+  return { fixedAffixes, templates };
+};
+
 const createTestActiveSkill = (): BaseActiveSkill => {
   // 40 levels of value 100 each (100% = deals 100% weapon damage, 100% added damage effectiveness)
   const constantValues = Array.from({ length: 40 }, () => 100);
@@ -660,7 +770,7 @@ const generateActiveSkillFile = (
 ): string => {
   return `import type { BaseActiveSkill } from "./types";
 
-export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly (BaseActiveSkill & Record<string, unknown>)[];
+export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly BaseActiveSkill[];
 `;
 };
 
@@ -670,7 +780,7 @@ const generateBaseSkillFile = (
 ): string => {
   return `import type { BaseSkill } from "./types";
 
-export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly (BaseSkill & Record<string, unknown>)[];
+export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly BaseSkill[];
 `;
 };
 
@@ -680,7 +790,7 @@ const generatePassiveSkillFile = (
 ): string => {
   return `import type { BasePassiveSkill } from "./types";
 
-export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly (BasePassiveSkill & Record<string, unknown>)[];
+export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly BasePassiveSkill[];
 `;
 };
 
@@ -690,7 +800,7 @@ const generateSupportSkillFile = (
 ): string => {
   return `import type { BaseSupportSkill } from "./types";
 
-export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly (BaseSupportSkill & Record<string, unknown>)[];
+export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly BaseSupportSkill[];
 `;
 };
 
@@ -700,7 +810,7 @@ const generateMagnificentSupportSkillFile = (
 ): string => {
   return `import type { BaseMagnificentSupportSkill } from "./types";
 
-export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly (BaseMagnificentSupportSkill & Record<string, unknown>)[];
+export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly BaseMagnificentSupportSkill[];
 `;
 };
 
@@ -710,7 +820,7 @@ const generateNobleSupportSkillFile = (
 ): string => {
   return `import type { BaseNobleSupportSkill } from "./types";
 
-export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly (BaseNobleSupportSkill & Record<string, unknown>)[];
+export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly BaseNobleSupportSkill[];
 `;
 };
 
@@ -720,7 +830,7 @@ const generateActivationMediumSkillFile = (
 ): string => {
   return `import type { BaseActivationMediumSkill } from "./types";
 
-export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly (BaseActivationMediumSkill & Record<string, unknown>)[];
+export const ${constName} = ${toTypeScript(skills)} as const satisfies readonly BaseActivationMediumSkill[];
 `;
 };
 
@@ -781,20 +891,12 @@ const main = async (): Promise<void> => {
         raw.name,
       );
 
-      // Check if this skill has a factory (which means it has level-scaling mods)
-      const hasFactory =
-        supportSkillModFactories[
-          raw.name as keyof typeof supportSkillModFactories
-        ] !== undefined;
-
-      // Build levelValues from parsed values if factory exists
-      let levelValues: BaseSupportSkill["levelValues"];
-
-      if (hasFactory && raw.parsedLevelModValues !== undefined) {
-        levelValues = convertParsedValuesToLevelValues(
-          raw.parsedLevelModValues,
-        );
-      }
+      // Build fixedAffixes and templates from description and progression table
+      const { fixedAffixes, templates } = buildSupportSkillAffixData(
+        raw.description,
+        raw.progressionTable ?? [],
+        raw.name,
+      );
 
       const skillEntry: BaseSupportSkill = {
         type: raw.type as BaseSupportSkill["type"],
@@ -803,7 +905,8 @@ const main = async (): Promise<void> => {
         description: raw.description,
         supportTargets,
         cannotSupportTargets,
-        ...(levelValues !== undefined && { levelValues }),
+        ...(fixedAffixes.length > 0 && { fixedAffixes }),
+        ...(templates.length > 0 && { templates }),
       };
 
       if (!supportSkillGroups.has(skillType)) {

@@ -1387,5 +1387,4 @@ export const MagnificentSupportSkills = [
     ],
     supportTarget: "Wilting Beam",
   },
-] as const satisfies readonly (BaseMagnificentSupportSkill &
-  Record<string, unknown>)[];
+] as const satisfies readonly BaseMagnificentSupportSkill[];

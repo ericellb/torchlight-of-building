@@ -1635,5 +1635,4 @@ export const ActivationMediumSkills = [
       ],
     },
   },
-] as const satisfies readonly (BaseActivationMediumSkill &
-  Record<string, unknown>)[];
+] as const satisfies readonly BaseActivationMediumSkill[];

@@ -331,6 +331,7 @@ export interface SupportSkillSlot {
   skillType: "support";
   name: SupportSkillName;
   level?: number; // default 20
+  affixes: SupportAffix[];
 }
 
 export interface MagnificentSupportSkillSlot {

@@ -3,10 +3,12 @@ import { CoreTalents } from "@/src/data/core_talent/core_talents";
 import type { HeroName, HeroTraitName } from "@/src/data/hero_trait/types";
 import { Pactspirits } from "@/src/data/pactspirit/pactspirits";
 import type { Pactspirit } from "@/src/data/pactspirit/types";
+import { SupportSkills as SupportSkillsData } from "@/src/data/skill/support";
 import { MagnificentSupportSkills } from "@/src/data/skill/support_magnificent";
 import { NobleSupportSkills } from "@/src/data/skill/support_noble";
 import type {
   ActivationMediumSkillNmae,
+  BaseSupportSkill,
   MagnificentSupportSkillName,
   NobleSupportSkillName,
   SupportSkillName,
@@ -65,6 +67,7 @@ import type {
   PlacedSlate,
   SkillPage,
   SkillSlot,
+  SupportAffix,
   SupportSkills,
   TalentInventory,
   TalentNode,
@@ -808,15 +811,58 @@ const buildSpecialSupportAffixTexts = (
   ];
 };
 
+/**
+ * Build support affixes for a regular support skill.
+ * Exported for use in tests and other contexts that need to create support skill slots.
+ */
+export const buildSupportSkillAffixes = (
+  skillName: string,
+  level: number,
+): SupportAffix[] => {
+  const skill: BaseSupportSkill | undefined = SupportSkillsData.find(
+    (s) => s.name === skillName,
+  );
+  if (skill === undefined) return [];
+
+  // Build affix texts from fixedAffixes and instantiated templates
+  const affixTexts: string[] = [];
+
+  // Add fixed affixes
+  if (skill.fixedAffixes !== undefined) {
+    affixTexts.push(...skill.fixedAffixes);
+  }
+
+  // Instantiate templates with level value
+  if (skill.templates !== undefined) {
+    for (const tmpl of skill.templates) {
+      const clampedLevel = Math.min(Math.max(level, 1), 40);
+      const value = tmpl.levelValues[clampedLevel - 1];
+      const text = tmpl.template.replace("{value}", String(value));
+      affixTexts.push(text);
+    }
+  }
+
+  // Parse all affixes
+  const parsedMods = parseSupportAffixes(affixTexts);
+
+  return affixTexts.map((text, i) => ({ text, mods: parsedMods[i] }));
+};
+
 const convertSupportSkillSlot = (
   slot: SaveDataBaseSupportSkillSlot,
 ): BaseSupportSkillSlot => {
   switch (slot.skillType) {
-    case "support":
+    case "support": {
+      const level = slot.level ?? 20;
+      const affixes = buildSupportSkillAffixes(slot.name, level);
+
       return {
-        ...slot,
+        skillType: "support",
         name: slot.name as SupportSkillName,
+        level: slot.level,
+        affixes,
       };
+    }
     case "magnificent_support": {
       const skill = MagnificentSupportSkills.find((s) => s.name === slot.name);
       const affixTexts = buildSpecialSupportAffixTexts(

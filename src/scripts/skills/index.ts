@@ -18,113 +18,12 @@ import {
   preciseErosionAmplificationParser,
   spellAmplificationParser,
 } from "./passive_parsers";
-import {
-  auraAmplificationParser,
-  cataclysmParser,
-  controlSpellParser,
-  criticalStrikeDamageIncreaseParser,
-  criticalStrikeRatingIncreaseParser,
-  enhancedAilmentParser,
-  extendedDurationParser,
-  grudgeParser,
-  guardParser,
-  hauntParser,
-  increasedAreaParser,
-  massEffectParser,
-  passivationParser,
-  quickDecisionParser,
-  steamrollParser,
-  wellFoughtBattleParser,
-  willpowerParser,
-} from "./support_parsers";
 import type { SkillCategory, SkillParserEntry } from "./types";
 
+// Note: Support skill parsers have been removed. Support skills now use
+// generic text-based parsing via fixedAffixes and templates in generated data.
+
 export const SKILL_PARSERS: SkillParserEntry[] = [
-  {
-    skillName: "Willpower",
-    categories: ["support"],
-    parser: willpowerParser,
-  },
-  {
-    skillName: "Haunt",
-    categories: ["support"],
-    parser: hauntParser,
-  },
-  {
-    skillName: "Steamroll",
-    categories: ["support"],
-    parser: steamrollParser,
-  },
-  {
-    skillName: "Quick Decision",
-    categories: ["support"],
-    parser: quickDecisionParser,
-  },
-  {
-    skillName: "Critical Strike Damage Increase",
-    categories: ["support"],
-    parser: criticalStrikeDamageIncreaseParser,
-  },
-  {
-    skillName: "Critical Strike Rating Increase",
-    categories: ["support"],
-    parser: criticalStrikeRatingIncreaseParser,
-  },
-  {
-    skillName: "Enhanced Ailment",
-    categories: ["support"],
-    parser: enhancedAilmentParser,
-  },
-  {
-    skillName: "Well-Fought Battle",
-    categories: ["support"],
-    parser: wellFoughtBattleParser,
-  },
-  {
-    skillName: "Mass Effect",
-    categories: ["support"],
-    parser: massEffectParser,
-  },
-  {
-    skillName: "Guard",
-    categories: ["support"],
-    parser: guardParser,
-  },
-  {
-    skillName: "Passivation",
-    categories: ["support"],
-    parser: passivationParser,
-  },
-  {
-    skillName: "Control Spell",
-    categories: ["support"],
-    parser: controlSpellParser,
-  },
-  {
-    skillName: "Aura Amplification",
-    categories: ["support"],
-    parser: auraAmplificationParser,
-  },
-  {
-    skillName: "Cataclysm",
-    categories: ["support"],
-    parser: cataclysmParser,
-  },
-  {
-    skillName: "Increased Area",
-    categories: ["support"],
-    parser: increasedAreaParser,
-  },
-  {
-    skillName: "Extended Duration",
-    categories: ["support"],
-    parser: extendedDurationParser,
-  },
-  {
-    skillName: "Grudge",
-    categories: ["support"],
-    parser: grudgeParser,
-  },
   {
     skillName: "Frost Spike",
     categories: ["active"],

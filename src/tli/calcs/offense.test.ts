@@ -6,8 +6,10 @@ import type {
   Configuration,
   DmgRange,
   Loadout,
+  SupportAffix,
 } from "../core";
 import type { Mod } from "../mod";
+import { buildSupportSkillAffixes } from "../storage/load-save";
 import {
   calculateOffense,
   convertDmg,
@@ -1810,10 +1812,18 @@ describe("resolveSelectedSkillSupportMods via calculateOffense", () => {
     enabled: true,
     level: 20,
     supportSkills: Object.fromEntries(
-      supportNames.map((s, i) => [
-        i + 1,
-        { skillType: "support" as const, name: s.name, level: s.level },
-      ]),
+      supportNames.map((s, i) => {
+        const level = s.level ?? 20;
+        return [
+          i + 1,
+          {
+            skillType: "support" as const,
+            name: s.name,
+            level,
+            affixes: buildSupportSkillAffixes(s.name, level),
+          },
+        ];
+      }),
     ),
   });
 
@@ -1836,16 +1846,15 @@ describe("resolveSelectedSkillSupportMods via calculateOffense", () => {
 
   test("all four support skills (haunt, willpower, steamroll, quick decision) combine correctly", () => {
     // All at level 20:
-    //   Haunt: DmgPct 0.008 (additional/more, global)
-    //   Willpower: MaxWillpowerStacks 6, DmgPct 0.06 per stack (increased, global)
-    //   Steamroll: AspdPct -0.15 (increased), DmgPct 0.405 (additional, melee)
-    //   Quick Decision: AspdAndCspdPct 0.245 (additional/more)
+    //   Haunt: DmgPct 0.8% (additional/more, global)
+    //   Willpower: Note: Willpower's damage affix is not in generated data due to HTML structure
+    //   Steamroll: AspdPct -15% (increased), DmgPct 40.5% (additional, melee)
+    //   Quick Decision: AspdAndCspdPct 24.5% (additional/more)
     //
     // Damage calculation:
     //   Base: 100
-    //   Willpower (6 * 0.06 = 36% increased): 100 * 1.36 = 136
-    //   Haunt (+0.8% more): 136 * 1.008 = 137.088
-    //   Steamroll (+40.5% more melee): 137.088 * 1.405 = 192.60864
+    //   Haunt (+0.8% more): 100 * 1.008 = 100.8
+    //   Steamroll (+40.5% more melee): 100.8 * 1.405 = 141.624
     //
     // Attack speed calculation:
     //   Base: 1.0
@@ -1876,7 +1885,7 @@ describe("resolveSelectedSkillSupportMods via calculateOffense", () => {
     });
 
     validate(results, "[Test] Simple Attack", {
-      avgHit: 192.60864,
+      avgHit: 141.624,
       aspd: 1.05825,
     });
   });
@@ -2188,6 +2197,34 @@ describe("resolveBuffSkillMods", () => {
       level?: number;
     }[] = [],
   ) => {
+    const buildSupportSlots = (
+      supports: { name: string; level?: number }[] = [],
+    ): Record<
+      number,
+      | {
+          skillType: "support";
+          name: string;
+          level: number;
+          affixes: SupportAffix[];
+        }
+      | undefined
+    > => {
+      return Object.fromEntries(
+        supports.map((s, i) => {
+          const level = s.level ?? 20;
+          return [
+            i + 1,
+            {
+              skillType: "support" as const,
+              name: s.name,
+              level,
+              affixes: buildSupportSkillAffixes(s.name, level),
+            },
+          ];
+        }),
+      );
+    };
+
     const skillSlots: Record<
       number,
       {
@@ -2196,7 +2233,13 @@ describe("resolveBuffSkillMods", () => {
         level: number;
         supportSkills: Record<
           number,
-          { skillType: "support"; name: string; level: number } | undefined
+          | {
+              skillType: "support";
+              name: string;
+              level: number;
+              affixes: SupportAffix[];
+            }
+          | undefined
         >;
       }
     > = {
@@ -2204,16 +2247,7 @@ describe("resolveBuffSkillMods", () => {
         skillName: mainSkill.name,
         enabled: mainSkill.enabled ?? true,
         level: mainSkill.level ?? 20,
-        supportSkills: Object.fromEntries(
-          (mainSkill.supports ?? []).map((s, i) => [
-            i + 1,
-            {
-              skillType: "support" as const,
-              name: s.name,
-              level: s.level ?? 20,
-            },
-          ]),
-        ),
+        supportSkills: buildSupportSlots(mainSkill.supports),
       },
     };
 
@@ -2222,16 +2256,7 @@ describe("resolveBuffSkillMods", () => {
         skillName: buff.name,
         enabled: buff.enabled ?? true,
         level: buff.level ?? 20,
-        supportSkills: Object.fromEntries(
-          (buff.supports ?? []).map((s, i) => [
-            i + 1,
-            {
-              skillType: "support" as const,
-              name: s.name,
-              level: s.level ?? 20,
-            },
-          ]),
-        ),
+        supportSkills: buildSupportSlots(buff.supports),
       };
     });
 

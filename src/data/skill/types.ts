@@ -130,14 +130,27 @@ export type SupportTarget =
   // Can be applied to any skill with the Spell tags, but not Summon, Channeled, or Sentry skills.
   | "spell_burst";
 
+/**
+ * Template for a level-scaling support skill affix.
+ * The template string contains a {value} placeholder that gets replaced with
+ * the appropriate value from levelValues based on the skill's level.
+ */
+export interface SupportSkillTemplate {
+  /** Template string with {value} placeholder, e.g. "+{value}% additional damage for the supported skill" */
+  template: string;
+  /** 40-element array of values (index = level - 1) */
+  levelValues: readonly number[];
+}
+
 export interface BaseSupportSkill extends BaseSkill {
   // support can target skill if any of the targets match
   supportTargets: SupportTarget[];
   // cannot support any of the matched targets (takes precedence over supportTargets)
   cannotSupportTargets: SupportTarget[];
-  // Named value arrays for level-scaling mods (1-40).
-  // Keys must match factory function expectations in support_factories.ts.
-  levelValues?: LevelValues;
+  // Fixed affixes that don't scale with level
+  fixedAffixes?: readonly string[];
+  // Templates for affixes that scale with level
+  templates?: readonly SupportSkillTemplate[];
 }
 
 export interface BaseMagnificentSupportSkill extends BaseSkill {

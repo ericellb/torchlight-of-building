@@ -589,4 +589,4 @@ export const PassiveSkills = [
       "Activates the Aura, you and allies within a certain area gain the following buff:\n+34% additional Physical Damage",
     ],
   },
-] as const satisfies readonly (BasePassiveSkill & Record<string, unknown>)[];
+] as const satisfies readonly BasePassiveSkill[];

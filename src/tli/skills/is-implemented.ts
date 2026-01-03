@@ -2,11 +2,9 @@ import type {
   ActiveSkillName,
   BaseSkill,
   PassiveSkillName,
-  SupportSkillName,
 } from "@/src/data/skill/types";
 import { activeSkillModFactories } from "./active_factories";
 import { passiveSkillModFactories } from "./passive_factories";
-import { supportSkillModFactories } from "./support_factories";
 
 /**
  * Check if a skill has a factory implementation.
@@ -23,9 +21,8 @@ export const isSkillImplemented = (skill: BaseSkill): boolean => {
         passiveSkillModFactories[skill.name as PassiveSkillName] !== undefined
       );
     case "Support":
-      return (
-        supportSkillModFactories[skill.name as SupportSkillName] !== undefined
-      );
+      // All support skills are implemented via parser-based approach
+      return true;
     case "Support (Magnificent)":
       // All magnificent supports are implemented via parser-based approach
       return true;

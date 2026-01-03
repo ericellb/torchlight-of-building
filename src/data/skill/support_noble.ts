@@ -1468,5 +1468,4 @@ export const NobleSupportSkills = [
     ],
     supportTarget: "Wilting Beam",
   },
-] as const satisfies readonly (BaseNobleSupportSkill &
-  Record<string, unknown>)[];
+] as const satisfies readonly BaseNobleSupportSkill[];

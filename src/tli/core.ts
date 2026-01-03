@@ -31,6 +31,24 @@ export interface ActivationMediumAffix {
   mods?: ActivationMediumMod[];
 }
 
+export interface MagnificentSupportMod {
+  mod: Mod;
+}
+
+export interface MagnificentSupportAffix {
+  text: string;
+  mods?: MagnificentSupportMod[];
+}
+
+export interface NobleSupportMod {
+  mod: Mod;
+}
+
+export interface NobleSupportAffix {
+  text: string;
+  mods?: NobleSupportMod[];
+}
+
 export interface BaseStatLine {
   text: string;
   mods?: Mod[];
@@ -338,7 +356,7 @@ export interface MagnificentSupportSkillSlot {
   name: MagnificentSupportSkillName;
   tier: 0 | 1 | 2; // lower is better (tier 0 is best)
   rank: 1 | 2 | 3 | 4 | 5; // higher is better (rank 5 is max)
-  value: number; // specific value within the tier's range
+  affixes: MagnificentSupportAffix[];
 }
 
 export interface NobleSupportSkillSlot {
@@ -346,7 +364,7 @@ export interface NobleSupportSkillSlot {
   name: NobleSupportSkillName;
   tier: 0 | 1 | 2; // lower is better (tier 0 is best)
   rank: 1 | 2 | 3 | 4 | 5; // higher is better (rank 5 is max)
-  value: number; // specific value within the tier's range
+  affixes: NobleSupportAffix[];
 }
 
 export interface ActivationMediumSkillSlot {

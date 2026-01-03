@@ -20,6 +20,7 @@ export const MagnificentSupportSkillSlotSchema = z.object({
     z.literal(4),
     z.literal(5),
   ]),
+  craftedAffix: z.string(),
   value: z.number(),
 });
 
@@ -38,6 +39,7 @@ export const NobleSupportSkillSlotSchema = z.object({
     z.literal(4),
     z.literal(5),
   ]),
+  craftedAffix: z.string(),
   value: z.number(),
 });
 

@@ -173,15 +173,6 @@ export const NobleSupportSkills = [
       "(-7–-5)% additional damage for the supported skill",
     ],
     supportTarget: "Chain of Lightning",
-    tierValues: {
-      tierDmgPct: {
-        0: { min: -4, max: -1 },
-        1: { min: -7, max: -5 },
-        2: { min: -10, max: -8 },
-      },
-    },
-    rankValues: { rankDmgPct: [0, 5, 10, 15, 20] },
-    constantValues: { jumpOnKill: 1 },
   },
   {
     type: "Support (Noble)",

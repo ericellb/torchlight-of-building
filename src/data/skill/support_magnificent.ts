@@ -118,19 +118,6 @@ export const MagnificentSupportSkills = [
       "+(16–18)% additional damage for the supported skill",
     ],
     supportTarget: "Burning Shot",
-    tierValues: {
-      tierDmgPct: {
-        0: { min: 19, max: 23 },
-        1: { min: 16, max: 18 },
-        2: { min: 12, max: 14 },
-      },
-    },
-    rankValues: { rankDmgPct: [0, 5, 10, 15, 20] },
-    constantValues: {
-      projectileSizePct: 25,
-      igniteDurationPct: 15,
-      durationPct: 15,
-    },
   },
   {
     type: "Support (Magnificent)",
@@ -757,14 +744,6 @@ export const MagnificentSupportSkills = [
       "+(6.1–6.6)% additional damage for this skill for every link less than maximum links",
     ],
     supportTarget: "Mind Control",
-    tierValues: {
-      tierDmgPctPerMissingLink: {
-        0: { min: 7, max: 8 },
-        1: { min: 6.1, max: 6.6 },
-        2: { min: 5.2, max: 5.7 },
-      },
-    },
-    rankValues: { rankDmgPct: [0, 5, 10, 15, 20] },
   },
   {
     type: "Support (Magnificent)",

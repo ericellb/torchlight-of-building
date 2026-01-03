@@ -1,12 +1,10 @@
 import type {
   ActiveSkillName,
   BaseSkill,
-  MagnificentSupportSkillName,
   PassiveSkillName,
   SupportSkillName,
 } from "@/src/data/skill/types";
 import { activeSkillModFactories } from "./active_factories";
-import { magnificentSupportSkillModFactories } from "./magnificent_support_factories";
 import { passiveSkillModFactories } from "./passive_factories";
 import { supportSkillModFactories } from "./support_factories";
 
@@ -29,13 +27,13 @@ export const isSkillImplemented = (skill: BaseSkill): boolean => {
         supportSkillModFactories[skill.name as SupportSkillName] !== undefined
       );
     case "Support (Magnificent)":
-      return (
-        magnificentSupportSkillModFactories[
-          skill.name as MagnificentSupportSkillName
-        ] !== undefined
-      );
+      // All magnificent supports are implemented via parser-based approach
+      return true;
+    case "Support (Noble)":
+      // All noble supports are implemented via parser-based approach
+      return true;
     default:
-      // Noble, Activation Medium don't have factory patterns yet
+      // Activation Medium doesn't have factory patterns yet
       return false;
   }
 };

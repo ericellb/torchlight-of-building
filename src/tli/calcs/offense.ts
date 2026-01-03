@@ -11,8 +11,6 @@ import {
   type BaseSkill,
   type BaseSupportSkill,
   type ImplementedActiveSkillName,
-  type MagnificentSupportSkillName,
-  type NobleSupportSkillName,
   type PassiveSkillName,
   PassiveSkills,
   type SkillOffense,
@@ -42,8 +40,6 @@ import type {
   StatType,
 } from "../mod";
 import { getActiveSkillMods } from "../skills/active_mods";
-import { getMagnificentSupportSkillMods } from "../skills/magnificent_support_mods";
-import { getNobleSupportSkillMods } from "../skills/noble_support_mods";
 import { getPassiveSkillMods } from "../skills/passive_mods";
 import { getSupportSkillMods } from "../skills/support_mods";
 import { getAllAffixes, getGearAffixes } from "./affix-collectors";
@@ -1522,32 +1518,28 @@ const resolveSelectedSkillSupportMods = (
     }
     // Handle magnificent support skills
     else if (ss.skillType === "magnificent_support") {
-      const mods = getMagnificentSupportSkillMods(
-        ss.name as MagnificentSupportSkillName,
-        ss.tier,
-        ss.rank,
-        ss.value,
-      );
-      for (const mod of mods) {
-        supportMods.push({
-          ...mod,
-          src: `Magnificent: ${ss.name} T${ss.tier} R${ss.rank}`,
-        });
+      for (const affix of ss.affixes) {
+        if (affix.mods !== undefined) {
+          for (const { mod } of affix.mods) {
+            supportMods.push({
+              ...mod,
+              src: `Magnificent: ${ss.name} T${ss.tier} R${ss.rank}`,
+            });
+          }
+        }
       }
     }
     // Handle noble support skills
     else if (ss.skillType === "noble_support") {
-      const mods = getNobleSupportSkillMods(
-        ss.name as NobleSupportSkillName,
-        ss.tier,
-        ss.rank,
-        ss.value,
-      );
-      for (const mod of mods) {
-        supportMods.push({
-          ...mod,
-          src: `Noble: ${ss.name} T${ss.tier} R${ss.rank}`,
-        });
+      for (const affix of ss.affixes) {
+        if (affix.mods !== undefined) {
+          for (const { mod } of affix.mods) {
+            supportMods.push({
+              ...mod,
+              src: `Noble: ${ss.name} T${ss.tier} R${ss.rank}`,
+            });
+          }
+        }
       }
     }
     // Handle activation medium skills

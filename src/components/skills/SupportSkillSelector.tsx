@@ -25,14 +25,21 @@ import {
   getActivationMediumSkill,
   getWorstActivationMediumDefaults,
 } from "@/src/lib/activation-medium-utils";
-import type { BaseSupportSkillSlot as SaveDataBaseSupportSkillSlot } from "@/src/lib/save-data";
+import type {
+  BaseSupportSkillSlot as SaveDataBaseSupportSkillSlot,
+  MagnificentSupportSkillSlot as SaveDataMagnificentSlot,
+  NobleSupportSkillSlot as SaveDataNobleSlot,
+} from "@/src/lib/save-data";
 import { listAvailableSupports } from "@/src/lib/skill-utils";
-import { getWorstSpecialDefaults } from "@/src/lib/special-support-utils";
+import {
+  getWorstSpecialDefaults,
+  parseValueFromCraftedAffix,
+} from "@/src/lib/special-support-utils";
 import type {
   BaseSupportSkillSlot,
   ActivationMediumSkillSlot as LoadoutActivationMediumSkillSlot,
-  MagnificentSupportSkillSlot,
-  NobleSupportSkillSlot,
+  MagnificentSupportSkillSlot as LoadoutMagnificentSlot,
+  NobleSupportSkillSlot as LoadoutNobleSlot,
 } from "@/src/tli/core";
 import { ActivationMediumEditModal } from "./ActivationMediumEditModal";
 import { OptionWithSkillTooltip } from "./OptionWithSkillTooltip";
@@ -83,6 +90,42 @@ const getNobleSkill = (
   skillName: string,
 ): BaseNobleSupportSkill | undefined => {
   return NobleSupportSkills.find((s) => s.name === skillName);
+};
+
+/**
+ * Convert a loadout magnificent slot (with affixes) to a save-data slot (with craftedAffix).
+ */
+const toSaveDataMagnificentSlot = (
+  slot: LoadoutMagnificentSlot,
+): SaveDataMagnificentSlot => {
+  // The first affix text is the craftedAffix
+  const craftedAffix = slot.affixes[0]?.text ?? "";
+  const value = parseValueFromCraftedAffix(craftedAffix);
+  return {
+    skillType: "magnificent_support",
+    name: slot.name,
+    tier: slot.tier,
+    rank: slot.rank,
+    craftedAffix,
+    value,
+  };
+};
+
+/**
+ * Convert a loadout noble slot (with affixes) to a save-data slot (with craftedAffix).
+ */
+const toSaveDataNobleSlot = (slot: LoadoutNobleSlot): SaveDataNobleSlot => {
+  // The first affix text is the craftedAffix
+  const craftedAffix = slot.affixes[0]?.text ?? "";
+  const value = parseValueFromCraftedAffix(craftedAffix);
+  return {
+    skillType: "noble_support",
+    name: slot.name,
+    tier: slot.tier,
+    rank: slot.rank,
+    craftedAffix,
+    value,
+  };
 };
 
 export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
@@ -243,7 +286,8 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
             name: skillName as MagnificentSupportSkillName,
             tier: defaults.tier,
             rank: defaults.rank,
-            value: defaults.value,
+            craftedAffix: defaults.craftedAffix,
+            value: 0, // Value is now derived from craftedAffix, kept for schema compatibility
           });
         }
         break;
@@ -257,7 +301,8 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
             name: skillName as NobleSupportSkillName,
             tier: defaults.tier,
             rank: defaults.rank,
-            value: defaults.value,
+            craftedAffix: defaults.craftedAffix,
+            value: 0, // Value is now derived from craftedAffix, kept for schema compatibility
           });
         }
         break;
@@ -296,11 +341,13 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
   };
 
   const handleMagnificentConfirm = (slot: SpecialSupportSlot): void => {
-    onChange(slot as MagnificentSupportSkillSlot);
+    // SpecialSupportSlot from modal is save-data compatible
+    onChange(slot as SaveDataMagnificentSlot);
   };
 
   const handleNobleConfirm = (slot: SpecialSupportSlot): void => {
-    onChange(slot as NobleSupportSkillSlot);
+    // SpecialSupportSlot from modal is save-data compatible
+    onChange(slot as SaveDataNobleSlot);
   };
 
   const handleActivationMediumConfirm = (
@@ -454,12 +501,14 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
       {/* Magnificent Edit Modal */}
       {magnificentSkill !== undefined &&
         selectedSlot !== undefined &&
-        "tier" in selectedSlot && (
+        selectedSlot.skillType === "magnificent_support" && (
           <SpecialSupportEditModal
             isOpen={isMagnificentModalOpen}
             onClose={() => setIsMagnificentModalOpen(false)}
             skill={magnificentSkill}
-            currentSlot={selectedSlot as MagnificentSupportSkillSlot}
+            currentSlot={toSaveDataMagnificentSlot(
+              selectedSlot as LoadoutMagnificentSlot,
+            )}
             onConfirm={handleMagnificentConfirm}
             skillType="magnificent"
           />
@@ -468,12 +517,12 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
       {/* Noble Edit Modal */}
       {nobleSkill !== undefined &&
         selectedSlot !== undefined &&
-        "tier" in selectedSlot && (
+        selectedSlot.skillType === "noble_support" && (
           <SpecialSupportEditModal
             isOpen={isNobleModalOpen}
             onClose={() => setIsNobleModalOpen(false)}
             skill={nobleSkill}
-            currentSlot={selectedSlot as NobleSupportSkillSlot}
+            currentSlot={toSaveDataNobleSlot(selectedSlot as LoadoutNobleSlot)}
             onConfirm={handleNobleConfirm}
             skillType="noble"
           />

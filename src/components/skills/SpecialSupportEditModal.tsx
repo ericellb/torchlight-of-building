@@ -11,9 +11,12 @@ import type {
   NobleSupportSkillSlot,
 } from "@/src/lib/save-data";
 import {
+  findTierScaledDescription,
+  formatCraftedAffix,
   getQualityPercentage,
   getTierRange,
   interpolateSpecialValue,
+  parseValueFromCraftedAffix,
 } from "@/src/lib/special-support-utils";
 import {
   Modal,
@@ -52,6 +55,9 @@ const RANK_OPTIONS = [
   { value: 5 as const, label: "Rank 5" },
 ];
 
+// Rank damage bonus values: [0, 5, 10, 15, 20] for ranks 1-5
+const RANK_DAMAGE_VALUES = [0, 5, 10, 15, 20] as const;
+
 export const SpecialSupportEditModal = ({
   isOpen,
   onClose,
@@ -64,24 +70,30 @@ export const SpecialSupportEditModal = ({
   const [rank, setRank] = useState<1 | 2 | 3 | 4 | 5>(currentSlot.rank);
   const [percentage, setPercentage] = useState(0);
 
-  // Get the tier range for the current tier
-  const tierRange = getTierRange(skill, tier);
-  const hasTierValues = tierRange !== undefined;
+  // Get the tier range for the skill
+  const tierRange = getTierRange(skill);
+  const hasTierRange = tierRange !== undefined;
 
   // Calculate the value from percentage
-  const value = hasTierValues
+  const value = hasTierRange
     ? interpolateSpecialValue(tierRange, percentage)
     : 0;
+
+  // Generate the crafted affix string
+  const craftedAffix = formatCraftedAffix(skill, value);
 
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
       setTier(currentSlot.tier);
       setRank(currentSlot.rank);
-      // Calculate initial percentage from current value
-      const range = getTierRange(skill, currentSlot.tier);
+      // Calculate initial percentage from current crafted affix value
+      const range = getTierRange(skill);
       if (range !== undefined) {
-        setPercentage(getQualityPercentage(range, currentSlot.value));
+        const currentValue = parseValueFromCraftedAffix(
+          currentSlot.craftedAffix,
+        );
+        setPercentage(getQualityPercentage(range, currentValue));
       } else {
         setPercentage(0);
       }
@@ -100,53 +112,44 @@ export const SpecialSupportEditModal = ({
         ? (currentSlot.name as MagnificentSupportSkillName)
         : (currentSlot.name as NobleSupportSkillName);
 
-    onConfirm({
+    const slot = {
+      skillType:
+        skillType === "magnificent" ? "magnificent_support" : "noble_support",
       name: slotName,
       tier,
       rank,
+      craftedAffix,
       value,
-    } as SpecialSupportSlot);
+    } as SpecialSupportSlot;
+
+    onConfirm(slot);
     onClose();
   };
 
-  // Build preview text from skill description
+  // Build preview text showing the crafted affix, fixed affixes, and rank damage
   const getPreviewText = (): string => {
     const lines: string[] = [];
 
-    // Add tier-scaled value if applicable
-    if (hasTierValues) {
-      const tierValueKey = Object.keys(skill.tierValues ?? {})[0];
-      if (tierValueKey !== undefined) {
-        // Format value with sign (e.g., "+13%" or "-3%")
-        const formattedValue = value >= 0 ? `+${value}%` : `${value}%`;
-        lines.push(`${formattedValue} (${tierValueKey})`);
+    // Add tier-scaled crafted affix if applicable
+    if (hasTierRange && craftedAffix !== "") {
+      lines.push(craftedAffix);
+    }
+
+    // Find which description index contains the tier-scaled value
+    const tierScaled = findTierScaledDescription(skill);
+    const tierScaledIndex = tierScaled?.index ?? -1;
+
+    // Add fixed affixes (descriptions that are not [0] and not the tier-scaled one)
+    for (let i = 1; i < skill.description.length; i++) {
+      if (i !== tierScaledIndex) {
+        lines.push(skill.description[i]);
       }
     }
 
-    // Add rank-scaled values
-    if (skill.rankValues !== undefined) {
-      for (const [key, values] of Object.entries(skill.rankValues)) {
-        const rankValue = values[rank - 1];
-        const formattedValue =
-          rankValue >= 0 ? `+${rankValue}%` : `${rankValue}%`;
-        lines.push(`${formattedValue} (${key})`);
-      }
-    }
-
-    // Add constant values
-    if (skill.constantValues !== undefined) {
-      for (const [key, constValue] of Object.entries(skill.constantValues)) {
-        // Don't add % for non-percentage values (like jumpOnKill)
-        const isPercentage = key.toLowerCase().includes("pct");
-        const formattedValue = isPercentage
-          ? constValue >= 0
-            ? `+${constValue}%`
-            : `${constValue}%`
-          : constValue >= 0
-            ? `+${constValue}`
-            : `${constValue}`;
-        lines.push(`${formattedValue} (${key})`);
-      }
+    // Add rank damage bonus
+    const rankDmg = RANK_DAMAGE_VALUES[rank - 1];
+    if (rankDmg > 0) {
+      lines.push(`+${rankDmg}% additional damage for the supported skill`);
     }
 
     return lines.join("\n");
@@ -184,8 +187,8 @@ export const SpecialSupportEditModal = ({
           />
         </div>
 
-        {/* Quality slider (only if tier values exist) */}
-        {hasTierValues && (
+        {/* Quality slider (only if tier range exists) */}
+        {hasTierRange && (
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm text-zinc-400">Quality</label>

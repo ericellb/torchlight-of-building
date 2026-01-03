@@ -1,7 +1,6 @@
 import type {
   BaseMagnificentSupportSkill,
   BaseNobleSupportSkill,
-  MagnificentTierRange,
 } from "@/src/data/skill/types";
 
 /**
@@ -10,6 +9,60 @@ import type {
 export type SpecialSupportSkill =
   | BaseMagnificentSupportSkill
   | BaseNobleSupportSkill;
+
+/**
+ * Tier range with min and max values (parsed from description).
+ */
+export interface TierRange {
+  min: number;
+  max: number;
+}
+
+/** Regex pattern for matching tier ranges like (16-18) or (16–18) */
+const TIER_RANGE_PATTERN = /\((-?\d+(?:\.\d+)?)[–-](-?\d+(?:\.\d+)?)\)/;
+
+/**
+ * Parse a tier range from description text.
+ * Matches patterns like "(16-18)" or "(16–18)" (en-dash).
+ * @returns The parsed range or undefined if no range found
+ */
+export const parseTierRange = (text: string): TierRange | undefined => {
+  // Match patterns like (16-18) or (16–18) with optional decimals
+  const match = text.match(TIER_RANGE_PATTERN);
+  if (match === null) return undefined;
+  return {
+    min: parseFloat(match[1]),
+    max: parseFloat(match[2]),
+  };
+};
+
+/**
+ * Find the tier-scaled description in the skill's description array.
+ * Returns the description text and its index, or undefined if none found.
+ */
+export const findTierScaledDescription = (
+  skill: SpecialSupportSkill,
+): { text: string; index: number } | undefined => {
+  for (let i = 0; i < skill.description.length; i++) {
+    if (TIER_RANGE_PATTERN.test(skill.description[i])) {
+      return { text: skill.description[i], index: i };
+    }
+  }
+  return undefined;
+};
+
+/**
+ * Get the tier range for a special support skill.
+ * Searches through all descriptions to find the tier-scaled one.
+ * Returns undefined if no tier-scaled value exists.
+ */
+export const getTierRange = (
+  skill: SpecialSupportSkill,
+): TierRange | undefined => {
+  const tierScaled = findTierScaledDescription(skill);
+  if (tierScaled === undefined) return undefined;
+  return parseTierRange(tierScaled.text);
+};
 
 /**
  * Get the number of decimal places in a number.
@@ -24,7 +77,7 @@ const getDecimalPlaces = (num: number): number => {
  * Get the decimal places to use for a tier range.
  * Uses the maximum precision from min and max values.
  */
-export const getRangeDecimalPlaces = (range: MagnificentTierRange): number => {
+export const getRangeDecimalPlaces = (range: TierRange): number => {
   return Math.max(getDecimalPlaces(range.min), getDecimalPlaces(range.max));
 };
 
@@ -36,7 +89,7 @@ export const getRangeDecimalPlaces = (range: MagnificentTierRange): number => {
  * @returns The interpolated value with appropriate decimal precision
  */
 export const interpolateSpecialValue = (
-  range: MagnificentTierRange,
+  range: TierRange,
   percentage: number,
 ): number => {
   const decimalPlaces = getRangeDecimalPlaces(range);
@@ -52,7 +105,7 @@ export const interpolateSpecialValue = (
  * @returns The percentage (0-100) representing where the value falls in the range
  */
 export const getQualityPercentage = (
-  range: MagnificentTierRange,
+  range: TierRange,
   value: number,
 ): number => {
   if (range.max === range.min) return 100;
@@ -60,31 +113,49 @@ export const getQualityPercentage = (
 };
 
 /**
- * Get the tier range for a special support skill (magnificent or noble).
- * Uses the first tier value key if multiple exist.
+ * Generate the crafted affix string by replacing the range in the tier-scaled description with the value.
+ * @param skill - The special support skill
+ * @param value - The crafted value
+ * @returns The crafted affix string
  */
-export const getTierRange = (
+export const formatCraftedAffix = (
   skill: SpecialSupportSkill,
-  tier: 0 | 1 | 2,
-): MagnificentTierRange | undefined => {
-  if (skill.tierValues === undefined) return undefined;
-  const firstKey = Object.keys(skill.tierValues)[0];
-  if (firstKey === undefined) return undefined;
-  return skill.tierValues[firstKey][tier];
+  value: number,
+): string => {
+  const tierScaled = findTierScaledDescription(skill);
+  if (tierScaled === undefined) return "";
+
+  // Replace the range pattern with the value, preserving existing sign
+  const formatted = tierScaled.text.replace(
+    /([+-])?\((-?\d+(?:\.\d+)?)[–-](-?\d+(?:\.\d+)?)\)/,
+    (_, sign) => `${sign ?? ""}${value}`,
+  );
+  return formatted;
+};
+
+/**
+ * Parse the value from a crafted affix string.
+ * Extracts the numeric value from patterns like "+17% additional damage..."
+ */
+export const parseValueFromCraftedAffix = (craftedAffix: string): number => {
+  const match = craftedAffix.match(/([+-]?\d+(?:\.\d+)?)/);
+  if (match === null) return 0;
+  return parseFloat(match[1]);
 };
 
 /**
  * Get the worst (lowest quality) defaults for a special support skill.
- * Defaults to tier 2, rank 1, and the minimum value for tier 2.
+ * Defaults to tier 2, rank 1, and the minimum value for the tier range.
  */
 export const getWorstSpecialDefaults = (
   skill: SpecialSupportSkill,
-): { tier: 0 | 1 | 2; rank: 1 | 2 | 3 | 4 | 5; value: number } => {
+): { tier: 0 | 1 | 2; rank: 1 | 2 | 3 | 4 | 5; craftedAffix: string } => {
   const tier = 2 as const;
   const rank = 1 as const;
-  const tierRange = getTierRange(skill, tier);
+  const tierRange = getTierRange(skill);
   const value = tierRange?.min ?? 0;
-  return { tier, rank, value };
+  const craftedAffix = formatCraftedAffix(skill, value);
+  return { tier, rank, craftedAffix };
 };
 
 // Backward compatibility aliases

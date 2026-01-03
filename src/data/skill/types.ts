@@ -140,56 +140,12 @@ export interface BaseSupportSkill extends BaseSkill {
   levelValues?: LevelValues;
 }
 
-/**
- * Range of values for a magnificent support tier (min and max).
- */
-export interface MagnificentTierRange {
-  min: number;
-  max: number;
-}
-
-/**
- * Tier values for magnificent supports - keyed by descriptive name,
- * where each value has ranges for tiers 0, 1, 2.
- */
-export type MagnificentTierValues = Record<
-  string,
-  { 0: MagnificentTierRange; 1: MagnificentTierRange; 2: MagnificentTierRange }
->;
-
-/**
- * Rank values for magnificent supports - 5-element tuples (index = rank - 1).
- */
-export type MagnificentRankValues = Record<
-  string,
-  readonly [number, number, number, number, number]
->;
-
-/**
- * Constant values for magnificent supports that don't change with tier/rank/value.
- */
-export type MagnificentConstantValues = Record<string, number>;
-
 export interface BaseMagnificentSupportSkill extends BaseSkill {
-  // name of skill that can be supported
   supportTarget: string;
-  // Tier-scaled values (tier 0-2 with min/max ranges)
-  tierValues?: MagnificentTierValues;
-  // Rank-scaled values (5-element arrays for ranks 1-5)
-  rankValues?: MagnificentRankValues;
-  // Constant values (don't change with tier/rank/value)
-  constantValues?: MagnificentConstantValues;
 }
 
 export interface BaseNobleSupportSkill extends BaseSkill {
-  // name of skill that can be supported
   supportTarget: string;
-  // Tier-scaled values (tier 0-2 with min/max ranges) - same as magnificent
-  tierValues?: MagnificentTierValues;
-  // Rank-scaled values (5-element arrays for ranks 1-5) - same as magnificent
-  rankValues?: MagnificentRankValues;
-  // Constant values (don't change with tier/rank/value) - same as magnificent
-  constantValues?: MagnificentConstantValues;
 }
 
 /**

@@ -640,6 +640,7 @@
             "name": "Mind Control: Concentrate (Magnificent)",
             "tier": 1,
             "rank": 1,
+            "craftedAffix": "+6.1% additional damage for this skill for every link less than maximum links",
             "value": 6.1
           },
           "4": {
@@ -715,7 +716,8 @@
             "name": "Shackles of Malice: Defile (Magnificent)",
             "tier": 0,
             "rank": 5,
-            "value": 0
+            "craftedAffix": "+43% additional Curse Effect for the target for 4s",
+            "value": 43
           },
           "4": {
             "skillType": "support",

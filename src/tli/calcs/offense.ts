@@ -1282,11 +1282,16 @@ const calculateHeroTraitMods = (loadout: Loadout): Mod[] => {
   const { traits, memorySlots } = loadout.heroPage;
 
   const mods = [];
+  // Primary traits with their associated memories
+  // Secondary traits (for dual-trait heroes) share the same memory slots
   const traitToMemory = [
     { trait: traits.level1, memory: undefined },
     { trait: traits.level45, memory: memorySlots.slot45 },
+    { trait: traits.level45b, memory: memorySlots.slot45 },
     { trait: traits.level60, memory: memorySlots.slot60 },
+    { trait: traits.level60b, memory: memorySlots.slot60 },
     { trait: traits.level75, memory: memorySlots.slot75 },
+    { trait: traits.level75b, memory: memorySlots.slot75 },
   ];
   for (const { trait, memory } of traitToMemory) {
     if (trait !== undefined) {

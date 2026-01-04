@@ -16,8 +16,11 @@ export const createEmptyHeroPage = (): HeroPage => ({
   traits: {
     level1: undefined,
     level45: undefined,
+    level45b: undefined,
     level60: undefined,
+    level60b: undefined,
     level75: undefined,
+    level75b: undefined,
   },
   memorySlots: {
     slot45: undefined,

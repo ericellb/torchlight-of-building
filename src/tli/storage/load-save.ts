@@ -471,8 +471,11 @@ const convertHeroPage = (
   const traits: HeroTraits = {
     level1: convertHeroTrait(saveDataHeroPage.traits.level1),
     level45: convertHeroTrait(saveDataHeroPage.traits.level45),
+    level45b: convertHeroTrait(saveDataHeroPage.traits.level45b),
     level60: convertHeroTrait(saveDataHeroPage.traits.level60),
+    level60b: convertHeroTrait(saveDataHeroPage.traits.level60b),
     level75: convertHeroTrait(saveDataHeroPage.traits.level75),
+    level75b: convertHeroTrait(saveDataHeroPage.traits.level75b),
   };
 
   const memorySlots: HeroMemorySlots = {};

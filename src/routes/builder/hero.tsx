@@ -23,12 +23,17 @@ function HeroPage(): React.ReactNode {
       heroPage={loadout.heroPage}
       heroMemoryList={loadout.heroPage.memoryInventory}
       onHeroChange={resetHeroPage}
-      onTraitSelect={(level: 45 | 60 | 75, traitName: string | undefined) =>
-        setTrait(
-          `level${level}` as "level45" | "level60" | "level75",
-          traitName,
-        )
-      }
+      onTraitSelect={(
+        level: 45 | 60 | 75,
+        group: "a" | "b",
+        traitName: string | undefined,
+      ) => {
+        const key =
+          group === "a"
+            ? (`level${level}` as "level45" | "level60" | "level75")
+            : (`level${level}b` as "level45b" | "level60b" | "level75b");
+        setTrait(key, traitName);
+      }}
       onMemoryEquip={(slot: HeroMemorySlot, memoryId: string | undefined) =>
         equipHeroMemoryById(slot, memoryId)
       }

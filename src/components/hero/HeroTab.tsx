@@ -12,7 +12,11 @@ interface HeroTabProps {
   heroPage: HeroPage;
   heroMemoryList: HeroMemory[];
   onHeroChange: (hero: string | undefined) => void;
-  onTraitSelect: (level: 45 | 60 | 75, traitName: string | undefined) => void;
+  onTraitSelect: (
+    level: 45 | 60 | 75,
+    group: "a" | "b",
+    traitName: string | undefined,
+  ) => void;
   onMemoryEquip: (slot: HeroMemorySlot, memoryId: string | undefined) => void;
   onMemorySave: (memory: SaveDataHeroMemory) => void;
   onMemoryCopy: (memoryId: string) => void;

@@ -423,7 +423,14 @@ export const internalStore = create(
       },
 
       setTrait: (
-        level: "level1" | "level45" | "level60" | "level75",
+        level:
+          | "level1"
+          | "level45"
+          | "level45b"
+          | "level60"
+          | "level60b"
+          | "level75"
+          | "level75b",
         traitName: string | undefined,
       ) => {
         set((state) => {
@@ -712,7 +719,7 @@ export const internalStore = create(
       // Hero actions (additional)
       resetHeroPage: (hero?: string) => {
         set((state) => {
-          if (!hero) {
+          if (hero === undefined) {
             state.saveData.heroPage = {
               ...createEmptyHeroPage(),
               memoryInventory: state.saveData.heroPage.memoryInventory,
@@ -724,8 +731,11 @@ export const internalStore = create(
               traits: {
                 level1: baseTrait ? { name: baseTrait.name } : undefined,
                 level45: undefined,
+                level45b: undefined,
                 level60: undefined,
+                level60b: undefined,
                 level75: undefined,
+                level75b: undefined,
               },
               memorySlots: {
                 slot45: undefined,

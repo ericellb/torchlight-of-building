@@ -113,3 +113,52 @@ export const getCompatibleLoadoutMemoriesForSlot = (
   const requiredType = MEMORY_SLOT_TYPE_MAP[slot];
   return memories.filter((memory) => memory.memoryType === requiredType);
 };
+
+// Bing2 (Creative Genius) has dual traits at each level threshold
+export const BING2_HERO = "Escapist Bing: Creative Genius (#2)";
+
+export const BING2_TRAIT_CONFIG = {
+  level45: {
+    a: ["Inspiration Overflow"],
+    b: ["Super Sonic Protocol", "Over-Shield Module"],
+  },
+  level60: {
+    a: ["Mind Domain", "Trouble Maker"],
+    b: [
+      "Law of Ingenuity",
+      "Ingenious Chaos Principle",
+      "Auto-Ingenuity Program",
+    ],
+  },
+  level75: {
+    a: ["Brainstorm", "Flash of Brilliance"],
+    b: [
+      "Multi-Coupling Equation",
+      "Hyper-Resonance Hypothesis",
+      "Contingency Inspiration Delivery",
+    ],
+  },
+} as const;
+
+type Bing2TraitLevel = keyof typeof BING2_TRAIT_CONFIG;
+
+export const isBing2Hero = (hero: string): boolean =>
+  normalizeHeroName(hero) === normalizeHeroName(BING2_HERO);
+
+export const getBing2TraitsForLevelAndGroup = (
+  hero: string,
+  level: 45 | 60 | 75,
+  group: "a" | "b",
+): BaseHeroTrait[] => {
+  if (!isBing2Hero(hero)) {
+    return group === "a" ? getTraitsForHeroAtLevel(hero, level) : [];
+  }
+
+  const levelKey = `level${level}` as Bing2TraitLevel;
+  const config = BING2_TRAIT_CONFIG[levelKey];
+  const traitNames: readonly string[] = config[group];
+
+  return getTraitsForHero(hero).filter(
+    (trait) => trait.level === level && traitNames.includes(trait.name),
+  );
+};

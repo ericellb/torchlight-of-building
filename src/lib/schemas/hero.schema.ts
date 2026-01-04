@@ -26,8 +26,11 @@ export const HeroTraitSchema = BaseHeroTraitSchema;
 const EMPTY_HERO_TRAITS = {
   level1: undefined,
   level45: undefined,
+  level45b: undefined,
   level60: undefined,
+  level60b: undefined,
   level75: undefined,
+  level75b: undefined,
 } as const;
 
 // Hero traits container
@@ -35,8 +38,11 @@ export const HeroTraitsSchema = z
   .object({
     level1: HeroTraitSchema.optional().catch(undefined),
     level45: HeroTraitSchema.optional().catch(undefined),
+    level45b: HeroTraitSchema.optional().catch(undefined),
     level60: HeroTraitSchema.optional().catch(undefined),
+    level60b: HeroTraitSchema.optional().catch(undefined),
     level75: HeroTraitSchema.optional().catch(undefined),
+    level75b: HeroTraitSchema.optional().catch(undefined),
   })
   .catch(EMPTY_HERO_TRAITS);
 

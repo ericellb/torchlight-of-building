@@ -422,8 +422,11 @@ export interface HeroTrait {
 export interface HeroTraits {
   level1?: HeroTrait;
   level45?: HeroTrait;
+  level45b?: HeroTrait;
   level60?: HeroTrait;
+  level60b?: HeroTrait;
   level75?: HeroTrait;
+  level75b?: HeroTrait;
 }
 
 export interface HeroMemorySlots {

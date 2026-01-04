@@ -379,11 +379,21 @@ const parseSupportTargets = (
   return { supportTargets, cannotSupportTargets };
 };
 
+// Normalize supportTarget names that don't match active/passive skill names
+// These come from the game's description text "Supports X." which sometimes differs from actual skill names
+const SUPPORT_TARGET_NORMALIZATION: Record<string, string> = {
+  "Chain of Lightning": "Chain Lightning",
+  "Summon Fire Spirit": "Summon Fire Magus",
+  "Summon Frost Spirit": "Summon Frost Magus",
+  "Summon Thunder Spirit": "Summon Thunder Magus",
+};
+
 // Parse the specific skill name from "Supports <SkillName>." for Magnificent/Noble supports
 const parseSkillSupportTarget = (description: string): string => {
   const firstLine = description.split("\n")[0] ?? "";
   const match = firstLine.match(/^Supports\s+(.+?)\./);
-  return match?.[1] ?? "";
+  const rawTarget = match?.[1] ?? "";
+  return SUPPORT_TARGET_NORMALIZATION[rawTarget] ?? rawTarget;
 };
 
 // Maps JSON type → file key and type names

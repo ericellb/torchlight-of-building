@@ -138,7 +138,7 @@ export const MagnificentSupportSkills = [
       "Supports Chain of Lightning.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
       "+(5.5–5.9)% additional damage for every 1 Jump(s) remaining of the supported skill (multiplies)",
     ],
-    supportTarget: "Chain of Lightning",
+    supportTarget: "Chain Lightning",
   },
   {
     type: "Support (Magnificent)",
@@ -149,7 +149,7 @@ export const MagnificentSupportSkills = [
       "For every 1 Jump, the supported skill releases 1 additional Chain Lightning (does not target the same enemy). Each Chain Lightning can only Jump 1 time(s)",
       "+(16–18)% additional damage for the supported skill",
     ],
-    supportTarget: "Chain of Lightning",
+    supportTarget: "Chain Lightning",
   },
   {
     type: "Support (Magnificent)",
@@ -1020,7 +1020,7 @@ export const MagnificentSupportSkills = [
       "Origin of Spirit Magus provided by the supported skill gains an additional effect: +(1.4–1.6)% Max Fire Resistance",
       "-50% Sealed Mana Compensation for the supported skill",
     ],
-    supportTarget: "Summon Fire Spirit",
+    supportTarget: "Summon Fire Magus",
   },
   {
     type: "Support (Magnificent)",
@@ -1042,7 +1042,7 @@ export const MagnificentSupportSkills = [
       "Origin of Spirit Magus provided by the supported skill gains an additional effect: +(1.4–1.6)% Max Cold Resistance",
       "-50% Sealed Mana Compensation for the supported skill",
     ],
-    supportTarget: "Summon Frost Spirit",
+    supportTarget: "Summon Frost Magus",
   },
   {
     type: "Support (Magnificent)",
@@ -1173,7 +1173,7 @@ export const MagnificentSupportSkills = [
       "Origin of Spirit Magus provided by the supported skill gains an additional effect: +(1.4–1.6)% Max Lightning Resistance",
       "-50% Sealed Mana Compensation for the supported skill",
     ],
-    supportTarget: "Summon Thunder Spirit",
+    supportTarget: "Summon Thunder Magus",
   },
   {
     type: "Support (Magnificent)",

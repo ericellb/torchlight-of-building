@@ -172,7 +172,7 @@ export const NobleSupportSkills = [
       "+1 Jump(s) for this skill when the supported skill defeats an enemy\nThe supported skill deals Lucky Damage",
       "(-7–-5)% additional damage for the supported skill",
     ],
-    supportTarget: "Chain of Lightning",
+    supportTarget: "Chain Lightning",
   },
   {
     type: "Support (Noble)",
@@ -183,7 +183,7 @@ export const NobleSupportSkills = [
       "Multiple Chain Lightnings released by the supported skill can target the same enemy, but will prioritize different enemies. The Shotgun Effect falloff coefficient of the supported skill is 80%",
       "(-14.0–-12.0)% additional damage for the supported skill",
     ],
-    supportTarget: "Chain of Lightning",
+    supportTarget: "Chain Lightning",
   },
   {
     type: "Support (Noble)",
@@ -1132,7 +1132,7 @@ export const NobleSupportSkills = [
       "Supports Summon Fire Spirit.\nThis skill can only be installed in the fifth Support Skill Slot of each Passive Skill.\n+20% additional damage for Minions summoned by the supported skill",
       "Minions summoned by the supported skill Reap (0.014–0.015) s of Damage Over Time on Critical Strikes for every 30% their Critical Strike Damage",
     ],
-    supportTarget: "Summon Fire Spirit",
+    supportTarget: "Summon Fire Magus",
   },
   {
     type: "Support (Noble)",

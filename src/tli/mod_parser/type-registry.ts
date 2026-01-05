@@ -17,11 +17,17 @@ import type {
  * Used by template-types.ts for compile-time type inference.
  */
 export interface CaptureTypeRegistry {
-  // Numeric types
+  // Numeric types (unsigned)
   int: number;
   dec: number;
   "int%": number;
   "dec%": number;
+
+  // Signed numeric types (require +/- prefix in input)
+  "+int": number;
+  "+dec": number;
+  "+int%": number;
+  "+dec%": number;
 
   // Enum types (registered in enums.ts)
   DmgModType: DmgModType;

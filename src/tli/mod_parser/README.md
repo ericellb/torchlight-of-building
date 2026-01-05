@@ -15,10 +15,14 @@ t("{value:dec%} damage"); // Captures: { value: number }
 **Types:**
 | Type | Pattern | Result |
 |------|---------|--------|
-| `int` | `[+-]?\d+` | `number` |
-| `dec` | `[+-]?\d+(?:\.\d+)?` | `number` |
-| `int%` | `[+-]?\d+%` | `number / 100` |
-| `dec%` | `[+-]?\d+(?:\.\d+)?%` | `number / 100` |
+| `int` | `\d+` | `number` |
+| `dec` | `\d+(?:\.\d+)?` | `number` |
+| `int%` | `\d+%` | `number` |
+| `dec%` | `\d+(?:\.\d+)?%` | `number` |
+| `+int` | `[+-]\d+` | `number` (signed) |
+| `+dec` | `[+-]\d+(?:\.\d+)?` | `number` (signed) |
+| `+int%` | `[+-]\d+%` | `number` (signed) |
+| `+dec%` | `[+-]\d+(?:\.\d+)?%` | `number` (signed) |
 | `EnumName` | `\w+` | Validated enum value |
 
 ### Optionals

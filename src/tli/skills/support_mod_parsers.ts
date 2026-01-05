@@ -69,6 +69,16 @@ const allSupportParsers = [
     value: c.value,
     addn: true,
   })),
+  // Signed version (e.g., "+19.8% additional damage for the supported skill")
+  t("{value:+dec%} additional damage for the supported skill").output(
+    "DmgPct",
+    (c) => ({
+      value: c.value,
+      dmgModType: GLOBAL,
+      addn: true,
+    }),
+  ),
+  // Unsigned version (e.g., "0.8% additional damage for the supported skill")
   t("{value:dec%} additional damage for the supported skill").output(
     "DmgPct",
     (c) => ({
@@ -77,7 +87,7 @@ const allSupportParsers = [
       addn: true,
     }),
   ),
-  t("{value:dec%} additional melee damage for the supported skill").output(
+  t("{value:+dec%} additional melee damage for the supported skill").output(
     "DmgPct",
     (c) => ({
       value: c.value,
@@ -85,7 +95,7 @@ const allSupportParsers = [
       addn: true,
     }),
   ),
-  t("{value:dec%} additional ailment damage for the supported skill").output(
+  t("{value:+dec%} additional ailment damage for the supported skill").output(
     "DmgPct",
     (c) => ({
       value: c.value,
@@ -101,7 +111,7 @@ const allSupportParsers = [
     addn: c.additional !== undefined,
   })),
   t(
-    "the supported skill deals more damage to enemies with more life, up to {value:int%} additional erosion damage",
+    "the supported skill deals more damage to enemies with more life, up to {value:+int%} additional erosion damage",
   ).output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: "erosion" as const,
@@ -116,13 +126,13 @@ const allSupportParsers = [
     cond: "enemy_is_cursed" as const,
   })),
   t(
-    "{value:dec%} additional damage for the supported skill when it lands a critical strike",
+    "{value:+dec%} additional damage for the supported skill when it lands a critical strike",
   ).output("CritDmgPct", (c) => ({
     value: c.value,
     addn: true,
     modType: GLOBAL,
   })),
-  t("{value:dec%} attack speed for the supported skill").output(
+  t("{value:+dec%} attack speed for the supported skill").output(
     "AspdPct",
     (c) => ({
       value: c.value,
@@ -130,19 +140,19 @@ const allSupportParsers = [
     }),
   ),
   t(
-    "{value:dec%} additional attack and cast speed for the supported skill",
+    "{value:+dec%} additional attack and cast speed for the supported skill",
   ).outputMany([
     spec("AspdPct", (c) => ({ value: c.value, addn: true })),
     spec("CspdPct", (c) => ({ value: c.value, addn: true })),
   ]),
-  t("{value:dec%} critical strike rating for the supported skill").output(
+  t("{value:+dec%} critical strike rating for the supported skill").output(
     "CritRatingPct",
     (c) => ({
       value: c.value,
       modType: GLOBAL,
     }),
   ),
-  t("{value:dec%} skill area for the supported skill").output(
+  t("{value:+dec%} skill area for the supported skill").output(
     "SkillAreaPct",
     (c) => ({
       value: c.value,
@@ -161,7 +171,7 @@ const allSupportParsers = [
       value: c.value,
     }),
   ),
-  t("{value:dec%} duration for the supported skill").output(
+  t("{value:+dec%} duration for the supported skill").output(
     "SkillEffDurationPct",
     (c) => ({
       value: c.value,
@@ -179,7 +189,7 @@ const allSupportParsers = [
     value: c.value,
     per: { stackable: "skill_charges_on_use" as const },
   })),
-  t("{value:int} shadow quantity for the supported skill").output(
+  t("{value:+int} shadow quantity for the supported skill").output(
     "ShadowQuant",
     (c) => ({
       value: c.value,

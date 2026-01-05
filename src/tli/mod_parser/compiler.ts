@@ -7,13 +7,17 @@ const getCapturePattern = (type: string): string => {
   const isPercent = type.endsWith("%");
   const baseType = isPercent ? type.slice(0, -1) : type;
 
+  // Check for signed prefix (+int, +dec)
+  const isSigned = baseType.startsWith("+");
+  const numericType = isSigned ? baseType.slice(1) : baseType;
+
   let pattern: string;
-  switch (baseType) {
+  switch (numericType) {
     case "int":
-      pattern = "([+-]?\\d+)";
+      pattern = isSigned ? "([+-]\\d+)" : "(\\d+)";
       break;
     case "dec":
-      pattern = "([+-]?\\d+(?:\\.\\d+)?)";
+      pattern = isSigned ? "([+-]\\d+(?:\\.\\d+)?)" : "(\\d+(?:\\.\\d+)?)";
       break;
     default:
       // Enum type - use word pattern
@@ -34,7 +38,10 @@ const getExtractor = (
   const isPercent = type.endsWith("%");
   const baseType = isPercent ? type.slice(0, -1) : type;
 
-  switch (baseType) {
+  // Strip signed prefix if present (+int, +dec)
+  const numericType = baseType.startsWith("+") ? baseType.slice(1) : baseType;
+
+  switch (numericType) {
     case "int":
       return (s) => parseInt(s, 10);
     case "dec":

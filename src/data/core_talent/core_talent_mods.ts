@@ -327,7 +327,14 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
       },
     ],
   },
-  Beacon: { affixLines: [{ text: "+2 Max Spell Burst" }] },
+  Beacon: {
+    affixLines: [
+      {
+        text: "+2 Max Spell Burst",
+        mods: [{ type: "MaxSpellBurst", value: 2 }],
+      },
+    ],
+  },
   Chilly: {
     affixLines: [
       { text: "+100% chance to gain 1 stack of Focus Blessing on hit" },
@@ -653,7 +660,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   "Endless Fervor": {
     affixLines: [
-      { text: "Have Fervor" },
+      { text: "Have Fervor", mods: [{ type: "HaveFervor" }] },
       {
         text: "+12% Fervor effect",
         mods: [{ type: "FervorEffPct", value: 12 }],
@@ -784,7 +791,18 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   "Stealth Stab": {
     affixLines: [
       { text: "-25% additional damage taken while Blur is active" },
-      { text: "+25% additional damage for 3 s after Blur ends" },
+      {
+        text: "+25% additional damage for 3 s after Blur ends",
+        mods: [
+          {
+            type: "DmgPct",
+            value: 25,
+            dmgModType: "global",
+            addn: true,
+            cond: "blur_ended_recently",
+          },
+        ],
+      },
     ],
   },
   "Beyond Cure": {
@@ -846,7 +864,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   "Verbal Abuse": {
     affixLines: [
       { text: "You can cast 1 additional Curses" },
-      { text: "+10% curse effect" },
+      {
+        text: "+10% curse effect",
+        mods: [{ type: "CurseEffPct", value: 10, addn: false }],
+      },
     ],
   },
   Vile: {
@@ -906,7 +927,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   Orders: {
     affixLines: [
-      { text: "+25% additional Minion Damage" },
+      {
+        text: "+25% additional Minion Damage",
+        mods: [{ type: "MinionDmgPct", value: 25, addn: true }],
+      },
       { text: "+50% additional Summon Skill Cast Speed" },
     ],
   },
@@ -947,13 +971,19 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   Boss: {
     affixLines: [
       { text: "+1 to Max Summonable Synthetic Troops" },
-      { text: "+15% additional Minion Damage" },
+      {
+        text: "+15% additional Minion Damage",
+        mods: [{ type: "MinionDmgPct", value: 15, addn: true }],
+      },
     ],
   },
   Rally: {
     affixLines: [
       { text: "Synthetic Troop Minions summoned at a time +1" },
-      { text: "+25% additional Minion Damage" },
+      {
+        text: "+25% additional Minion Damage",
+        mods: [{ type: "MinionDmgPct", value: 25, addn: true }],
+      },
     ],
   },
   "Burning Aggression": {

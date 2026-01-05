@@ -2572,10 +2572,17 @@ const calcAvgSpellBurstDps = (
   mods: Mod[],
   avgHit: number,
 ): OffenseSpellBurstDpsSummary => {
+  const playSafe = findMod(mods, "PlaySafe");
   const baseBurstsPerSec = 0.5;
-  const burstsPerSecMult = calculateEffMultiplier(
-    filterMod(mods, "SpellBurstChargeSpeedPct"),
-  );
+  const chargeSpeedMods = [
+    ...filterMod(mods, "SpellBurstChargeSpeedPct"),
+    ...(playSafe !== undefined
+      ? filterMod(mods, "CspdPct").map((m) =>
+          multModValue(m, playSafe.value / 100),
+        )
+      : []),
+  ];
+  const burstsPerSecMult = calculateEffMultiplier(chargeSpeedMods);
   const burstsPerSec = baseBurstsPerSec * burstsPerSecMult;
   const maxSpellBurst = sumByValue(filterMod(mods, "MaxSpellBurst"));
 

@@ -1049,7 +1049,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "-10% additional Minion Attack and Cast Speed",
-        mods: [{ type: "MinionAspdAndCspdPct", value: -10, addn: true }],
+        mods: [
+          { type: "MinionAspdPct", value: -10, addn: true },
+          { type: "MinionCspdPct", value: -10, addn: true },
+        ],
       },
       { text: "Spirit Magi +50% chance to use an Enhanced Skill" },
     ],

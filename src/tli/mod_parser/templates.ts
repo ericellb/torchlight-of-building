@@ -285,7 +285,15 @@ export const allParsers = [
     addn: c.additional !== undefined,
     modType: c.modType ?? "global",
   })),
-  t("{value:+dec%} [additional] minion attack and cast speed").output("MinionAspdAndCspdPct", (c) => ({
+  t("{value:+dec%} [additional] minion attack and cast speed").outputMany([
+    spec("MinionAspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined })),
+    spec("MinionCspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined })),
+  ]),
+  t("{value:+dec%} [additional] minion attack speed").output("MinionAspdPct", (c) => ({
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] minion cast speed").output("MinionCspdPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,
   })),

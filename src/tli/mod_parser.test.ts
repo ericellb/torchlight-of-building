@@ -702,8 +702,35 @@ test("parse basic minion attack and cast speed", () => {
   const result = parseMod("+6% minion attack and cast speed");
   expect(result).toEqual([
     {
-      type: "MinionAspdAndCspdPct",
+      type: "MinionAspdPct",
       value: 6,
+      addn: false,
+    },
+    {
+      type: "MinionCspdPct",
+      value: 6,
+      addn: false,
+    },
+  ]);
+});
+
+test("parse minion attack speed", () => {
+  const result = parseMod("+10% Minion Attack Speed");
+  expect(result).toEqual([
+    {
+      type: "MinionAspdPct",
+      value: 10,
+      addn: false,
+    },
+  ]);
+});
+
+test("parse minion cast speed", () => {
+  const result = parseMod("+34% Minion Cast Speed");
+  expect(result).toEqual([
+    {
+      type: "MinionCspdPct",
+      value: 34,
       addn: false,
     },
   ]);

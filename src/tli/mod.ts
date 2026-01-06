@@ -206,8 +206,9 @@ interface ModDefinitions {
   AspdPct: { value: number; addn: boolean };
   CspdPct: { value: number; addn: boolean };
   // minions
-  MinionAspdAndCspdPct: { value: number; addn: boolean };
   MinionDmgPct: { value: number; addn?: boolean };
+  MinionAspdPct: { value: number; addn: boolean };
+  MinionCspdPct: { value: number; addn: boolean };
   MinionCritRatingPct: { value: number; addn?: boolean };
   // end minions
   ProjectileSpeedPct: { value: number; addn?: boolean };

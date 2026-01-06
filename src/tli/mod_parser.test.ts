@@ -2366,12 +2366,7 @@ test("parse chance to gain blur when reaping", () => {
 
 test("parse gains focus blessing when reaping", () => {
   const result = parseMod("Gains 1 stack(s) of Focus Blessing when Reaping");
-  expect(result).toEqual([
-    {
-      type: "GeneratesFocusBlessing",
-      value: 1,
-    },
-  ]);
+  expect(result).toEqual([{ type: "GeneratesFocusBlessing" }]);
 });
 
 test("parse gains repentance when gaining any blessing", () => {
@@ -2643,6 +2638,50 @@ test("parse blessing duration (all types)", () => {
     {
       type: "TenacityBlessingDurationPct",
       value: 30,
+    },
+  ]);
+});
+
+test("parse spell damage when having focus blessing", () => {
+  const result = parseMod("+30% Spell Damage when having Focus Blessing");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 30,
+      dmgModType: "spell",
+      addn: false,
+      cond: "has_focus_blessing",
+    },
+  ]);
+});
+
+test("parse generates focus blessing when activating spell burst", () => {
+  const result = parseMod(
+    "Gains 1 stack(s) of Focus Blessing when activating Spell Burst",
+  );
+  expect(result).toEqual([{ type: "GeneratesFocusBlessing" }]);
+});
+
+test("parse cast speed when focus blessing is active", () => {
+  const result = parseMod("+12% Cast Speed when Focus Blessing is active");
+  expect(result).toEqual([
+    {
+      type: "CspdPct",
+      value: 12,
+      addn: false,
+      cond: "has_focus_blessing",
+    },
+  ]);
+});
+
+test("parse additional hit damage for skills cast by spell burst", () => {
+  const result = parseMod(
+    "+36% additional Hit Damage for skills cast by Spell Burst",
+  );
+  expect(result).toEqual([
+    {
+      type: "SpellBurstAdditionalDmgPct",
+      value: 36,
     },
   ]);
 });

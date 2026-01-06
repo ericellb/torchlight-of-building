@@ -148,6 +148,12 @@ export const allParsers = [
     addn: false,
     cond: HAS_FOCUS_BLESSING,
   })),
+  t("{value:+dec%} spell damage when having focus blessing").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "spell" as const,
+    addn: false,
+    cond: HAS_FOCUS_BLESSING,
+  })),
   t("{value:+dec%} damage if you have blocked recently").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: GLOBAL,
@@ -370,6 +376,11 @@ export const allParsers = [
     addn: true,
     cond: HAS_CRIT_RECENTLY,
   })),
+  t("{value:+dec%} cast speed when focus blessing is active").output("CspdPct", (c) => ({
+    value: c.value,
+    addn: false,
+    cond: HAS_FOCUS_BLESSING,
+  })),
   t("{value:+dec%} [additional] attack speed").output("AspdPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,
@@ -547,6 +558,9 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
+  t("{value:+dec%} additional hit damage for skills cast by spell burst").output("SpellBurstAdditionalDmgPct", (c) => ({
+    value: c.value,
+  })),
   t(
     "{value:dec%} of the bonuses and additional bonuses to cast speed is also applied to spell burst charge speed",
   ).output("PlaySafe", (c) => ({ value: c.value })),
@@ -570,9 +584,11 @@ export const allParsers = [
   t("{value:+dec%} chance to gain blur when reaping").output("GeneratesBlur", (c) => ({
     value: c.value,
   })),
-  t("gains {value:int} stack\\(s\\) of focus blessing when reaping").output("GeneratesFocusBlessing", (c) => ({
-    value: c.value,
-  })),
+  t("gains {value:int} stack\\(s\\) of focus blessing when reaping").output("GeneratesFocusBlessing", () => ({})),
+  t("gains {value:int} stack\\(s\\) of focus blessing when activating spell burst").output(
+    "GeneratesFocusBlessing",
+    () => ({}),
+  ),
   t("{value:+dec%} additional {modType:DmgModType} damage for every stack of focus blessing").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: c.modType,

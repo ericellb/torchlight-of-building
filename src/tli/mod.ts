@@ -326,7 +326,7 @@ interface ModDefinitions {
   FocusBlessingDurationPct: { value: number };
   AgilityBlessingDurationPct: { value: number };
   TenacityBlessingDurationPct: { value: number };
-  GeneratesFocusBlessing: { value: number };
+  GeneratesFocusBlessing: object;
   GeneratesAgilityBlessing: object;
   GeneratesTenacityBlessing: object;
   MaxChannel: { value: number };

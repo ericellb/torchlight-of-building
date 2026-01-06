@@ -304,6 +304,19 @@ function SavesPage(): React.ReactNode {
           </span>
         </div>
 
+        <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+          <div className="flex items-start gap-3">
+            <span className="text-amber-400 text-lg">🛠️</span>
+            <div>
+              <p className="text-amber-200 font-medium">Early Development</p>
+              <p className="text-zinc-400 text-sm mt-1">
+                Please be patient and bear with me on any issues you encounter
+                with this app, as it's still in early phases of development.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-zinc-50">
             Your Builds ({savesIndex.saves.length})

@@ -554,6 +554,21 @@ test("parse spell critical strike damage per stack of focus blessing owned", () 
   ]);
 });
 
+test("parse critical strike damage per spell skill used recently with stack limit", () => {
+  const result = parseMod(
+    "For each Spell Skill used recently, +4% Critical Strike Damage, stacking up to 12 time(s)",
+  );
+  expect(result).toEqual([
+    {
+      type: "CritDmgPct",
+      value: 4,
+      modType: "global",
+      addn: false,
+      per: { stackable: "num_spell_skills_used_recently", limit: 12 },
+    },
+  ]);
+});
+
 test("return undefined for invalid crit damage mod type", () => {
   const result = parseMod("+10% Fire Critical Strike Damage");
   expect(result).toBeUndefined();

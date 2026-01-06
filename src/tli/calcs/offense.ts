@@ -2147,6 +2147,14 @@ const resolveModsForOffenseSkill = (
     ...normalizeStackables(prenormMods, "desecration", desecration ?? 0),
   );
 
+  mods.push(
+    ...normalizeStackables(
+      prenormMods,
+      "has_hit_enemy_with_elemental_dmg_recently",
+      config.hasHitEnemyWithElementalDmgRecently,
+    ),
+  );
+
   const willpowerStacks = calculateWillpower(prenormMods);
   mods.push(...normalizeStackables(prenormMods, "willpower", willpowerStacks));
 

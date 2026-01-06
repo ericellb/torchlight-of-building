@@ -68,6 +68,9 @@ export const ConfigurationPageSchema = z
     targetEnemyHasFireInfiltration: z
       .boolean()
       .catch(d.targetEnemyHasFireInfiltration),
+    hasHitEnemyWithElementalDmgRecently: z
+      .number()
+      .catch(d.hasHitEnemyWithElementalDmgRecently),
     realmOfMercuryEnabled: z.boolean().catch(d.realmOfMercuryEnabled),
     baptismOfPurityEnabled: z.boolean().catch(d.baptismOfPurityEnabled),
     enemyColdRes: z.number().optional().catch(d.enemyColdRes),

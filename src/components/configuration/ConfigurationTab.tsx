@@ -714,6 +714,18 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             }
             className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-amber-500"
           />
+
+          <label className="text-right text-zinc-50">
+            Hit Enemy With Elemental Dmg Recently
+            <InfoTooltip text="Number of times you've hit enemy with elemental damage recently. Defaults to 0." />
+          </label>
+          <NumberInput
+            value={config.hasHitEnemyWithElementalDmgRecently}
+            onChange={(v) =>
+              onUpdate({ hasHitEnemyWithElementalDmgRecently: v ?? 0 })
+            }
+            min={0}
+          />
         </div>
       </div>
 

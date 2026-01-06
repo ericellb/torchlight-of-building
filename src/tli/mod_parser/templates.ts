@@ -531,6 +531,9 @@ export const allParsers = [
   })),
   t("max channeled stacks {value:+int}").output("MaxChannel", (c) => ({ value: c.value })),
   t("has hasten").output("HasHasten", () => ({})),
+  t(
+    "damage becomes lucky and at least {stacks:int} stack\\(s\\) of spell burst charge is consumed when spell burst is activated",
+  ).output("LuckyDmg", () => ({})),
   t("have fervor").output("HaveFervor", () => ({})),
   t("has {value:int} point\\(s\\) of fixed fervor rating").output("FixedFervorPts", (c) => ({
     value: c.value,

@@ -2527,3 +2527,14 @@ test("parse inflicts frail on spell hit", () => {
     },
   ]);
 });
+
+test("parse lucky damage with spell burst consumption", () => {
+  const result = parseMod(
+    "Damage becomes Lucky and at least 4 stack(s) of Spell Burst Charge is consumed when Spell Burst is activated",
+  );
+  expect(result).toEqual([
+    {
+      type: "LuckyDmg",
+    },
+  ]);
+});

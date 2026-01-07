@@ -378,6 +378,12 @@ export const allParsers = [
     addn: true,
   })),
   t("{value:+dec%} chance for minions to inflict trauma").output("InflictTrauma", () => ({})),
+  t("{value:+dec%} additional max damage for minions").output("AddnMaxMinionDmgPct", (c) => ({
+    value: c.value,
+  })),
+  t("{value:+dec%} additional max damage").output("AddnMaxDmgPct", (c) => ({
+    value: c.value,
+  })),
   t("{value:+dec%} [additional] attack and cast speed when at full mana").outputMany([
     spec("AspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined, cond: HAS_FULL_MANA })),
     spec("CspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined, cond: HAS_FULL_MANA })),

@@ -208,6 +208,10 @@ interface ModDefinitions {
     addn: boolean;
     isEnemyDebuff?: boolean;
   };
+  AddnMaxDmgPct: {
+    value: number;
+    addn: true;
+  };
   ElementalSpellDmgPct: {
     value: number;
     addn: boolean;
@@ -229,6 +233,9 @@ interface ModDefinitions {
     value: number;
     addn?: boolean;
     minionDmgModType?: MinionDmgModType;
+  };
+  AddnMaxMinionDmgPct: {
+    value: number;
   };
   MinionAspdPct: { value: number; addn: boolean };
   MinionCspdPct: { value: number; addn: boolean };
@@ -303,7 +310,7 @@ interface ModDefinitions {
   MaxProjectile: { value: number; override?: boolean };
   MaxSpellBurst: { value: number };
   SpellBurstChargeSpeedPct: { value: number; addn?: boolean };
-  SpellBurstAdditionalDmgPct: { value: number };
+  SpellBurstAdditionalDmgPct: { value: number; addn: true };
   PlaySafe: { value: number };
   SkillAreaPct: {
     value: number;

@@ -2932,6 +2932,26 @@ test("parse armor dmg mitigation penetration for minions", () => {
   ]);
 });
 
+test("parse additional max damage", () => {
+  const result = parseMod("+6% additional max damage");
+  expect(result).toEqual([
+    {
+      type: "AddnMaxDmgPct",
+      value: 6,
+    },
+  ]);
+});
+
+test("parse additional max damage for minions", () => {
+  const result = parseMod("+6% additional Max Damage for Minions");
+  expect(result).toEqual([
+    {
+      type: "AddnMaxMinionDmgPct",
+      value: 6,
+    },
+  ]);
+});
+
 test("parse additional damage after using mobility skills", () => {
   const result = parseMod(
     "+10% additional damage for 4s after using Mobility Skills",

@@ -429,9 +429,16 @@ interface BaseHitOverview {
 
 const calcBaseHitOverview = (
   dmgRanges: DmgRanges,
+  mods: Mod[],
   derivedCtx: DerivedCtx,
 ): BaseHitOverview => {
+  const maxHitMult = calcEffMult(mods, "AddnMaxDmgPct");
   const { physical, cold, lightning, fire, erosion } = dmgRanges;
+  physical.max *= maxHitMult;
+  cold.max *= maxHitMult;
+  lightning.max *= maxHitMult;
+  fire.max *= maxHitMult;
+  erosion.max *= maxHitMult;
   const min = physical.min + cold.min + lightning.min + fire.min + erosion.min;
   const max = physical.max + cold.max + lightning.max + fire.max + erosion.max;
   const total = { min, max };
@@ -560,7 +567,7 @@ const calculateAtkHit = (
     config,
     ignoreArmor: false,
   });
-  return calcBaseHitOverview(finalDmgRanges, derivedCtx);
+  return calcBaseHitOverview(finalDmgRanges, mods, derivedCtx);
 };
 
 export interface OffenseInput {
@@ -2029,7 +2036,7 @@ const calcSpellHit = (
     config,
     ignoreArmor: false,
   });
-  const baseHitOverview = calcBaseHitOverview(finalDmgRanges, derivedCtx);
+  const baseHitOverview = calcBaseHitOverview(finalDmgRanges, mods, derivedCtx);
   return { ...baseHitOverview, castTime };
 };
 

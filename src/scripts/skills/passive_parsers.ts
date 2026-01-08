@@ -30,10 +30,7 @@ export const preciseCrueltyParser: SupportLevelParser = (input) => {
   validateAllLevels(attackDmgPct, skillName);
   validateAllLevels(auraEffPctPerCrueltyStack, skillName);
 
-  return {
-    attackDmgPct,
-    auraEffPctPerCrueltyStack,
-  };
+  return { attackDmgPct, auraEffPctPerCrueltyStack };
 };
 
 export const spellAmplificationParser: SupportLevelParser = (input) => {
@@ -77,10 +74,7 @@ export const preciseDeepPainParser: SupportLevelParser = (input) => {
 
   validateAllLevels(dotDmgPct, skillName);
 
-  return {
-    dotDmgPct,
-    afflictionPerSec: createConstantLevels(30),
-  };
+  return { dotDmgPct, afflictionPerSec: createConstantLevels(30) };
 };
 
 export const preciseErosionAmplificationParser: SupportLevelParser = (

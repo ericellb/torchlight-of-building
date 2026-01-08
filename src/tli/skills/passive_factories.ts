@@ -48,10 +48,7 @@ export const passiveSkillModFactories: Partial<
         addn: true,
         dmgModType: "damage_over_time",
       },
-      {
-        type: "AfflictionInflictedPerSec",
-        value: v(vals.afflictionPerSec, l),
-      },
+      { type: "AfflictionInflictedPerSec", value: v(vals.afflictionPerSec, l) },
     ],
   }),
   "Precise: Erosion Amplification": (l, vals) => ({
@@ -130,16 +127,8 @@ export const passiveSkillModFactories: Partial<
   }),
   "Summon Thunder Magus": (l, vals) => ({
     buffMods: [
-      {
-        type: "AspdPct",
-        value: v(vals.aspdAndCspdPct, l),
-        addn: true,
-      },
-      {
-        type: "CspdPct",
-        value: v(vals.aspdAndCspdPct, l),
-        addn: true,
-      },
+      { type: "AspdPct", value: v(vals.aspdAndCspdPct, l), addn: true },
+      { type: "CspdPct", value: v(vals.aspdAndCspdPct, l), addn: true },
       {
         type: "DmgPct",
         value: v(vals.dmgPct, l),

@@ -159,15 +159,9 @@ export const normalizeStackable = <T extends Mod>(
   }
 
   if (typeof newModValue === "number" && mod.per.valueLimit !== undefined) {
-    return {
-      ...mod,
-      value: Math.min(newModValue, mod.per.valueLimit),
-    } as T;
+    return { ...mod, value: Math.min(newModValue, mod.per.valueLimit) } as T;
   } else {
-    return {
-      ...mod,
-      value: newModValue,
-    } as T;
+    return { ...mod, value: newModValue } as T;
   }
 };
 

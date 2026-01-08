@@ -59,10 +59,7 @@ const baseWeapon = {
   },
 };
 
-const emptySkillPage = () => ({
-  activeSkills: {},
-  passiveSkills: {},
-});
+const emptySkillPage = () => ({ activeSkills: {}, passiveSkills: {} });
 
 const simpleAttackSkillPage = () => ({
   activeSkills: {
@@ -1863,10 +1860,7 @@ describe("resolveSelectedSkillSupportMods via calculateOffense", () => {
     //   Quick Decision (+24.5% more): 0.85 * 1.245 = 1.05825
 
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: weaponWithAspd },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: weaponWithAspd }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: createSkillSlotWithSupports("[Test] Simple Attack", [
@@ -1900,10 +1894,7 @@ describe("resolveSelectedSkillSupportMods via calculateOffense", () => {
     // Attack speed at level 40: 1.0 * 1.345 = 1.345
 
     const loadoutL1 = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: weaponWithAspd },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: weaponWithAspd }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: createSkillSlotWithSupports("[Test] Simple Attack", [
@@ -1915,10 +1906,7 @@ describe("resolveSelectedSkillSupportMods via calculateOffense", () => {
     });
 
     const loadoutL40 = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: weaponWithAspd },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: weaponWithAspd }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: createSkillSlotWithSupports("[Test] Simple Attack", [
@@ -2078,10 +2066,7 @@ describe("resolveSelectedSkillMods via calculateOffense", () => {
   // Helper to create a loadout with Frost Spike in skill slot
   const createFrostSpikeLoadout = (level: number = 20) =>
     initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -2260,14 +2245,8 @@ describe("resolveBuffSkillMods", () => {
     });
 
     return initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
-      skillPage: {
-        activeSkills: skillSlots,
-        passiveSkills: {},
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: { activeSkills: skillSlots, passiveSkills: {} },
     });
   };
 
@@ -2844,10 +2823,7 @@ describe("Pactspirit Ring Mods", () => {
     // Use a pactspirit slot with an originalAffix (from pactspirit data)
     // The affix provides +50% global damage
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -2901,10 +2877,7 @@ describe("Pactspirit Ring Mods", () => {
   test("multiple pactspirit ring affixes stack additively", () => {
     // Two rings with +30% damage each should add to +60% total
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -2968,10 +2941,7 @@ describe("Pactspirit Ring Mods", () => {
     // A ring with an installed destiny should use the destiny's affix, not the original
     // originalAffix is +25% but installedDestiny.affix is +75%, should use +75%
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -3038,10 +3008,7 @@ describe("Pactspirit Ring Mods", () => {
   test("rings from multiple pactspirit slots contribute to damage", () => {
     // Rings from slot1 and slot2 should both contribute
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -3121,10 +3088,7 @@ describe("Pactspirit Ring Mods", () => {
 describe("Divinity Slate Mods", () => {
   test("placed divinity slate affixes are included in damage calculations", () => {
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -3173,10 +3137,7 @@ describe("Divinity Slate Mods", () => {
 
   test("only placed slates contribute to damage, not inventory-only slates", () => {
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -3225,10 +3186,7 @@ describe("Divinity Slate Mods", () => {
 
   test("multiple placed slates stack additively", () => {
     const loadout = initLoadout({
-      gearPage: {
-        equippedGear: { mainHand: baseWeapon },
-        inventory: [],
-      },
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
       skillPage: {
         activeSkills: {
           1: {
@@ -4237,9 +4195,7 @@ describe("added skill levels from mods", () => {
 
 describe("resistance calculations", () => {
   const createResInput = (mods: Mod[]) => ({
-    loadout: initLoadout({
-      customAffixLines: affixLines(mods),
-    }),
+    loadout: initLoadout({ customAffixLines: affixLines(mods) }),
     configuration: createDefaultConfiguration(),
   });
 
@@ -5040,10 +4996,7 @@ describe("affliction mechanics", () => {
     // Total: 100 * 2.5 = 250
     const input = createAfflictionInput(
       affixLines([{ type: "AfflictionEffectPct", value: 50, addn: false }]),
-      {
-        enemyHasAffliction: true,
-        afflictionPts: 100,
-      },
+      { enemyHasAffliction: true, afflictionPts: 100 },
     );
     const results = calculateOffense(input);
     expect(results.skills[skillName]?.persistentDpsSummary?.total).toBeCloseTo(

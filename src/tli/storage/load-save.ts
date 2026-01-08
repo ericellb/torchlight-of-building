@@ -103,15 +103,9 @@ const convertBaseStats = (
   const lines = baseStatText.split(/\n/);
   const baseStatLines = lines.map((lineText) => {
     const mods = parseMod(lineText);
-    return {
-      text: lineText,
-      mods: mods?.map((mod) => ({ ...mod, src })),
-    };
+    return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
-  return {
-    baseStatLines,
-    src,
-  };
+  return { baseStatLines, src };
 };
 
 // Set for fast core talent name lookup (case-insensitive)
@@ -159,17 +153,10 @@ const convertAffix = (
 
   const affixLines: AffixLine[] = lines.map((lineText) => {
     const mods = parseMod(lineText);
-    return {
-      text: lineText,
-      mods: mods?.map((mod) => ({ ...mod, src })),
-    };
+    return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
 
-  return {
-    affixLines,
-    src,
-    maxDivinity,
-  };
+  return { affixLines, src, maxDivinity };
 };
 
 const convertAffixArray = (
@@ -195,11 +182,7 @@ const convertCoreTalent = (
     mods: line.mods?.map((mod) => ({ ...mod, src })),
   }));
 
-  return {
-    specialName: talentName,
-    affixLines,
-    src,
-  };
+  return { specialName: talentName, affixLines, src };
 };
 
 const convertCustomAffixLines = (lines: string[] | undefined): AffixLine[] => {
@@ -501,10 +484,7 @@ const convertTalentPage = (
     inverseImageList: saveDataTalentPage.inventory.inverseImageList,
   };
 
-  return {
-    talentTrees: allocatedTalents,
-    inventory,
-  };
+  return { talentTrees: allocatedTalents, inventory };
 };
 
 const getHeroSrc = (type: "trait" | "memory", slot: string): string => {
@@ -531,11 +511,7 @@ const convertHeroMemory = (
     affixes.push(convertAffix(affixText, src));
   }
 
-  return {
-    id: memory.id,
-    memoryType: memory.memoryType,
-    affixes,
-  };
+  return { id: memory.id, memoryType: memory.memoryType, affixes };
 };
 
 const convertHeroTrait = (
@@ -858,10 +834,7 @@ const convertDivinityPage = (
     }
   }
 
-  return {
-    placedSlates: placements,
-    inventory,
-  };
+  return { placedSlates: placements, inventory };
 };
 
 // Rank damage bonus values for magnificent/noble supports: [0, 5, 10, 15, 20] for ranks 1-5
@@ -992,10 +965,7 @@ const convertSupportSkillSlot = (
         skillType: "activation_medium",
         name: slot.name as ActivationMediumSkillNmae,
         tier: slot.tier ?? 3,
-        affixes: affixTexts.map((text, i) => ({
-          text,
-          mods: parsedMods?.[i],
-        })),
+        affixes: affixTexts.map((text, i) => ({ text, mods: parsedMods?.[i] })),
       };
     }
   }
@@ -1038,10 +1008,7 @@ const convertSkillPage = (saveDataSkillPage: SaveDataSkillPage): SkillPage => {
     }
   }
 
-  return {
-    activeSkills,
-    passiveSkills,
-  };
+  return { activeSkills, passiveSkills };
 };
 
 export const loadSave = (unloadedSaveData: SaveData): Loadout => {

@@ -90,11 +90,7 @@ export const allParsers = [
   })),
   t("{value:+dec%} movement speed per stack of max spell burst, up to {limit:+dec%}").output(
     "MovementSpeedPct",
-    (c) => ({
-      value: c.value,
-      addn: false,
-      per: { stackable: "max_spell_burst" as const, valueLimit: c.limit },
-    }),
+    (c) => ({ value: c.value, addn: false, per: { stackable: "max_spell_burst" as const, valueLimit: c.limit } }),
   ),
   t(
     "for every {amt:+dec%} spell burst charge speed, {value:+dec%} additional hit damage for skills cast by spell burst, up to {limit:+dec%}",
@@ -201,12 +197,7 @@ export const allParsers = [
   ),
   t(
     "deals up to {value:+dec%} additional attack damage to enemies in proximity, and this (effect|damage) reduces as the distance from the enemy grows",
-  ).output("DmgPct", (c) => ({
-    value: c.value,
-    dmgModType: ATTACK,
-    addn: true,
-    cond: TARGET_ENEMY_IS_IN_PROXIMITY,
-  })),
+  ).output("DmgPct", (c) => ({ value: c.value, dmgModType: ATTACK, addn: true, cond: TARGET_ENEMY_IS_IN_PROXIMITY })),
   t(
     "{value:+dec%} additional attack damage and ailment damage dealt by attacks when there are elites within 10m nearby",
   ).outputMany([
@@ -237,12 +228,7 @@ export const allParsers = [
   })),
   t("at max channeled stacks, {value:+dec%} additional damage for channeled skills for {dur:int} s").output(
     "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: "channeled" as const,
-      addn: true,
-      cond: AT_MAX_CHANNELED_STACKS,
-    }),
+    (c) => ({ value: c.value, dmgModType: "channeled" as const, addn: true, cond: AT_MAX_CHANNELED_STACKS }),
   ),
   t("{value:+dec%} [additional] damage for channeled skills").output("DmgPct", (c) => ({
     value: c.value,
@@ -379,13 +365,8 @@ export const allParsers = [
     addn: true,
   })),
   t("{value:+dec%} chance for minions to inflict trauma").output("InflictTrauma", () => ({})),
-  t("{value:+dec%} additional max damage for minions").output("AddnMaxMinionDmgPct", (c) => ({
-    value: c.value,
-  })),
-  t("{value:+dec%} additional max damage").output("AddnMaxDmgPct", (c) => ({
-    value: c.value,
-    addn: true as const,
-  })),
+  t("{value:+dec%} additional max damage for minions").output("AddnMaxMinionDmgPct", (c) => ({ value: c.value })),
+  t("{value:+dec%} additional max damage").output("AddnMaxDmgPct", (c) => ({ value: c.value, addn: true as const })),
   t("{value:+dec%} [additional] attack and cast speed when at full mana").outputMany([
     spec("AspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined, cond: HAS_FULL_MANA })),
     spec("CspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined, cond: HAS_FULL_MANA })),
@@ -402,11 +383,7 @@ export const allParsers = [
   t("{value:+dec%} additional attack speed when only {count:int} enemies are nearby").output("AspdPct", (c) => ({
     value: c.value,
     addn: true,
-    condThreshold: {
-      target: "num_enemies_nearby" as const,
-      comparator: "eq" as const,
-      value: c.count,
-    },
+    condThreshold: { target: "num_enemies_nearby" as const, comparator: "eq" as const, value: c.count },
   })),
   t("{value:+dec%} additional attack speed if you have dealt a critical strike recently").output("AspdPct", (c) => ({
     value: c.value,
@@ -627,16 +604,12 @@ export const allParsers = [
     "damage becomes lucky and at least {stacks:int} stack\\(s\\) of spell burst charge is consumed when spell burst is activated",
   ).output("LuckyDmg", () => ({})),
   t("have fervor").output("HaveFervor", () => ({})),
-  t("has {value:int} point\\(s\\) of fixed fervor rating").output("FixedFervorPts", (c) => ({
-    value: c.value,
-  })),
+  t("has {value:int} point\\(s\\) of fixed fervor rating").output("FixedFervorPts", (c) => ({ value: c.value })),
   t("gains a stack of torment when dealing damage to enemies with max affliction").output(
     "GeneratesTorment",
     () => ({}),
   ),
-  t("{value:+dec%} chance to gain blur when reaping").output("GeneratesBlur", (c) => ({
-    value: c.value,
-  })),
+  t("{value:+dec%} chance to gain blur when reaping").output("GeneratesBlur", (c) => ({ value: c.value })),
   t("gains {value:int} stack\\(s\\) of focus blessing when reaping").output("GeneratesFocusBlessing", () => ({})),
   t("gains {value:int} stack\\(s\\) of focus blessing when activating spell burst").output(
     "GeneratesFocusBlessing",
@@ -671,18 +644,12 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:dec%} movement speed").output("MovementSpeedPct", (c) => ({
-    value: c.value,
-    addn: false,
-  })),
+  t("{value:dec%} movement speed").output("MovementSpeedPct", (c) => ({ value: c.value, addn: false })),
   t("{value:+dec%} [additional] projectile speed").output("ProjectileSpeedPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+int} all skills' level").output("SkillLevel", (c) => ({
-    value: c.value,
-    skillLevelType: "all" as const,
-  })),
+  t("{value:+int} all skills' level").output("SkillLevel", (c) => ({ value: c.value, skillLevelType: "all" as const })),
   t("{value:+int} {skillLevelType:SkillLevelType} skill level").output("SkillLevel", (c) => ({
     value: c.value,
     skillLevelType: c.skillLevelType,
@@ -695,9 +662,7 @@ export const allParsers = [
   })),
   t("{value:+int} skill cost").output("SkillCost", (c) => ({ value: c.value })),
   t("{value:+int} to hero trait level").output("HeroTraitLevel", (c) => ({ value: c.value })),
-  t("{min:int} - {max:int} physical damage").output("GearBasePhysDmg", (c) => ({
-    value: (c.min + c.max) / 2,
-  })),
+  t("{min:int} - {max:int} physical damage").output("GearBasePhysDmg", (c) => ({ value: (c.min + c.max) / 2 })),
   t("{value:int} critical strike rating").output("GearBaseCritRating", (c) => ({ value: c.value })),
   t("{value:dec} attack speed").output("GearBaseAttackSpeed", (c) => ({ value: c.value })),
   t(
@@ -737,10 +702,7 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:dec%} sealed mana compensation").output("SealedManaCompPct", (c) => ({
-    value: c.value,
-    addn: false,
-  })),
+  t("{value:dec%} sealed mana compensation").output("SealedManaCompPct", (c) => ({ value: c.value, addn: false })),
   t(
     "additionally settles {value:dec%} of the remaining total damage when reaping, then removes all damage over time acting on the target",
   ).output("ReapPurificationPct", (c) => ({ value: c.value })),
@@ -801,21 +763,10 @@ export const allParsers = [
   })),
   t(
     "spell skills on hit have a {chancePct:dec%} chance to spawn a pulse, dealing true damage equal to {pctOfHitDmg:dec%} of hit damage. interval: {interval:dec}s",
-  ).output("SpellRipple", (c) => ({
-    chancePct: c.chancePct,
-    pctOfHitDmg: c.pctOfHitDmg,
-  })),
+  ).output("SpellRipple", (c) => ({ chancePct: c.chancePct, pctOfHitDmg: c.pctOfHitDmg })),
   t("{value:+int%} all resistance when the enemy has max affliction").outputMany([
-    spec("EnemyRes", (c) => ({
-      value: c.value,
-      resType: "fire" as const,
-      cond: "enemy_at_max_affliction" as const,
-    })),
-    spec("EnemyRes", (c) => ({
-      value: c.value,
-      resType: "cold" as const,
-      cond: "enemy_at_max_affliction" as const,
-    })),
+    spec("EnemyRes", (c) => ({ value: c.value, resType: "fire" as const, cond: "enemy_at_max_affliction" as const })),
+    spec("EnemyRes", (c) => ({ value: c.value, resType: "cold" as const, cond: "enemy_at_max_affliction" as const })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "lightning" as const,
@@ -864,10 +815,7 @@ export const allParsers = [
     cond: ENEMY_IS_CURSED,
   })),
   // Additional skill cost
-  t("{value:+dec%} additional skill cost").output("SkillCostPct", (c) => ({
-    value: c.value,
-    addn: true,
-  })),
+  t("{value:+dec%} additional skill cost").output("SkillCostPct", (c) => ({ value: c.value, addn: true })),
   // Lucky damage against numbed enemies
   t("you and minions deal lucky damage against numbed enemies").output("LuckyDmg", () => ({
     cond: "enemy_numbed" as const,

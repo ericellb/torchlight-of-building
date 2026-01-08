@@ -26,13 +26,7 @@ describe("parseSupportAffixes", () => {
       "For every 1 Jump, the supported skill releases 1 additional Chain Lightning (does not target the same enemy). Each Chain Lightning can only Jump 1 time(s)",
     ]);
     expect(result).toEqual([
-      [
-        {
-          mod: {
-            type: "ChainLightningWebOfLightning",
-          },
-        },
-      ],
+      [{ mod: { type: "ChainLightningWebOfLightning" } }],
     ]);
   });
 
@@ -41,14 +35,7 @@ describe("parseSupportAffixes", () => {
       "Multiple Chain Lightnings released by the supported skill can target the same enemy, but will prioritize different enemies. The Shotgun Effect falloff coefficient of the supported skill is 80%",
     ]);
     expect(result).toEqual([
-      [
-        {
-          mod: {
-            type: "ChainLightningMerge",
-            shotgunFalloffCoefficient: 80,
-          },
-        },
-      ],
+      [{ mod: { type: "ChainLightningMerge", shotgunFalloffCoefficient: 80 } }],
     ]);
   });
 });

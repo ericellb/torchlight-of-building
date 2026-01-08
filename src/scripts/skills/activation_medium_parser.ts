@@ -58,10 +58,7 @@ export const buildActivationMediumAffixDefs = (
         }
       }
 
-      return {
-        affix,
-        ...(exclusiveGroup !== undefined && { exclusiveGroup }),
-      };
+      return { affix, ...(exclusiveGroup !== undefined && { exclusiveGroup }) };
     });
 
     result[tier] = affixDefs;

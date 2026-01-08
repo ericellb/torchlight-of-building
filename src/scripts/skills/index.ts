@@ -40,16 +40,8 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     categories: ["active"],
     parser: frostSpikeParser,
   },
-  {
-    skillName: "Ice Bond",
-    categories: ["active"],
-    parser: iceBondParser,
-  },
-  {
-    skillName: "Bull's Rage",
-    categories: ["active"],
-    parser: bullsRageParser,
-  },
+  { skillName: "Ice Bond", categories: ["active"], parser: iceBondParser },
+  { skillName: "Bull's Rage", categories: ["active"], parser: bullsRageParser },
   {
     skillName: "Charging Warcry",
     categories: ["active"],
@@ -65,11 +57,7 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     categories: ["active"],
     parser: entangledPainParser,
   },
-  {
-    skillName: "Corruption",
-    categories: ["active"],
-    parser: corruptionParser,
-  },
+  { skillName: "Corruption", categories: ["active"], parser: corruptionParser },
   {
     skillName: "Precise: Cruelty",
     categories: ["passive"],
@@ -95,21 +83,13 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     categories: ["passive"],
     parser: corrosionFocusParser,
   },
-  {
-    skillName: "Mana Boil",
-    categories: ["active"],
-    parser: manaBoilParser,
-  },
+  { skillName: "Mana Boil", categories: ["active"], parser: manaBoilParser },
   {
     skillName: "Arcane Circle",
     categories: ["active"],
     parser: arcaneCircleParser,
   },
-  {
-    skillName: "Deep Pain",
-    categories: ["passive"],
-    parser: deepPainParser,
-  },
+  { skillName: "Deep Pain", categories: ["passive"], parser: deepPainParser },
   {
     skillName: "Erosion Amplification",
     categories: ["passive"],
@@ -125,11 +105,7 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     categories: ["active"],
     parser: bitingColdParser,
   },
-  {
-    skillName: "Timid",
-    categories: ["active"],
-    parser: timidParser,
-  },
+  { skillName: "Timid", categories: ["active"], parser: timidParser },
   {
     skillName: "Electric Conversion",
     categories: ["passive"],

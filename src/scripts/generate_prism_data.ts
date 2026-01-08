@@ -36,10 +36,7 @@ const extractPrismData = (html: string): Prism[] => {
       const name = tooltipSpan.text().trim();
       const rawAffix = tooltipSpan.attr("data-title") || "";
       if (name !== "" && rawAffix !== "") {
-        item.replacementCoreTalent = {
-          name,
-          affix: cleanEffectText(rawAffix),
-        };
+        item.replacementCoreTalent = { name, affix: cleanEffectText(rawAffix) };
       }
     }
 

@@ -14,9 +14,7 @@ import {
 } from "../lib/saves";
 import { createEmptySaveData } from "../lib/storage";
 
-export const Route = createFileRoute("/")({
-  component: SavesPage,
-});
+export const Route = createFileRoute("/")({ component: SavesPage });
 
 const formatDate = (timestamp: number): string => {
   return new Date(timestamp).toLocaleDateString("en-US", {

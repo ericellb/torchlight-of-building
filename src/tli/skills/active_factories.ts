@@ -35,10 +35,7 @@ export const activeSkillModFactories: Partial<
       { type: "AddedDmgEffPct", value: v(vals.addedDmgEffPct, l) },
       {
         type: "SpellDmg",
-        value: {
-          min: v(vals.spellDmgMin, l),
-          max: v(vals.spellDmgMax, l),
-        },
+        value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
         dmgType: "physical",
         castTime: v(vals.castTime, l),
       },
@@ -95,10 +92,7 @@ export const activeSkillModFactories: Partial<
         dmgModType: "global",
         per: { stackable: "additional_max_channel_stack" },
       },
-      {
-        type: "MindControlMaxLink",
-        value: v(vals.initialMaxLinks, l),
-      },
+      { type: "MindControlMaxLink", value: v(vals.initialMaxLinks, l) },
       {
         type: "MindControlMaxLink",
         value: v(vals.maxLinkPerChannel, l),
@@ -234,10 +228,7 @@ export const activeSkillModFactories: Partial<
       { type: "AddedDmgEffPct", value: v(vals.addedDmgEffPct, l) },
       {
         type: "SpellDmg",
-        value: {
-          min: v(vals.spellDmgMin, l),
-          max: v(vals.spellDmgMax, l),
-        },
+        value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
         dmgType: "lightning",
         castTime: v(vals.castTime, l),
       },

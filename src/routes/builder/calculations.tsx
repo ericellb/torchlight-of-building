@@ -277,10 +277,7 @@ function CalculationsPage(): React.ReactNode {
     | undefined;
 
   const offenseResults = useMemo(() => {
-    const input: OffenseInput = {
-      loadout,
-      configuration,
-    };
+    const input: OffenseInput = { loadout, configuration };
     return calculateOffense(input);
   }, [loadout, configuration]);
 

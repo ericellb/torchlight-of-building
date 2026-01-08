@@ -108,12 +108,7 @@ const extractHeroMemoryData = (html: string): HeroMemory[] => {
         const item = $(tds[4]).find("a").text().trim();
 
         if (affix.length > 0 && item.length > 0) {
-          items.push({
-            type: memoryType,
-            item,
-            affix,
-            tier,
-          });
+          items.push({ type: memoryType, item, affix, tier });
         }
       });
     });

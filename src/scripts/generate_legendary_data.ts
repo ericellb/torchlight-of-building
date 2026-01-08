@@ -86,11 +86,7 @@ const extractAffixChoiceCards = (
     // Create a unique key that includes corroded status
     const key = isCorroded ? `${descriptor}:corroded` : `${descriptor}:normal`;
 
-    choiceCards.set(key, {
-      descriptor,
-      isCorroded,
-      choices,
-    });
+    choiceCards.set(key, { descriptor, isCorroded, choices });
   });
 
   return choiceCards;
@@ -291,13 +287,7 @@ const extractLegendary = (
     return undefined;
   }
 
-  return {
-    baseItem,
-    baseStat,
-    name,
-    normalAffixes,
-    corruptionAffixes,
-  };
+  return { baseItem, baseStat, name, normalAffixes, corruptionAffixes };
 };
 
 const applyOverrides = (legendaries: Legendary[]): Legendary[] => {

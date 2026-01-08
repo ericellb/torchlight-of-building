@@ -49,51 +49,28 @@ const parseWillpowerBlob = (input: string): Mod[] | undefined => {
 const allSupportParsers = [
   t("auto-used supported skills {value:int%} additional damage").output(
     "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: true,
-    }),
+    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
   ),
   t("manually used supported skills {value:int%} additional damage").output(
     "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: true,
-    }),
+    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
   ),
   t(
     "{value:int%} additional damage for minions summoned by the supported skill",
-  ).output("MinionDmgPct", (c) => ({
-    value: c.value,
-    addn: true,
-  })),
+  ).output("MinionDmgPct", (c) => ({ value: c.value, addn: true })),
   // Signed version (e.g., "+19.8% additional damage for the supported skill")
   t("{value:+dec%} additional damage for the supported skill").output(
     "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: true,
-    }),
+    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
   ),
   // Unsigned version (e.g., "0.8% additional damage for the supported skill")
   t("{value:dec%} additional damage for the supported skill").output(
     "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: true,
-    }),
+    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
   ),
   t("{value:+dec%} additional melee damage for the supported skill").output(
     "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: "melee" as const,
-      addn: true,
-    }),
+    (c) => ({ value: c.value, dmgModType: "melee" as const, addn: true }),
   ),
   t(
     "{value:dec%} additional {dmgType:DmgModType} damage for the supported skill",
@@ -104,11 +81,7 @@ const allSupportParsers = [
   })),
   t("{value:+dec%} additional ailment damage for the supported skill").output(
     "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: "ailment" as const,
-      addn: true,
-    }),
+    (c) => ({ value: c.value, dmgModType: "ailment" as const, addn: true }),
   ),
   t(
     "{value:dec%} [additional] damage over time for the supported skill",
@@ -141,17 +114,11 @@ const allSupportParsers = [
   })),
   t("{value:+dec%} attack speed for the supported skill").output(
     "AspdPct",
-    (c) => ({
-      value: c.value,
-      addn: false,
-    }),
+    (c) => ({ value: c.value, addn: false }),
   ),
   t("{value:+dec%} cast speed for the supported skill").output(
     "CspdPct",
-    (c) => ({
-      value: c.value,
-      addn: false,
-    }),
+    (c) => ({ value: c.value, addn: false }),
   ),
   t(
     "{value:+dec%} additional hit damage for skills cast by spell burst when spell burst is activated by the supported skill",
@@ -167,35 +134,23 @@ const allSupportParsers = [
   ]),
   t("{value:+dec%} critical strike rating for the supported skill").output(
     "CritRatingPct",
-    (c) => ({
-      value: c.value,
-      modType: GLOBAL,
-    }),
+    (c) => ({ value: c.value, modType: GLOBAL }),
   ),
   t("{value:+dec%} skill area for the supported skill").output(
     "SkillAreaPct",
-    (c) => ({
-      value: c.value,
-      skillAreaModType: GLOBAL,
-    }),
+    (c) => ({ value: c.value, skillAreaModType: GLOBAL }),
   ),
   t("{value:dec%} aura effect for the supported skill").output(
     "AuraEffPct",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t("{value:dec%} buff effect for the supported skill").output(
     "FocusBuffEffPct",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t("{value:+dec%} duration for the supported skill").output(
     "SkillEffDurationPct",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t(
     "the supported skill {value:dec%} effect every time it is cast, up to {_:int} time\\(s\\)",
@@ -211,9 +166,7 @@ const allSupportParsers = [
   })),
   t("{value:+int} shadow quantity for the supported skill").output(
     "ShadowQuant",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t("{value:+int} jumps for the supported skill").output("Jump", (c) => ({
     value: c.value,
@@ -223,14 +176,10 @@ const allSupportParsers = [
   })),
   t(
     "when the supported skill deals damage over time, it inflicts {value:int} affliction on the enemy. effect cooldown: {_:int} s",
-  ).output("AfflictionInflictedPerSec", (c) => ({
-    value: c.value,
-  })),
+  ).output("AfflictionInflictedPerSec", (c) => ({ value: c.value })),
   t("it inflicts {value:int} affliction on the enemy").output(
     "AfflictionInflictedPerSec",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t(
     "affliction grants an additional {value:dec%} effect to the supported skill",
@@ -241,10 +190,7 @@ const allSupportParsers = [
   })),
   t("{value:int%} chance to paralyze it").output(
     "InflictParalysisPct",
-    (c) => ({
-      value: c.value,
-      cond: "enemy_is_cursed" as const,
-    }),
+    (c) => ({ value: c.value, cond: "enemy_is_cursed" as const }),
   ),
   t(
     "when the supported skill deals damage to a cursed target, there is a {value:+dec%} chance to paralyze it",
@@ -259,21 +205,15 @@ const allSupportParsers = [
   t("gains a barrier if there's no barrier").output("GeneratesBarrier"),
   t("{value:int%} projectile size for the supported skill").output(
     "ProjectileSizePct",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t("{value:int%} additional ignite duration for the supported skill").output(
     "IgniteDurationPct",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t("{value:int%} additional duration for the supported skill").output(
     "SkillEffDurationPct",
-    (c) => ({
-      value: c.value,
-    }),
+    (c) => ({ value: c.value }),
   ),
   t(
     "+{value:dec%} additional damage for this skill for every link less than maximum links",

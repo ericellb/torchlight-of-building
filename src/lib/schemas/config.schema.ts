@@ -104,11 +104,7 @@ export type ConfigurationPage = z.infer<typeof ConfigurationPageSchema>;
 
 // Calculations page
 export const CalculationsPageSchema = z
-  .object({
-    selectedSkillName: z.string().optional().catch(undefined),
-  })
-  .catch({
-    selectedSkillName: undefined,
-  });
+  .object({ selectedSkillName: z.string().optional().catch(undefined) })
+  .catch({ selectedSkillName: undefined });
 
 export type CalculationsPage = z.infer<typeof CalculationsPageSchema>;

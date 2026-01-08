@@ -76,10 +76,7 @@ const cleanAffixText = (html: string): string => {
   return text.trim();
 };
 
-const emptyRingDetails = (): PactspiritRingDetails => ({
-  name: "",
-  affix: "",
-});
+const emptyRingDetails = (): PactspiritRingDetails => ({ name: "", affix: "" });
 
 const extractPactspirit = (
   $: cheerio.CheerioAPI,

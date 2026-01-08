@@ -543,10 +543,7 @@ function EquipmentPage(): React.ReactNode {
                         craftingPool: "",
                       })) as BaseGearAffix[]
                     }
-                    selection={{
-                      affixIndex: blendAffixIndex,
-                      percentage: 100,
-                    }}
+                    selection={{ affixIndex: blendAffixIndex, percentage: 100 }}
                     onAffixSelect={handleBlendSelect}
                     onSliderChange={() => {}}
                     onClear={handleClearBlend}

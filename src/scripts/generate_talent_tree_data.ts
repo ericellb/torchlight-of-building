@@ -171,10 +171,7 @@ const scrapeProfessionTree = async (
     };
   });
 
-  return {
-    name: professionName,
-    nodes: talentNodes,
-  };
+  return { name: professionName, nodes: talentNodes };
 };
 
 const generateDataFile = (trees: TalentTreeData[]): string => {

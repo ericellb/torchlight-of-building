@@ -751,10 +751,7 @@ const applyModFilters = (
   const prenormMods = withCondThreshold
     ? filterModsByCondThreshold(condFiltered, config)
     : condFiltered;
-  return {
-    prenormMods,
-    mods: filterOutPerMods(prenormMods),
-  };
+  return { prenormMods, mods: filterOutPerMods(prenormMods) };
 };
 
 const listActiveSkillSlots = (loadout: Loadout): SkillSlot[] => {
@@ -859,10 +856,7 @@ const resolveBuffSkillMods = (
           src: `${skill.name} Lv.${level}`,
         })) ?? [];
       rawBuffMods =
-        activeMods.buffMods?.map((mod) => ({
-          ...mod,
-          src: buffSrc,
-        })) ?? [];
+        activeMods.buffMods?.map((mod) => ({ ...mod, src: buffSrc })) ?? [];
     } else if (skill.type === "Passive") {
       const passiveMods = getPassiveSkillMods(
         skill.name as PassiveSkillName,
@@ -874,10 +868,7 @@ const resolveBuffSkillMods = (
           src: `${skill.name} Lv.${level}`,
         })) ?? [];
       rawBuffMods =
-        passiveMods.buffMods?.map((mod) => ({
-          ...mod,
-          src: buffSrc,
-        })) ?? [];
+        passiveMods.buffMods?.map((mod) => ({ ...mod, src: buffSrc })) ?? [];
     }
 
     const prenormMods = [...loadoutMods, ...supportMods, ...levelMods];
@@ -948,10 +939,7 @@ const collectSupportAffixMods = (ss: TieredSupportSlot): Mod[] => {
   const mods: Mod[] = [];
   for (const affix of ss.affixes) {
     for (const { mod } of affix.mods ?? []) {
-      mods.push({
-        ...mod,
-        src: `${prefix}: ${ss.name}${tierPart}${rankPart}`,
-      });
+      mods.push({ ...mod, src: `${prefix}: ${ss.name}${tierPart}${rankPart}` });
     }
   }
   return mods;
@@ -1060,10 +1048,7 @@ const resolvePerSkillMods = (
     derivedCtx,
   );
 
-  return {
-    mods: [...selectedSkillMods, ...supportMods],
-    skill,
-  };
+  return { mods: [...selectedSkillMods, ...supportMods], skill };
 };
 
 interface EnemyFrostbittenCtx {
@@ -1872,13 +1857,7 @@ const calcTotalReapDps = (
     const purificationDmg = remainingDotDuration * dotDps * reapPurificationPct;
     const dmgPerReap = baseReapDmg + purificationDmg;
     const reapDps = dmgPerReap * reapsPerSecond;
-    return {
-      rawCooldown,
-      duration,
-      reapsPerSecond,
-      dmgPerReap,
-      reapDps,
-    };
+    return { rawCooldown, duration, reapsPerSecond, dmgPerReap, reapDps };
   });
   if (reaps.length === 0) {
     return undefined;
@@ -1965,10 +1944,7 @@ const calcSpellHit = (
     return undefined;
   }
   const { value: skillSpellDR, dmgType, castTime } = offense;
-  const skillSpellDRs = {
-    ...emptyDmgRanges(),
-    [dmgType]: skillSpellDR,
-  };
+  const skillSpellDRs = { ...emptyDmgRanges(), [dmgType]: skillSpellDR };
 
   const addedDmgEffPct = getLevelOffenseValue(skill, "AddedDmgEffPct", level);
   if (typeof addedDmgEffPct !== "number") {
@@ -2042,23 +2018,14 @@ const calcAvgSpellDps = (
     avg * critChance * critDmgMult + avg * (1 - critChance);
   const avgDps =
     avgHitWithCrit * doubleDmgMult * cspd * extraMult * spellRippleMult;
-  return {
-    critChance,
-    critDmgMult,
-    castsPerSec: cspd,
-    avgHitWithCrit,
-    avgDps,
-  };
+  return { critChance, critDmgMult, castsPerSec: cspd, avgHitWithCrit, avgDps };
 };
 
 export interface OffenseSpellBurstDpsSummary {
   burstsPerSec: number;
   maxSpellBurst: number;
   avgDps: number;
-  ingenuityOverload?: {
-    avgDps: number;
-    interval: number;
-  };
+  ingenuityOverload?: { avgDps: number; interval: number };
 }
 
 const calcAvgSpellBurstDps = (

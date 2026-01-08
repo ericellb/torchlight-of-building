@@ -209,14 +209,8 @@ interface ModDefinitions {
     addn: boolean;
     isEnemyDebuff?: boolean;
   };
-  AddnMaxDmgPct: {
-    value: number;
-    addn: true;
-  };
-  ElementalSpellDmgPct: {
-    value: number;
-    addn: boolean;
-  };
+  AddnMaxDmgPct: { value: number; addn: true };
+  ElementalSpellDmgPct: { value: number; addn: boolean };
   FlatDmgToAtks: { value: DmgRange; dmgType: DmgChunkType };
   FlatDmgToSpells: { value: DmgRange; dmgType: DmgChunkType };
   FlatCritRating: { value: number; modType: CritRatingModType };
@@ -235,9 +229,7 @@ interface ModDefinitions {
     addn?: boolean;
     minionDmgModType?: MinionDmgModType;
   };
-  AddnMaxMinionDmgPct: {
-    value: number;
-  };
+  AddnMaxMinionDmgPct: { value: number };
   MinionAspdPct: { value: number; addn: boolean };
   MinionCspdPct: { value: number; addn: boolean };
   MinionCritRatingPct: { value: number; addn?: boolean };

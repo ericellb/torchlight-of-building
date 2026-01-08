@@ -195,11 +195,7 @@ export const compileTemplate = (
     pos++;
   }
 
-  return {
-    regex: new RegExp(`^${regexStr}$`, "i"),
-    captureNames,
-    extractors,
-  };
+  return { regex: new RegExp(`^${regexStr}$`, "i"), captureNames, extractors };
 };
 
 // Compile inner content (for optionals) without wrapping in ^...$

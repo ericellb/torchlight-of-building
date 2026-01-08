@@ -544,10 +544,7 @@ export const EditGearModal = ({
         slotIndex={slotIndex}
         affixType={affixType}
         affixes={affixes}
-        selection={{
-          affixIndex: slot.affixIndex,
-          percentage: slot.percentage,
-        }}
+        selection={{ affixIndex: slot.affixIndex, percentage: slot.percentage }}
         onAffixSelect={onSelect}
         onSliderChange={onSliderChange}
         onClear={onClear}

@@ -5,10 +5,7 @@ import type { CraftedInverseImage, PlacedInverseImage } from "@/src/tli/core";
 export const reflectPosition = (
   x: number,
   y: number,
-): { x: number; y: number } => ({
-  x: 6 - x,
-  y: 4 - y,
-});
+): { x: number; y: number } => ({ x: 6 - x, y: 4 - y });
 
 // Get all positions in a 3x3 area around center, clamped to grid bounds
 export const get3x3AreaPositions = (

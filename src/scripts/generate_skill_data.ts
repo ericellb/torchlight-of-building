@@ -173,10 +173,7 @@ const parseSupportTargets = (
       targets: [{ tags: ["Spell"], requiredKind: "deal_damage" }],
     },
     // Pure DoT (after combinations)
-    {
-      pattern: /Supports? DoT Skills?\.?/i,
-      targets: ["dot"],
-    },
+    { pattern: /Supports? DoT Skills?\.?/i, targets: ["dot"] },
     // Summon patterns
     {
       pattern: /Supports skills that summon Spirit Magus/i,
@@ -200,23 +197,14 @@ const parseSupportTargets = (
       targets: [{ skillType: "passive" as const }],
     },
     // Generic patterns
-    {
-      pattern: /Supports any skill/i,
-      targets: ["any"],
-    },
+    { pattern: /Supports any skill/i, targets: ["any"] },
     // "hit the enemy" variant (singular) - for activation medium
     {
       pattern: /Supports skills that hit the enemy/i,
       targets: ["hit_enemies"],
     },
-    {
-      pattern: /Supports skills that hit enemies/i,
-      targets: ["hit_enemies"],
-    },
-    {
-      pattern: /Supports skills that deal damage/i,
-      targets: ["deal_damage"],
-    },
+    { pattern: /Supports skills that hit enemies/i, targets: ["hit_enemies"] },
+    { pattern: /Supports skills that deal damage/i, targets: ["deal_damage"] },
   ];
 
   // Check special patterns
@@ -399,11 +387,7 @@ const parseSkillSupportTarget = (description: string): string => {
 // Maps JSON type → file key and type names
 // supportType: "none" | "generic" | "magnificent" | "noble"
 const SKILL_TYPE_CONFIG = {
-  Active: {
-    fileKey: "active",
-    constName: "ActiveSkills",
-    supportType: "none",
-  },
+  Active: { fileKey: "active", constName: "ActiveSkills", supportType: "none" },
   Passive: {
     fileKey: "passive",
     constName: "PassiveSkills",
@@ -791,9 +775,7 @@ const createTestPersistentSpell = (): BaseActiveSkill => {
     tags: ["Spell", "Persistent"],
     description: ["this is used for testing persistent damage"],
     mainStats: ["int"],
-    levelValues: {
-      persistentDamage: constantValues,
-    },
+    levelValues: { persistentDamage: constantValues },
   };
 };
 

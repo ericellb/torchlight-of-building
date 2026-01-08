@@ -38,10 +38,7 @@ export interface GearDmg {
 // === Damage Range Utilities ===
 
 export const addDR = (dr1: DmgRange, dr2: DmgRange): DmgRange => {
-  return {
-    min: dr1.min + dr2.min,
-    max: dr1.max + dr2.max,
-  };
+  return { min: dr1.min + dr2.min, max: dr1.max + dr2.max };
 };
 
 export const addValue = <T extends DmgRange | number>(v1: T, v2: T): T => {
@@ -62,10 +59,7 @@ export const addDRs = (drs1: DmgRanges, drs2: DmgRanges): DmgRanges => {
 };
 
 export const multDR = (dr: DmgRange, multiplier: number): DmgRange => {
-  return {
-    min: dr.min * multiplier,
-    max: dr.max * multiplier,
-  };
+  return { min: dr.min * multiplier, max: dr.max * multiplier };
 };
 
 export const multDRs = (drs: DmgRanges, multiplier: number): DmgRanges => {
@@ -93,9 +87,7 @@ export const emptyDmgRanges = (): DmgRanges => {
 };
 
 export const emptyGearDmg = (): GearDmg => {
-  return {
-    mainHand: emptyDmgRanges(),
-  };
+  return { mainHand: emptyDmgRanges() };
 };
 
 // === Damage Conversion ===
@@ -667,13 +659,7 @@ export const calculateFlatDmg = (
       })
       .exhaustive();
   }
-  return {
-    physical: phys,
-    cold,
-    lightning,
-    fire,
-    erosion,
-  };
+  return { physical: phys, cold, lightning, fire, erosion };
 };
 
 export const calculateGearAspd = (loadout: Loadout, allMods: Mod[]): number => {

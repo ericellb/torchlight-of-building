@@ -1,6 +1,6 @@
 import type { SupportMod } from "../core";
 import type { Mod } from "../mod";
-import { spec, t } from "../mod_parser";
+import { spec, t } from "../mod-parser";
 
 const GLOBAL = "global" as const;
 

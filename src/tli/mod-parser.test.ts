@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { parseMod } from "./mod_parser/index";
+import { parseMod } from "./mod-parser/index";
 
 test("parse basic damage without type (global)", () => {
   const result = parseMod("+9% damage");

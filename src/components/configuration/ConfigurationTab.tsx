@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import type { ConfigurationPage } from "../../lib/save-data";
-import { parseMod } from "../../tli/mod_parser";
+import { parseMod } from "../../tli/mod-parser";
 
 interface ConfigurationTabProps {
   config: ConfigurationPage;

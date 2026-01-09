@@ -5,7 +5,7 @@ import {
 } from "@/src/data/talent-tree";
 import type { PlacedPrism as SaveDataPlacedPrism } from "@/src/lib/save-data";
 import type { Affix, AffixLine } from "./core";
-import { parseMod } from "./mod_parser/index";
+import { parseMod } from "./mod-parser/index";
 
 export type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
 

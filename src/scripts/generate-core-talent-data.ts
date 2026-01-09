@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
 import type { BaseCoreTalent } from "../data/core-talent/types";
 import { isTree } from "../data/talent";
 import type { Affix, AffixLine } from "../tli/core";
-import { parseMod } from "../tli/mod_parser";
+import { parseMod } from "../tli/mod-parser";
 
 const cleanAffixText = (html: string): string => {
   const NEWLINE_PLACEHOLDER = "\x00";

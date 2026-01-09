@@ -80,7 +80,7 @@ import type {
   TalentTree,
   TalentTrees,
 } from "../core";
-import { parseMod } from "../mod_parser/index";
+import { parseMod } from "../mod-parser/index";
 import { parseSupportAffixes } from "../skills/support-mod-templates";
 import {
   convertAffixTextToAffix,

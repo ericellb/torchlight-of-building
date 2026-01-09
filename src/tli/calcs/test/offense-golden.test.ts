@@ -24,7 +24,8 @@ describe("offense golden tests", () => {
 
     const avgDps = frostSpike.attackDpsSummary?.avgDps;
     // With projectile damage from frostbite: trunc(100/35) = 2 projectiles × 8% = 16% additional damage
-    const expectedDps = 16.04e12; // ~16.04 trillion (with 40% enemy res default)
+    // Build has 32% multistrike chance from Pactspirit rings, which adds 6.4% attack speed
+    const expectedDps = 16.39e12; // ~16.39 trillion (with 40% enemy res default)
     const tolerance = 0.01; // 1% tolerance
 
     expect(avgDps).toBeGreaterThan(expectedDps * (1 - tolerance));

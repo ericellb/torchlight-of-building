@@ -1535,6 +1535,53 @@ const calcSpellBurstChargeSpeedBonusPct = (mods: Mod[]): number => {
   return (calcEffMult(chargeSpeedMods) - 1) * 100;
 };
 
+const pushMultistrikeAspd = (
+  mods: Mod[],
+  multistrikeChancePct: number,
+): void => {
+  const multistrikeAspdPct = 20;
+  if (multistrikeChancePct >= 100) {
+    mods.push({ type: "AspdPct", addn: false, value: multistrikeAspdPct });
+  } else if (multistrikeChancePct > 0) {
+    mods.push({
+      type: "AspdPct",
+      addn: false,
+      value: multistrikeAspdPct * (multistrikeChancePct / 100),
+      src: "Multistrike",
+    });
+  }
+};
+
+const pushMultistrikeDmgBonus = (
+  mods: Mod[],
+  multistrikeChancePct: number,
+  multistrikeIncDmgPct: number,
+): void => {
+  if (multistrikeChancePct <= 0 || multistrikeIncDmgPct <= 0) {
+    return;
+  }
+  const maxHits = Math.floor(multistrikeChancePct / 100) + 2;
+  let expectedDmgMult = 0;
+  for (let hitNumber = 0; hitNumber < maxHits; hitNumber++) {
+    const hitProbability =
+      hitNumber === 0
+        ? 1.0
+        : Math.min(1.0, multistrikeChancePct / 100 - (hitNumber - 1));
+
+    const hitDamageMultiplier = 1.0 + hitNumber * (multistrikeIncDmgPct / 100);
+    expectedDmgMult += hitProbability * hitDamageMultiplier;
+  }
+  const expectedHits = 1 + multistrikeChancePct / 100;
+  const expectedDmgBonusPct = (expectedDmgMult / expectedHits - 1) * 100;
+  mods.push({
+    type: "DmgPct",
+    value: expectedDmgBonusPct,
+    dmgModType: "global",
+    addn: true,
+    src: "Multistrike Increasing Damage",
+  });
+};
+
 interface DerivedOffenseCtx {
   maxSpellBurst: number;
   spellBurstChargeSpeedBonusPct: number;
@@ -1690,6 +1737,16 @@ const resolveModsForOffenseSkill = (
     "spell_burst_charge_speed_bonus_pct",
     spellBurstChargeSpeedBonusPct,
   );
+
+  // Must happen after any multistrike chance normalization
+  const multistrikeChancePct = sumByValue(
+    filterMods(mods, "MultistrikeChancePct"),
+  );
+  const multistrikeIncDmgPct = sumByValue(
+    filterMods(mods, "MultistrikeIncDmgPct"),
+  );
+  pushMultistrikeAspd(mods, multistrikeChancePct);
+  pushMultistrikeDmgBonus(mods, multistrikeChancePct, multistrikeIncDmgPct);
 
   return {
     mods,

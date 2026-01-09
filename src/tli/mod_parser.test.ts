@@ -2216,3 +2216,25 @@ test("parse attack aggression on defeat", () => {
   const result = parseMod("25% chance to gain Attack Aggression on defeat");
   expect(result).toEqual([{ type: "GeneratesAttackAggression" }]);
 });
+
+test("parse additional damage if recently moved", () => {
+  const result = parseMod(
+    "+30% additional damage if you have recently moved more than 5 m",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 30,
+      dmgModType: "global",
+      addn: true,
+      cond: "has_moved_recently",
+    },
+  ]);
+});
+
+test("parse inflicts lightning infiltration on critical strike", () => {
+  const result = parseMod("Inflicts Lightning Infiltration on Critical Strike");
+  expect(result).toEqual([
+    { type: "InflictsInfiltration", infiltrationType: "lightning" },
+  ]);
+});

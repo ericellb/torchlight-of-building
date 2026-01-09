@@ -258,6 +258,12 @@ export const allParsers = [
     addn: true,
     cond: HAS_USED_MOBILITY_SKILL_RECENTLY,
   })),
+  t("{value:+dec%} additional damage if you have recently moved more than {dist:int} m").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: true,
+    cond: HAS_MOVED_RECENTLY,
+  })),
   t("{value:+dec%} [additional] elemental damage dealt by spell skills").output("ElementalSpellDmgPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,
@@ -782,6 +788,10 @@ export const allParsers = [
   t("inflicts cold infiltration when dealing damage to frozen enemies").output("InflictsInfiltration", () => ({
     infiltrationType: "cold" as const,
   })),
+  t("inflicts {infiltrationType:InfiltrationType} infiltration on critical strike").output(
+    "InflictsInfiltration",
+    (c) => ({ infiltrationType: c.infiltrationType as InfiltrationType }),
+  ),
   t(
     "inflicts {infiltrationType:InfiltrationType} infiltration when dealing damage. interval for each enemy: {interval:int} s",
   ).output("InflictsInfiltration", (c) => ({ infiltrationType: c.infiltrationType as InfiltrationType })),

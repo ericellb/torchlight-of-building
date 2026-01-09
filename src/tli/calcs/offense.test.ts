@@ -5471,3 +5471,121 @@ describe("dual wielding", () => {
     expect(summary?.avgDps).toBeCloseTo(248.05);
   });
 });
+
+describe("multistrike damage bonus", () => {
+  const skillName = "[Test] Simple Attack" as const;
+
+  // Weapon with base attack speed for multistrike tests
+  const weaponWithAspd = {
+    equipmentType: "One-Handed Sword" as const,
+    baseStats: {
+      baseStatLines: [
+        {
+          text: "100 - 100 physical damage",
+          mods: [{ type: "GearBasePhysDmg" as const, value: 100 }],
+        },
+        {
+          text: "1.0 Attack Speed",
+          mods: [{ type: "GearBaseAttackSpeed" as const, value: 1.0 }],
+        },
+      ],
+    },
+  };
+
+  const createMultistrikeInput = (
+    multistrikeChancePct: number,
+    multistrikeIncDmgPct: number,
+  ) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: { mainHand: weaponWithAspd }, inventory: [] },
+      customAffixLines: affixLines([
+        { type: "MultistrikeChancePct", value: multistrikeChancePct },
+        { type: "MultistrikeIncDmgPct", value: multistrikeIncDmgPct },
+      ]),
+      skillPage: simpleAttackSkillPage(),
+    }),
+    configuration: defaultConfiguration,
+  });
+
+  test("no multistrike chance results in no damage change", () => {
+    // 0% multistrike chance, 50% increasing damage
+    // Should have no effect on damage (early return)
+    const input = createMultistrikeInput(0, 50);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 100 });
+  });
+
+  test("multistrike with 0% increasing damage results in no damage change", () => {
+    // 100% multistrike chance, 0% increasing damage
+    // Should have no effect on damage (early return when incDmgPct <= 0)
+    const input = createMultistrikeInput(100, 0);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 100 });
+  });
+
+  test("100% multistrike with 50% increasing damage", () => {
+    // 100% multistrike = always 2 hits
+    // hitNumber 0: prob=1.0, mult=1.0 → 1.0
+    // hitNumber 1: prob=1.0, mult=1.5 → 1.5
+    // expectedDmgMult = 2.5, expectedHits = 2.0
+    // avgDmgPerHit = 2.5 / 2.0 = 1.25, bonus = 25%
+    // Base 100 * 1.25 = 125
+    const input = createMultistrikeInput(100, 50);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 125 });
+  });
+
+  test("50% multistrike with 50% increasing damage", () => {
+    // 50% multistrike = 50% chance for 2nd hit
+    // hitNumber 0: prob=1.0, mult=1.0 → 1.0
+    // hitNumber 1: prob=0.5, mult=1.5 → 0.75
+    // expectedDmgMult = 1.75, expectedHits = 1.5
+    // avgDmgPerHit = 1.75 / 1.5 ≈ 1.167, bonus ≈ 16.67%
+    // Base 100 * 1.167 ≈ 116.67
+    const input = createMultistrikeInput(50, 50);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 116.67 });
+  });
+
+  test("150% multistrike with 50% increasing damage", () => {
+    // 150% multistrike = always 2 hits, 50% chance for 3rd hit
+    // hitNumber 0: prob=1.0, mult=1.0 → 1.0
+    // hitNumber 1: prob=1.0, mult=1.5 → 1.5
+    // hitNumber 2: prob=0.5, mult=2.0 → 1.0
+    // expectedDmgMult = 3.5, expectedHits = 2.5
+    // avgDmgPerHit = 3.5 / 2.5 = 1.4, bonus = 40%
+    // Base 100 * 1.4 = 140
+    const input = createMultistrikeInput(150, 50);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 140 });
+  });
+
+  test("200% multistrike with 30% increasing damage", () => {
+    // 200% multistrike = always 3 hits
+    // hitNumber 0: prob=1.0, mult=1.0 → 1.0
+    // hitNumber 1: prob=1.0, mult=1.3 → 1.3
+    // hitNumber 2: prob=1.0, mult=1.6 → 1.6
+    // expectedDmgMult = 3.9, expectedHits = 3.0
+    // avgDmgPerHit = 3.9 / 3.0 = 1.3, bonus = 30%
+    // Base 100 * 1.3 = 130
+    const input = createMultistrikeInput(200, 30);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 130 });
+  });
+
+  test("multistrike attack speed bonus at 100%", () => {
+    // 100% multistrike gives full 20% attack speed bonus
+    // Base aspd 1.0 * 1.2 = 1.2
+    const input = createMultistrikeInput(100, 50);
+    const results = calculateOffense(input);
+    validate(results, skillName, { aspd: 1.2 });
+  });
+
+  test("multistrike attack speed bonus at 50%", () => {
+    // 50% multistrike gives half the attack speed bonus: 20% * 0.5 = 10%
+    // Base aspd 1.0 * 1.1 = 1.1
+    const input = createMultistrikeInput(50, 50);
+    const results = calculateOffense(input);
+    validate(results, skillName, { aspd: 1.1 });
+  });
+});

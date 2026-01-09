@@ -2,6 +2,19 @@ import { describe, expect, test } from "vitest";
 import { parseSupportAffixes } from "./support-mod-templates";
 
 describe("parseSupportAffixes", () => {
+  test("parse auto-used supported skills additional damage (signed)", () => {
+    const result = parseSupportAffixes([
+      "Auto-used supported skills +10% additional damage",
+    ]);
+    expect(result).toEqual([
+      [
+        {
+          mod: { type: "DmgPct", value: 10, dmgModType: "global", addn: true },
+        },
+      ],
+    ]);
+  });
+
   test("parse Overload damage per focus blessing stack", () => {
     const result = parseSupportAffixes([
       "4% additional damage for the supported skill for every stack of Focus Blessing, stacking up to 8 times",
@@ -37,5 +50,19 @@ describe("parseSupportAffixes", () => {
     expect(result).toEqual([
       [{ mod: { type: "ChainLightningMerge", shotgunFalloffCoefficient: 80 } }],
     ]);
+  });
+
+  test("parse crit buff informational text returns no mods", () => {
+    const result = parseSupportAffixes([
+      "The supported skill gains a buff on Critical Strike. The buff lasts 2 s.",
+    ]);
+    expect(result).toEqual([[]]);
+  });
+
+  test("parse auto-cast while standing still returns no mods", () => {
+    const result = parseSupportAffixes([
+      "Automatically and continuously cast the supported skill at the nearest enemy within 25m while standing still",
+    ]);
+    expect(result).toEqual([[]]);
   });
 });

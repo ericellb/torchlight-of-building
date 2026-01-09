@@ -47,6 +47,12 @@ const parseWillpowerBlob = (input: string): Mod[] | undefined => {
 };
 
 const allSupportParsers = [
+  // Signed version (e.g., "Auto-used supported skills +10% additional damage")
+  t("auto-used supported skills {value:+int%} additional damage").output(
+    "DmgPct",
+    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
+  ),
+  // Unsigned version (e.g., "Auto-used supported skills 10% additional damage")
   t("auto-used supported skills {value:int%} additional damage").output(
     "DmgPct",
     (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
@@ -246,6 +252,13 @@ const allSupportParsers = [
   ).output("ChainLightningMerge", (c) => ({
     shotgunFalloffCoefficient: c.value,
   })),
+  // Recognized but produces no mods (informational text)
+  t(
+    "the supported skill gains a buff on critical strike. the buff lasts {_:int} s.",
+  ).outputMany([]),
+  t(
+    "automatically and continuously cast the supported skill at the nearest enemy within {_:int}m while standing still",
+  ).outputMany([]),
 ];
 
 const parseSupportAffix = (text: string): SupportMod[] | undefined => {
@@ -267,6 +280,8 @@ const parseSupportAffix = (text: string): SupportMod[] | undefined => {
   return undefined;
 };
 
-export const parseSupportAffixes = (affixes: string[]): SupportMod[][] => {
-  return affixes.map((text) => parseSupportAffix(text) ?? []);
+export const parseSupportAffixes = (
+  affixes: string[],
+): (SupportMod[] | undefined)[] => {
+  return affixes.map((text) => parseSupportAffix(text));
 };

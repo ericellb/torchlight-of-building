@@ -76,7 +76,7 @@ import {
   sumByValue,
 } from "./mod-utils";
 import type { OffenseSkillName } from "./skill-confs";
-import { multModValue, multValue } from "./util";
+import { ModWithValue, multModValue, multValue } from "./util";
 
 // Re-export types that consumers expect from offense.ts
 export type { DmgChunk, DmgPools, DmgRanges };
@@ -1547,15 +1547,22 @@ const pushMultistrikeAspd = (
   multistrikeChancePct: number,
 ): void => {
   const multistrikeAspdPct = 20;
+  const aspdWhenMultistrikingMods: ModWithValue[] = filterMods(
+    mods,
+    "AspdWhenMultistrikingPct",
+  ).map((m) => ({ ...m, type: "AspdPct" }));
   if (multistrikeChancePct >= 100) {
     mods.push({ type: "AspdPct", addn: false, value: multistrikeAspdPct });
+    mods.push(...aspdWhenMultistrikingMods);
   } else if (multistrikeChancePct > 0) {
+    const mult = multistrikeChancePct / 100;
     mods.push({
       type: "AspdPct",
       addn: false,
-      value: multistrikeAspdPct * (multistrikeChancePct / 100),
+      value: multistrikeAspdPct * mult,
       src: "Multistrike",
     });
+    mods.push(...aspdWhenMultistrikingMods.map((m) => multModValue(m, mult)));
   }
 };
 

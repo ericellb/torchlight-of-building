@@ -698,6 +698,9 @@ export const allParsers = [
     "CspdPct",
     (c) => ({ value: c.value, addn: false, cond: HAS_FOCUS_BLESSING }),
   ),
+  t(
+    "{value:+dec%} additional attack speed when performing multistrikes",
+  ).output("AspdWhenMultistrikingPct", (c) => ({ value: c.value, addn: true })),
   t("{value:+dec%} [additional] attack speed").output("AspdPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,

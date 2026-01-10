@@ -309,6 +309,7 @@ interface ModDefinitions {
   Reap: { duration: number; cooldown: number };
   ReapDurationPct: { value: number };
   ReapCdrPct: { value: number; addn?: boolean };
+  AspdWhenMultistrikingPct: { value: number; addn: boolean };
   MultistrikeChancePct: { value: number };
   MultistrikeIncDmgPct: { value: number };
   // initial multistrike count, e.g. if there's 3 of this, first strike will

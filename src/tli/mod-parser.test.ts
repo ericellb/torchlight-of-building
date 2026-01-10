@@ -2446,3 +2446,12 @@ test("parse additional lightning damage per dexterity", () => {
     },
   ]);
 });
+
+test("parse additional attack speed when performing multistrikes", () => {
+  const result = parseMod(
+    "+9% additional Attack Speed when performing Multistrikes",
+  );
+  expect(result).toEqual([
+    { type: "AspdWhenMultistrikingPct", value: 9, addn: true },
+  ]);
+});

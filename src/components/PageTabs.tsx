@@ -1,7 +1,7 @@
 import { i18n } from "@lingui/core";
 import { Link, useRouterState } from "@tanstack/react-router";
 
-const TABS = [
+export const TABS = [
   { path: "/builder/equipment", label: "Equipment" },
   { path: "/builder/talents", label: "Talents" },
   { path: "/builder/skills", label: "Skills" },

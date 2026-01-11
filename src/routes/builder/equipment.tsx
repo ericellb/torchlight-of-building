@@ -434,7 +434,7 @@ function EquipmentPage(): React.ReactNode {
               </option>
               {allEquipmentTypes.map((type) => (
                 <option key={type} value={type}>
-                  {type}
+                  {i18n._(type)}
                 </option>
               ))}
             </select>

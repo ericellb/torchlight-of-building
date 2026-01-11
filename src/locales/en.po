@@ -14,96 +14,282 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
-#: src/lib/constants.ts:6
-msgid "Helmet"
-msgstr "Helmet"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:7
-msgid "Chest"
-msgstr "Chest"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:8
-msgid "Neck"
-msgstr "Neck"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:9
-msgid "Gloves"
-msgstr "Gloves"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:10
-msgid "Belt"
-msgstr "Belt"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:11
-msgid "Boots"
-msgstr "Boots"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:12
-msgid "Left Ring"
-msgstr "Left Ring"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:13
-msgid "Right Ring"
-msgstr "Right Ring"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:14
-msgid "Main Hand"
-msgstr "Main Hand"
-
-#. js-lingui-explicit-id
-#: src/lib/constants.ts:15
-msgid "Off Hand"
-msgstr "Off Hand"
-
-#. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:5
+#: src/data/translate/translate-tab.ts:4
 msgid "Equipment"
 msgstr "Equipment"
 
 #. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:6
+#: src/data/translate/translate-tab.ts:5
 msgid "Talents"
 msgstr "Talents"
 
 #. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:7
+#: src/data/translate/translate-tab.ts:6
 msgid "Skills"
 msgstr "Skills"
 
 #. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:8
+#: src/data/translate/translate-tab.ts:7
 msgid "Hero"
 msgstr "Hero"
 
 #. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:9
+#: src/data/translate/translate-tab.ts:8
 msgid "Pactspirit"
 msgstr "Pactspirit"
 
 #. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:10
+#: src/data/translate/translate-tab.ts:9
 msgid "Divinity"
 msgstr "Divinity"
 
 #. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:11
+#: src/data/translate/translate-tab.ts:10
 msgid "Configuration"
 msgstr "Configuration"
 
 #. js-lingui-explicit-id
-#: src/components/PageTabs.tsx:12
+#: src/data/translate/translate-tab.ts:11
 msgid "Calculations"
 msgstr "Calculations"
 
-#: src/components/equipment/LegendaryGearModule.tsx:184
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:4
+#: src/data/translate/equipment-types.ts:5
+msgid "Belt"
+msgstr "Belt"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:6
+msgid "Boots"
+msgstr "Boots"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:7
+msgid "Boots (DEX)"
+msgstr "Boots (DEX)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:8
+msgid "Boots (INT)"
+msgstr "Boots (INT)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:9
+msgid "Boots (STR)"
+msgstr "Boots (STR)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:10
+msgid "Bow"
+msgstr "Bow"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:11
+msgid "Cane"
+msgstr "Cane"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:12
+msgid "Chest"
+msgstr "Chest"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:13
+msgid "Chest Armor (DEX)"
+msgstr "Chest Armor (DEX)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:14
+msgid "Chest Armor (INT)"
+msgstr "Chest Armor (INT)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:15
+msgid "Chest Armor (STR)"
+msgstr "Chest Armor (STR)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:16
+msgid "Claw"
+msgstr "Claw"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:17
+msgid "Crossbow"
+msgstr "Crossbow"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:18
+msgid "Cudgel"
+msgstr "Cudgel"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:19
+msgid "Dagger"
+msgstr "Dagger"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:20
+msgid "Fire Cannon"
+msgstr "Fire Cannon"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:21
+msgid "Gloves"
+msgstr "Gloves"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:22
+msgid "Gloves (DEX)"
+msgstr "Gloves (DEX)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:23
+msgid "Gloves (INT)"
+msgstr "Gloves (INT)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:24
+msgid "Gloves (STR)"
+msgstr "Gloves (STR)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:25
+msgid "Helmet"
+msgstr "Helmet"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:26
+msgid "Helmet (DEX)"
+msgstr "Helmet (DEX)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:27
+msgid "Helmet (INT)"
+msgstr "Helmet (INT)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:28
+msgid "Helmet (STR)"
+msgstr "Helmet (STR)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:29
+msgid "Left Ring"
+msgstr "Left Ring"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:30
+msgid "Main Hand"
+msgstr "Main Hand"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:31
+msgid "Musket"
+msgstr "Musket"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:32
+msgid "Neck"
+msgstr "Neck"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:33
+msgid "Necklace"
+msgstr "Necklace"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:34
+msgid "Off Hand"
+msgstr "Off Hand"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:35
+msgid "One-Handed Axe"
+msgstr "One-Handed Axe"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:36
+msgid "One-Handed Hammer"
+msgstr "One-Handed Hammer"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:37
+msgid "One-Handed Sword"
+msgstr "One-Handed Sword"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:38
+msgid "Pistol"
+msgstr "Pistol"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:39
+msgid "Right Ring"
+msgstr "Right Ring"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:40
+msgid "Ring"
+msgstr "Ring"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:41
+msgid "Rod"
+msgstr "Rod"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:42
+msgid "Scepter"
+msgstr "Scepter"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:43
+msgid "Shield (DEX)"
+msgstr "Shield (DEX)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:44
+msgid "Shield (INT)"
+msgstr "Shield (INT)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:45
+msgid "Shield (STR)"
+msgstr "Shield (STR)"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:46
+msgid "Spirit Ring"
+msgstr "Spirit Ring"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:47
+msgid "Tin Staff"
+msgstr "Tin Staff"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:48
+msgid "Two-Handed Axe"
+msgstr "Two-Handed Axe"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:49
+msgid "Two-Handed Hammer"
+msgstr "Two-Handed Hammer"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:50
+msgid "Two-Handed Sword"
+msgstr "Two-Handed Sword"
+
+#. js-lingui-explicit-id
+#: src/data/translate/equipment-types.ts:51
+msgid "Wand"
+msgstr "Wand"
+
+#: src/components/equipment/LegendaryGearModule.tsx:185
 msgid "Add Legendary"
 msgstr "Add Legendary"
 
@@ -112,15 +298,15 @@ msgstr "Add Legendary"
 msgid "Are you sure you want to delete \"{0}\"?"
 msgstr "Are you sure you want to delete \"{0}\"?"
 
-#: src/routes/builder/equipment.tsx:469
+#: src/routes/builder/equipment.tsx:470
 msgid "Base Affixes (2 max)"
 msgstr "Base Affixes (2 max)"
 
-#: src/routes/builder/equipment.tsx:448
+#: src/routes/builder/equipment.tsx:449
 msgid "Base Stats (1 max)"
 msgstr "Base Stats (1 max)"
 
-#: src/routes/builder/equipment.tsx:534
+#: src/routes/builder/equipment.tsx:535
 msgid "Blending (1 max)"
 msgstr "Blending (1 max)"
 
@@ -133,7 +319,7 @@ msgstr "Cancel"
 msgid "Copy"
 msgstr "Copy"
 
-#: src/routes/builder/equipment.tsx:415
+#: src/routes/builder/equipment.tsx:416
 msgid "Craft New Item"
 msgstr "Craft New Item"
 
@@ -163,11 +349,11 @@ msgstr "Delete"
 msgid "Early Development"
 msgstr "Early Development"
 
-#: src/routes/builder/equipment.tsx:393
+#: src/routes/builder/equipment.tsx:394
 msgid "Equipment Slots"
 msgstr "Equipment Slots"
 
-#: src/routes/builder/equipment.tsx:423
+#: src/routes/builder/equipment.tsx:424
 msgid "Equipment Type"
 msgstr "Equipment Type"
 
@@ -175,11 +361,11 @@ msgstr "Equipment Type"
 msgid "Import Build"
 msgstr "Import Build"
 
-#: src/routes/builder/equipment.tsx:630
+#: src/routes/builder/equipment.tsx:631
 msgid "Inventory"
 msgstr "Inventory"
 
-#: src/routes/builder/equipment.tsx:631
+#: src/routes/builder/equipment.tsx:632
 msgid "items"
 msgstr "items"
 
@@ -191,7 +377,7 @@ msgstr "My Builds"
 msgid "No builds yet"
 msgstr "No builds yet"
 
-#: src/routes/builder/equipment.tsx:635
+#: src/routes/builder/equipment.tsx:636
 msgid "No items in inventory. Craft items above to add them here."
 msgstr "No items in inventory. Craft items above to add them here."
 
@@ -199,7 +385,7 @@ msgstr "No items in inventory. Craft items above to add them here."
 msgid "Please be patient and bear with me on any issues you encounter with this app, as it's still in early phases of development."
 msgstr "Please be patient and bear with me on any issues you encounter with this app, as it's still in early phases of development."
 
-#: src/routes/builder/equipment.tsx:575
+#: src/routes/builder/equipment.tsx:576
 msgid "Prefixes (3 max)"
 msgstr "Prefixes (3 max)"
 
@@ -211,31 +397,31 @@ msgstr "Rename"
 msgid "Save"
 msgstr "Save"
 
-#: src/routes/builder/equipment.tsx:618
+#: src/routes/builder/equipment.tsx:619
 msgid "Save to Inventory"
 msgstr "Save to Inventory"
 
-#: src/routes/builder/equipment.tsx:623
+#: src/routes/builder/equipment.tsx:624
 msgid "Select an equipment type to begin crafting"
 msgstr "Select an equipment type to begin crafting"
 
-#: src/routes/builder/equipment.tsx:432
+#: src/routes/builder/equipment.tsx:433
 msgid "Select equipment type..."
 msgstr "Select equipment type..."
 
-#: src/components/equipment/LegendaryGearModule.tsx:189
+#: src/components/equipment/LegendaryGearModule.tsx:191
 msgid "Select Legendary"
 msgstr "Select Legendary"
 
-#: src/routes/builder/equipment.tsx:595
+#: src/routes/builder/equipment.tsx:596
 msgid "Suffixes (3 max)"
 msgstr "Suffixes (3 max)"
 
-#: src/routes/builder/equipment.tsx:492
+#: src/routes/builder/equipment.tsx:493
 msgid "Sweet Dream Affix (1 max)"
 msgstr "Sweet Dream Affix (1 max)"
 
-#: src/routes/builder/equipment.tsx:513
+#: src/routes/builder/equipment.tsx:514
 msgid "Tower Sequence (1 max)"
 msgstr "Tower Sequence (1 max)"
 

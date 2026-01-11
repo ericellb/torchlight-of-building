@@ -4,6 +4,7 @@ import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
 import {
   calculateOffense,
   type OffenseInput,
+  type OffenseSlashStrikeDpsSummary,
   type OffenseSpellBurstDpsSummary,
   type OffenseSpellDpsSummary,
   type PersistentDpsSummary,
@@ -262,6 +263,79 @@ const SpellBurstSummarySection = ({
   );
 };
 
+const SlashStrikeSummarySection = ({
+  summary,
+}: {
+  summary: OffenseSlashStrikeDpsSummary;
+}): React.ReactNode => {
+  return (
+    <div className="rounded-lg border border-rose-500/30 bg-zinc-900 p-3">
+      <div className="mb-2 text-sm font-semibold text-rose-400">
+        Slash Strike
+      </div>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-0.5 md:grid-cols-3">
+        <StatLine
+          label="Average DPS"
+          value={formatStatValue.dps(summary.avgDps)}
+          highlight
+        />
+        <StatLine
+          label="Steep Strike Chance"
+          value={formatStatValue.pct(summary.steepStrikeChancePct)}
+        />
+        <StatLine
+          label="Crit Multiplier"
+          value={formatStatValue.multiplier(summary.critDmgMult)}
+        />
+        <StatLine
+          label="Sweep DPS"
+          value={formatStatValue.dps(summary.sweep.avgDps)}
+        />
+        <StatLine
+          label="Steep DPS"
+          value={formatStatValue.dps(summary.steep.avgDps)}
+        />
+        <StatLine
+          label="Sweep Avg Hit"
+          value={formatStatValue.damage(summary.sweep.mainhand.avgHit)}
+        />
+        <StatLine
+          label="Sweep Avg (crit)"
+          value={formatStatValue.damage(summary.sweep.mainhand.avgHitWithCrit)}
+        />
+        <StatLine
+          label="Steep Avg Hit"
+          value={formatStatValue.damage(summary.steep.mainhand.avgHit)}
+        />
+        <StatLine
+          label="Steep Avg (crit)"
+          value={formatStatValue.damage(summary.steep.mainhand.avgHitWithCrit)}
+        />
+        <StatLine
+          label="Crit Chance"
+          value={formatStatValue.percentage(summary.sweep.mainhand.critChance)}
+        />
+        <StatLine
+          label="Attack Speed"
+          value={formatStatValue.aps(summary.sweep.mainhand.aspd)}
+        />
+        {summary.multistrikeChancePct > 0 && (
+          <>
+            <StatLine
+              label="Multistrike Chance"
+              value={formatStatValue.pct(summary.multistrikeChancePct)}
+            />
+            <StatLine
+              label="Multistrike Dmg Inc"
+              value={formatStatValue.pct(summary.multistrikeIncDmgPct)}
+            />
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const Route = createFileRoute("/builder/calculations")({
   component: CalculationsPage,
 });
@@ -292,6 +366,7 @@ function CalculationsPage(): React.ReactNode {
 
   const hasDamageStats =
     offenseSummary?.attackDpsSummary !== undefined ||
+    offenseSummary?.slashStrikeDpsSummary !== undefined ||
     offenseSummary?.spellDpsSummary !== undefined ||
     offenseSummary?.spellBurstDpsSummary !== undefined ||
     offenseSummary?.persistentDpsSummary !== undefined ||
@@ -426,6 +501,12 @@ function CalculationsPage(): React.ReactNode {
                 )}
               </div>
             </div>
+          )}
+
+          {offenseSummary.slashStrikeDpsSummary !== undefined && (
+            <SlashStrikeSummarySection
+              summary={offenseSummary.slashStrikeDpsSummary}
+            />
           )}
 
           {offenseSummary.spellDpsSummary !== undefined && (

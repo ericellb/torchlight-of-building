@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+
 import type { ImplementedActiveSkillName } from "../../data/skill";
 import {
   type Affix,
@@ -20,8 +21,6 @@ import {
   type WeaponAttackSummary,
 } from "./offense";
 import type { OffenseSkillName } from "./skill-confs";
-import { equal } from "assert";
-import { equipmentTypes } from "@/src/data/translate/equipment-types";
 
 type DmgPctMod = Extract<Mod, { type: "DmgPct" }>;
 
@@ -61,8 +60,6 @@ const baseWeapon = {
     ],
   },
 };
-
-
 
 const emptySkillPage = () => ({ activeSkills: {}, passiveSkills: {} });
 

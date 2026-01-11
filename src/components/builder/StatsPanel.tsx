@@ -466,7 +466,7 @@ export const StatsPanel = (): React.ReactNode => {
         />
 
         <div className="h-2" />
-        
+
         <StatLine
           label="Cold Res"
           value={formatRes(defenses.coldRes)}

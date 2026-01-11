@@ -170,7 +170,6 @@ const calculateTotalMainStats = (
   return totalMainStats;
 };
 
-
 const calculateDefenseStat = (
   mods: Mod[],
   gearFlatModType: "GearEnergyShield" | "GearArmor" | "GearEvasion",
@@ -183,12 +182,12 @@ const calculateDefenseStat = (
 
   const gearFlat = sumByValue(filterMods(mods, gearFlatModType));
   const gearPctMult = calcEffMult(mods, gearPctModType);
-  const totalFromGear = (gearFlat) * gearPctMult;
-  
+  const totalFromGear = gearFlat * gearPctMult;
+
   const finalFlat = sumByValue(filterMods(mods, finalFlatModType));
   const finalPctMult = calcEffMult(mods, finalPctModType);
   const finalValue = (totalFromGear + finalFlat) * finalPctMult;
-  
+
   return Math.max(0, finalValue);
 };
 
@@ -1870,8 +1869,6 @@ const resolveModsForOffenseSkill = (
   };
 };
 
-
-
 const calculateResourcePool = (
   paramMods: Mod[],
   loadout: Loadout,
@@ -1904,7 +1901,6 @@ const calculateResourcePool = (
   const maxManaFromMods = sumByValue(filterMods(mods, "MaxMana"));
   const maxManaMult = calcEffMult(mods, "MaxManaPct");
   const maxMana = (40 + config.level * 5 + maxManaFromMods) * maxManaMult;
-
 
   const energyShield = calculateDefenseStat(
     mods,

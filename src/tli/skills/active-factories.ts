@@ -302,4 +302,16 @@ export const activeSkillModFactories: Partial<
       { type: "SteepStrikeChancePct", value: v(vals.steepStrikeChancePct, l) },
     ],
   }),
+  "Ice Lances": (l, vals) => ({
+    offense: {
+      addedDmgEffPct: { value: v(vals.addedDmgEffPct, l) },
+      spellDmg: {
+        value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
+        dmgType: "cold",
+        castTime: v(vals.castTime, l),
+      },
+      shotgunEffFalloffPct: { value: v(vals.shotgunEffFalloffPct, l) },
+    },
+    mods: [{ type: "Jump", value: v(vals.jump, l) }],
+  }),
 };

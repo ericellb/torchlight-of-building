@@ -10,6 +10,7 @@ import {
   entangledPainParser,
   frostSpikeParser,
   iceBondParser,
+  iceLancesParser,
   manaBoilParser,
   mindControlParser,
   secretOriginUnleashParser,
@@ -176,6 +177,7 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     categories: ["active"],
     parser: berserkingBladeParser,
   },
+  { skillName: "Ice Lances", categories: ["active"], parser: iceLancesParser },
 ];
 
 export const getParserForSkill = (

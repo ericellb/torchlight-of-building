@@ -205,7 +205,7 @@ const getDefenseModTypes = (defenseType: DefenseType) => {
     } as const;
   }
 
-  return undefined;
+  throw new Error(`Unsupported defense type: ${defenseType}`);
 };
 
 const calculateDefenseStat = (
@@ -214,12 +214,7 @@ const calculateDefenseStat = (
   defenseType: DefenseType,
 ): number => {
   const modTypes = getDefenseModTypes(defenseType);
-  if (!modTypes) {
-    throw new Error(`Unsupported defense type: ${defenseType}`);
-  }
-
   const equippedGear = loadout.gearPage.equippedGear;
-
   let totalFromGear = 0;
 
   for (const gear in equippedGear) {

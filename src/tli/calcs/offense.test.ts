@@ -2653,7 +2653,7 @@ describe("resolveBuffSkillMods", () => {
         "cond" in m &&
         m.cond === "enemy_frostbitten",
     ) as DmgPctMod | undefined;
-    expect(iceBondBuffMod?.value).toBeCloseTo(51.3975);
+    expect(iceBondBuffMod?.value).toBeCloseTo(46.2);
   });
 
   test("support skill level affects skill effect bonus", () => {

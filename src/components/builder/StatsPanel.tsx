@@ -454,7 +454,7 @@ export const StatsPanel = (): React.ReactNode => {
         />
 
         <StatLine
-          label="Armour"
+          label="Armor"
           value={formatStatValue.integer(defenses.armor)}
           color="text-red-400"
         />

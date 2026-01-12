@@ -167,9 +167,7 @@ export const chargingWarcryParser: SupportLevelParser = (input) => {
     skillName,
   );
 
-  return {
-    shadowStrikeSkillDmgPerEnemy: createConstantLevels(dmgMatch.dmg),
-  };
+  return { shadowStrikeSkillDmgPerEnemy: createConstantLevels(dmgMatch.dmg) };
 };
 
 export const mindControlParser: SupportLevelParser = (input) => {

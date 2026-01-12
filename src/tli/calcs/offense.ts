@@ -39,6 +39,7 @@ import type {
 import { getActiveSkillMods } from "../skills/active-mods";
 import { getPassiveSkillMods } from "../skills/passive-mods";
 import { buildSupportSkillAffixes } from "../storage/load-save";
+import { getGearAffixes } from "./affix-collectors";
 import {
   addDRs,
   applyDmgBonusesAndPen,
@@ -74,7 +75,6 @@ import {
 } from "./mod-utils";
 import type { OffenseSkillName } from "./skill-confs";
 import { type ModWithValue, multModValue, multValue } from "./util";
-import { getGearAffixes } from "./affix-collectors";
 
 // Re-export types that consumers expect from offense.ts
 export type { DmgChunk, DmgPools, DmgRanges };
@@ -206,12 +206,12 @@ const getDefenseModTypes = (defenseType: DefenseType) => {
   }
 
   return undefined;
-}
+};
 
 const calculateDefenseStat = (
   loadout: Loadout,
   mods: Mod[],
-  defenseType: DefenseType
+  defenseType: DefenseType,
 ): number => {
   const modTypes = getDefenseModTypes(defenseType);
   if (!modTypes) {
@@ -219,7 +219,7 @@ const calculateDefenseStat = (
   }
 
   const equippedGear = loadout.gearPage.equippedGear;
-  
+
   let totalFromGear = 0;
 
   for (const gear in equippedGear) {
@@ -2033,7 +2033,11 @@ export const calculateDefenses = (
     30 + sumByValue(filterMods(mods, "BlockRatioPct")),
   );
 
-  const energyShield = calculateDefenseStat(loadout, mods, DefenseType.EnergyShield);
+  const energyShield = calculateDefenseStat(
+    loadout,
+    mods,
+    DefenseType.EnergyShield,
+  );
   const armor = calculateDefenseStat(loadout, mods, DefenseType.Armor);
   const evasion = calculateDefenseStat(loadout, mods, DefenseType.Evasion);
 
